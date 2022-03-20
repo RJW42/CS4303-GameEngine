@@ -1,5 +1,7 @@
 package GameEngine.Utils;
 
+import GameEngine.GameEngine;
+
 import java.io.*;
 import java.util.Locale;
 import java.util.Optional;
@@ -15,14 +17,61 @@ public class Config {
 
 
    // Constructor
-   public Config(String file_loc){
-      init(file_loc);
+   public Config(){
+      if(!init(GameEngine.CONFIG_FOLDER + GameEngine.CONFIG_FILE)){
+         // Failed to read try reading the config folder
+         System.out.println(" - Attempting to read the default config file");
+         if(!init(GameEngine.CONFIG_FOLDER + GameEngine.DEFAULT_CONFIG_FILE)){
+            // Failed to read the default config file
+            System.out.println(" - No config file found");
+            System.exit(0);
+         }
+
+         // Save the default config file
+         System.out.println(" - Read in defaults saving");
+         reset_to_default();
+      }
    }
 
+
    // Methods
+   public void reset_to_default(){
+      // Delete current
+      new File(GameEngine.CONFIG_FOLDER + GameEngine.CONFIG_FILE).delete();
+
+      // Replace with default
+      File default_file = new File(GameEngine.CONFIG_FOLDER + GameEngine.DEFAULT_CONFIG_FILE);
+      File new_file     = new File(GameEngine.CONFIG_FOLDER + GameEngine.CONFIG_FILE);
+
+      try{
+         // Create new config file
+         if(!new_file.exists())
+            new_file.createNewFile();
+
+         InputStream oInStream = new FileInputStream(default_file);
+         OutputStream oOutStream = new FileOutputStream(new_file);
+
+         // Transfer bytes from in to out
+         byte[] oBytes = new byte[1024];
+         int nLength;
+
+         BufferedInputStream oBuffInputStream = new BufferedInputStream(oInStream);
+         while((nLength = oBuffInputStream.read(oBytes)) > 0) {
+            oOutStream.write(oBytes, 0, nLength);
+         }
+         oInStream.close();
+         oOutStream.close();
+      } catch (IOException e){
+         System.out.println("Failed to reset config file to defaults");
+         System.out.println(e.getMessage());
+         System.exit(0);
+      }
+
+   }
+
 
    // Parsing
-   private void init(String file_loc){
+   private boolean init(String file_loc){
       // Open the file
       System.out.println("Reading config file");
       try (BufferedReader reader = new BufferedReader(new FileReader(file_loc))){
@@ -38,8 +87,9 @@ public class Config {
          }
       } catch (IOException e){
          System.out.println(" - Failed to read config file: " + e.getMessage());
-         System.exit(0);
+         return false;
       }
+      return true;
    }
 
    private void parse_line(String key, String values){

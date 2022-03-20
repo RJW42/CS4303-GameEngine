@@ -1,6 +1,8 @@
-package GameEngine.Utils;
+package GameEngine.Utils.Managers;
 
 import GameEngine.GameEngine;
+import GameEngine.Utils.PGif;
+import GameEngine.Utils.Pair;
 import processing.core.PImage;
 
 import java.io.File;

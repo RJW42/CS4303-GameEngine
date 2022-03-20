@@ -6,8 +6,9 @@ import GameEngine.Components.CollisionComponents.CollisionHandlers.CollisionHand
 import GameEngine.GameObjects.*;
 import GameEngine.Levels.*;
 import GameEngine.Utils.Config;
-import GameEngine.Utils.InputManager;
-import GameEngine.Utils.ImageManager;
+import GameEngine.Utils.Managers.AudioManager;
+import GameEngine.Utils.Managers.InputManager;
+import GameEngine.Utils.Managers.ImageManager;
 import ddf.minim.Minim;
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -18,36 +19,40 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class GameEngine extends PApplet {
+   public static final String DEFAULT_CONFIG_FILE  = "default_config.txt";
+   public static final String SAVES_LOCATION = "GameEngine/Resources/Saves/scoreboard.csv";
    public static final String SPRITE_FOLDER  = "GameEngine/Resources/Sprites";
    public static final String GIFS_FOLDER    = "GameEngine/Resources/Gifs";
-   public static final String CONFIG_FOLDER  = "GameEngine/Resources/config.txt";
-   public static final String SAVES_LOCATION = "GameEngine/Resources/Saves/scoreboard.csv";
+   public static final String CONFIG_FOLDER  = "GameEngine/Resources/";
+   public static final String CONFIG_FILE    = "config.txt";
+
    public static final int Z_LAYERS          = 4;
-   private static int SCREEN_WIDTH           = 960;
-   private static int SCREEN_HEIGHT          = 960;
    public static final float GRID_SIZE       = 1;
    public static float PIXEL_TO_METER_X      = -1;
    public static float PIXEL_TO_METER_Y      = -1;
-   public static int WORLD_WIDTH             = 32;
+   private static int SCREEN_HEIGHT          = 960;
+   private static int SCREEN_WIDTH           = 960;
    public static int WORLD_HEIGHT            = 18;
+   public static int WORLD_WIDTH             = 32;
    public static int GRID_X_SIZE             = WORLD_WIDTH / (int)GRID_SIZE;
    public static int GRID_Y_SIZE             = WORLD_HEIGHT / (int)GRID_SIZE;
+   public static int TARGET_FPS              = 60;
 
-   public ScoreManager score_manager      = null;
-   public boolean DISPLAY_FPS             = false;
    public boolean DISPLAY_BOUNDS          = false;
    public boolean DISPLAY_COLS            = false;
    public boolean ENABLE_PAUSE            = false;
-   public int TARGET_FPS                  = 60;
-   public float GRAVITY                   = 9.8f;
+   public boolean DISPLAY_FPS             = false;
+   public float TIME_FACTOR               = 1f;
    public float DELTA_TIME                = 1f / TARGET_FPS; // 1 / DELTA_TIME == current FPS
    public float TOTAL_TIME                = 0f;
-   public float TIME_FACTOR               = 1f;
+   public float GRAVITY                   = 9.8f;
 
    /* Game Engine Variables */
-   public Minim minim;
+   private Minim minim;
    public InputManager input_manager;
    public ImageManager sprite_manager;
+   public ScoreManager score_manager;
+   public AudioManager audio_manager;
    public Config config;
    public float mouse_x;
    public float mouse_y;
@@ -74,7 +79,8 @@ public class GameEngine extends PApplet {
 
    public void settings(){
       // Load config
-      config = new Config(CONFIG_FOLDER);
+      config = new Config();
+      config.reset_to_default();
 
       // Init screen size
       if(config.full_screen){
@@ -102,21 +108,20 @@ public class GameEngine extends PApplet {
    public void setup() {
       // System Setup
       frameRate(TARGET_FPS);
-      pause = false;
-      frame_skip = false;
 
       // Init Game Engine Variables
+      pause = false;
+      frame_skip = false;
       prev = System.nanoTime() - (long)(DELTA_TIME * 1e9);
+
+      // Init manager objects
       minim = new Minim(this);
+      sprite_manager = new ImageManager(this);
+      input_manager = new InputManager(this);
+      audio_manager = new AudioManager(this, minim);
 
       // Init level manager
       level_manager = new LevelManager(this, new TestLevel(this));
-
-      // Load sprites
-      sprite_manager = new ImageManager(this);
-
-      // Init input manager
-      input_manager = new InputManager(this);
    }
 
 
@@ -499,7 +504,6 @@ public class GameEngine extends PApplet {
          prev = System.nanoTime() - (pause_time - prev);
          input_manager.keys_pressed[9] = false;
          frame_skip = true;
-         return;
       }
    }
 

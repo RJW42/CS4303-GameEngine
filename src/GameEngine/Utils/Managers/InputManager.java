@@ -1,4 +1,4 @@
-package GameEngine.Utils;
+package GameEngine.Utils.Managers;
 
 import GameEngine.GameEngine;
 import processing.event.KeyEvent;

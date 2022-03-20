@@ -29,6 +29,7 @@ public class TestLevel extends Level{
       // Create terrian
       int seed = 357988076;
       seed = new Random().nextInt();
+      System.out.println(seed);
 
       Terrain terrain = new Terrain(sys, seed, AdvancedTerrainGenerator::new);
 
