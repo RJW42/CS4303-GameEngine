@@ -25,12 +25,14 @@ public class ScoreBoard extends Component {
    // Attributes
    public int score;
    public String username = "";
+   public boolean saved_score = false;
 
    private ArrayList<TextRenderer> text_lines;
    private LinkedHashMap<String, Integer> scores;
    private TextRenderer first_line;
    private KeyEvent event;
-   public boolean saved_score = false;
+   private boolean sent_callback = false;
+
 
    // Constructor
    public ScoreBoard(GameObject parent, int score) {
@@ -66,21 +68,27 @@ public class ScoreBoard extends Component {
    }
 
    public void update() {
-      if(!saved_score) {
-         // Get username
-         get_username();
+      if(saved_score)
+         return;
 
-         // Update the top text with the username
-         first_line.text = "Enter Username: " + username;
-
-         // Check if scores finished
-         if(saved_score){
-            display_scores();
-         }
+      // Get username
+      if(!sent_callback){
+         sys.input_manager.getInput(this::username_callback);
+         sent_callback = true;
       }
+
+      // Update the top text with the username
+      first_line.text = "Enter Username: " + sys.input_manager.current_string;
    }
 
    public void draw() {
+   }
+
+
+   private void username_callback(String username, boolean escaped){
+      this.username = username;
+      saveScore();
+      display_scores();
    }
 
 

@@ -88,9 +88,10 @@ public class InputManager {
       // Not an escape/entre so keep building the string
       if(latest_key.getKey() == PConstants.BACKSPACE){
          current_string_builder.deleteCharAt(current_string_builder.length() - 1);
-      } else if(latest_key.getKey() >= 'a' || latest_key.getKey() <= 'z' ||
-         latest_key.getKey() >= 'A' || latest_key.getKey() <= 'Z' ||
-         latest_key.getKey() >= '0' || latest_key.getKey() <= '9' ||
+      } else if(
+         (latest_key.getKey() >= 'a' && latest_key.getKey() <= 'z') ||
+         (latest_key.getKey() >= 'A' && latest_key.getKey() <= 'Z') ||
+         (latest_key.getKey() >= '0' && latest_key.getKey() <= '9') ||
          latest_key.getKey() == '_' || latest_key.getKey() == '-'
       ){
          current_string_builder.append(latest_key.getKey());

@@ -4,6 +4,7 @@ import GameEngine.Components.CollisionComponents.BaseCollisionComponent;
 import GameEngine.Components.TerrianComponents.AdvancedTerrainGenerator;
 import GameEngine.Components.TerrianComponents.BossLevelTerrainGenerator;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
+import GameEngine.GameObjects.GameOver;
 import GameEngine.GameObjects.Player;
 import GameEngine.GameObjects.Terrain;
 import GameEngine.GameEngine;
@@ -44,6 +45,7 @@ public class TestLevel extends Level{
       sys.terrain = terrain;
       sys.spawn(terrain, 0);
 //      sys.spawn(new Player(sys, new PVector(3, 3)), 0);
+      sys.spawn(new GameOver(sys, 0), 0);
    }
 
    public boolean updateAndCanAdvance() {
