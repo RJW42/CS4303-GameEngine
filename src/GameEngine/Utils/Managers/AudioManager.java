@@ -17,5 +17,11 @@ public class AudioManager {
 
 
    // Methods
+   public void stop(){
+      // Close all audio files
+      // Todo: implement
 
+      // Close minim
+      minim.stop();
+   }
 }

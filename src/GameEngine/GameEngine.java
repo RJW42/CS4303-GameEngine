@@ -226,10 +226,7 @@ public class GameEngine extends PApplet {
 
    public void stop(){
       // Close Audio
-      minim.stop();
-
-      // Ensure normal closer occurs
-      super.stop();
+      audio_manager.stop();
    }
 
 
