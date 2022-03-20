@@ -16,6 +16,7 @@ public abstract class Component {
    }
 
    // Methods
-   public abstract void update();
-   public abstract void draw();
+   public void start() {};
+   public void update() {};
+   public void draw() {};
 }

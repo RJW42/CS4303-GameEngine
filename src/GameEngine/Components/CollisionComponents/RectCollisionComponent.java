@@ -1,6 +1,8 @@
 package GameEngine.Components.CollisionComponents;
 
+import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
+import GameEngine.GameObjects.Terrain;
 import GameEngine.Triggers.CollisionTrigger;
 import processing.core.PVector;
 
@@ -19,20 +21,21 @@ public class RectCollisionComponent extends BaseCollisionComponent{
    }
 
    public RectCollisionComponent(GameObject parent, CollisionTrigger trigger, PVector offset, float width, float height) {
-      super(parent, trigger, offset, (int)width, (int)height);
+      super(parent, trigger, offset, width, height);
       this.width = width;
       this.height = height;
       this.trigger = trigger;
    }
 
    // Methods
-   @Override
-   public void update() {
-
-   }
 
    @Override
    public void draw() {
-
+      if(sys.DISPLAY_BOUNDS){
+         sys.stroke(0, 255, 0);
+         sys.noFill();
+         sys.rect(get_x(), get_y() - 1, width, height);
+         sys.fill(255);
+      }
    }
 }

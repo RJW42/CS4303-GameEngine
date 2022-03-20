@@ -4,26 +4,30 @@ import GameEngine.Components.Component;
 import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.Triggers.CollisionTrigger;
+import processing.core.PApplet;
 import processing.core.PVector;
 
 import java.util.ArrayList;
 
 public abstract class BaseCollisionComponent extends Component {
-   public int bound_box_width;
-   public int bound_box_height;
+   public float bound_box_width;
+   public float bound_box_height;
    public PVector offset;
    public ArrayList<Integer> curr_grids;
    public CollisionTrigger trigger;
+   public boolean stationary;
 
-   protected BaseCollisionComponent(GameObject parent, CollisionTrigger trigger, int bound_box_width) {
+   private boolean set_collisions;
+
+   protected BaseCollisionComponent(GameObject parent, CollisionTrigger trigger, float bound_box_width) {
       this(parent, trigger, bound_box_width, bound_box_width);
    }
 
-   protected BaseCollisionComponent(GameObject parent, CollisionTrigger trigger, int bound_box_width, int bound_box_height){
+   protected BaseCollisionComponent(GameObject parent, CollisionTrigger trigger, float bound_box_width, float bound_box_height){
       this(parent, trigger, new PVector(0, 0), bound_box_width, bound_box_height);
    }
 
-   protected BaseCollisionComponent(GameObject parent, CollisionTrigger trigger, PVector offset, int bound_box_width, int bound_box_height) {
+   protected BaseCollisionComponent(GameObject parent, CollisionTrigger trigger, PVector offset, float bound_box_width, float bound_box_height) {
       super(parent);
 
       this.curr_grids = new ArrayList<>(4);
@@ -31,15 +35,23 @@ public abstract class BaseCollisionComponent extends Component {
       this.bound_box_height = bound_box_height;
       this.offset = offset;
       this.trigger = trigger;
+      this.stationary = false;
+      this.set_collisions = false;
    }
 
    public void trigger(BaseCollisionComponent other){
       if(isTrigger())
-         this.trigger(other);
+         trigger.resolveCollision(other);
    }
 
    public boolean isTrigger(){
       return trigger != null;
+   }
+
+   public void draw(){
+//      if(sys.DISPLAY_BOUNDS){
+//         sys.rect(get_x(), get_y(), bound_box_width, bound_box_height);
+//      }
    }
 
    /* ***** Implemented Methods ***** */
@@ -51,11 +63,11 @@ public abstract class BaseCollisionComponent extends Component {
       return parent.pos.y + offset.y;
    }
 
-   public boolean collidesWith(BaseCollisionComponent other){
-      // Check both objects are collidable
-//      if(!other.collidable || !collidable) // Todo change this to method can collide which takes in other
-//         return false;
+   public PVector pos(){
+      return new PVector(get_x(), get_y());
+   }
 
+   public boolean collidesWith(BaseCollisionComponent other){
       // Both Objects Have Circular Collision Meshes
       if(other instanceof CircleCollisionComponent && this instanceof CircleCollisionComponent){
          return circleCircleCollision((CircleCollisionComponent)this, (CircleCollisionComponent)other);
@@ -125,15 +137,23 @@ public abstract class BaseCollisionComponent extends Component {
    }
 
    public void updateCollisionGrids() {
+      // Check if the object should update collisions
+      if(stationary && set_collisions)
+         return; // Object has set collisions and doesn't move nothing needed
+      set_collisions = true;
+
       // Init Some Constants
-      int mesh_width = bound_box_width;
-      int mesh_height = bound_box_height;
-      int x_increase = Math.min(mesh_width, GameEngine.GRID_SIZE);
-      int y_decrease = Math.min(mesh_height, GameEngine.GRID_SIZE);
+      float mesh_width = bound_box_width;
+      float mesh_height = bound_box_height;
+      float x_increase = Math.min(mesh_width, GameEngine.GRID_SIZE);
+      float y_decrease = Math.min(mesh_height, GameEngine.GRID_SIZE);
       int grid_x = -1;
       int grid_y = -1;
       boolean stop_y = false;
       boolean stop_x = false;
+
+      sys.shapeMode(PApplet.CORNER);
+      sys.circle(get_x(), get_y(), 0.1f);
 
       // Clear Current Grids
       for(var i : this.curr_grids)
@@ -141,26 +161,26 @@ public abstract class BaseCollisionComponent extends Component {
       this.curr_grids.clear();
 
       // Calc Overlapping Grids
-      for(int y = (int)this.get_y(); !stop_y && y > 0; y -= y_decrease, stop_x = false) {
+      for(float y = this.get_y(); !stop_y && y > 0; y -= y_decrease, stop_x = false) {
          // Check if at final position
          if(y < this.get_y() - mesh_height) {
-            y = (int)this.get_y() - mesh_height;
+            y = this.get_y() - mesh_height;
             stop_y = true;
          }
 
          // Check Y Position within the world
-         if(y >= GameEngine.SCREEN_HEIGHT)
+         if(y >= GameEngine.WORLD_HEIGHT)
             continue;
 
-         int new_grid_y = y / GameEngine.GRID_SIZE;
+         int new_grid_y = (int)(y / GameEngine.GRID_SIZE);
 
          if(new_grid_y == grid_y)
             continue;
 
-         for(int x = (int)this.get_x(); !stop_x && x < GameEngine.SCREEN_WIDTH; x += x_increase) {
+         for(float x = this.get_x(); !stop_x && x < GameEngine.WORLD_WIDTH; x += x_increase) {
             // Check if at final position
             if(x > this.get_x() + mesh_width){
-               x = (int)this.get_x() + mesh_width;
+               x = this.get_x() + mesh_width;
                stop_x = true;
             }
 
@@ -168,7 +188,7 @@ public abstract class BaseCollisionComponent extends Component {
             if (x < 0)
                continue;
 
-            int new_grid_x = x / GameEngine.GRID_SIZE;
+            int new_grid_x = (int)(x / GameEngine.GRID_SIZE);
 
             if (new_grid_x == grid_x)
                continue;

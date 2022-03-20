@@ -10,23 +10,23 @@ public class CircleCollisionComponent extends BaseCollisionComponent{
 
    // Constructor
    public CircleCollisionComponent(GameObject parent, CollisionTrigger trigger, float rad) {
-      this(parent, trigger, new PVector(0, 0), rad);
+      this(parent, trigger, new PVector(-rad, rad), rad);
    }
 
    public CircleCollisionComponent(GameObject parent, CollisionTrigger trigger, PVector offset, float rad) {
-      super(parent, trigger, offset, (int)(rad * 2),  (int)(rad * 2));
+      super(parent, trigger, offset, (rad * 2), (rad * 2));
       this.rad = rad;
       this.trigger = trigger;
    }
 
    // Methods
-   @Override
-   public void update() {
-
-   }
 
    @Override
    public void draw() {
-
+      if(sys.DISPLAY_BOUNDS){
+         sys.noFill();
+         sys.stroke(0, 0, 255);
+         sys.circle(get_x() + rad, get_y() - rad, rad * 2);
+      }
    }
 }

@@ -1,12 +1,16 @@
 package GameEngine.Levels;
 
-import GameEngine.Components.CollisionComponents.BaseCollisionComponent;
-import GameEngine.Components.CollisionComponents.CircleCollisionComponent;
+import GameEngine.Components.TerrianComponents.AdvancedTerrainGenerator;
+import GameEngine.Components.TerrianComponents.TerrainGenerator;
+import GameEngine.GameObjects.Terrain;
 import GameEngine.GameEngine;
-import GameEngine.GameObjects.Ball;
+
+import java.util.Random;
+
 
 public class TestLevel extends Level{
    // Attributes
+   boolean stop = false;
 
    // Constructor
    public TestLevel(GameEngine sys) {
@@ -21,6 +25,20 @@ public class TestLevel extends Level{
    public void start() {
       // Init world
       sys.initWorld();
+
+      // Create terrian
+      int seed = 357988076;
+      seed = new Random().nextInt();
+
+      Terrain terrain = new Terrain(sys, seed, AdvancedTerrainGenerator::new);
+
+      TerrainGenerator generator = terrain.getComponent(TerrainGenerator.class);
+      generator.setConfig(Terrain.WIDTH, Terrain.HEIGHT); //, Terrain.WALK_ITERATIONS, Terrain.WALK_STEPS);
+      generator.createWorld();
+
+      //sys.spawn(new Ball(sys, new PVector(1, 5f)), 0);
+      sys.terrain = terrain;
+      sys.spawn(terrain, 0);
    }
 
    public boolean updateAndCanAdvance() {
