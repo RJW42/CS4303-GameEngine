@@ -80,7 +80,6 @@ public class GameEngine extends PApplet {
    public void settings(){
       // Load config
       config = new Config();
-      config.reset_to_default();
 
       // Init screen size
       if(config.full_screen){
@@ -158,7 +157,8 @@ public class GameEngine extends PApplet {
       mouse_y = WORLD_HEIGHT - (mouseY / PIXEL_TO_METER_Y);
 
       // Handle any pause mechanics
-      handlePause();
+      if(ENABLE_PAUSE)
+         handlePause();
 
       if(pause)
          return;
@@ -441,16 +441,16 @@ public class GameEngine extends PApplet {
          drawGridLines();
       }
 
-//      for(int i = 0; i < GRID_X_SIZE * GRID_Y_SIZE; i++) {
-//         ArrayList<BaseCollisionComponent> collision_square = collision_grid[i];
-//
-//         if(collision_square.size() > 0 && DISPLAY_BOUNDS) {
-//            displayGridCell(i % GRID_X_SIZE, i / GRID_Y_SIZE, 0, 255, 0);
-//
-//            if (DISPLAY_BOUNDS)
-//               displayGridCell(i % GRID_X_SIZE, i / GRID_Y_SIZE, 255, 0, 0);
-//         }
-//      }
+      for(int i = 0; i < GRID_X_SIZE * GRID_Y_SIZE; i++) {
+         ArrayList<BaseCollisionComponent> collision_square = collision_grid[i];
+
+         if(collision_square.size() > 0 && DISPLAY_BOUNDS) {
+            displayGridCell(i % GRID_X_SIZE, i / GRID_Y_SIZE, 0, 255, 0);
+
+            if (DISPLAY_BOUNDS)
+               displayGridCell(i % GRID_X_SIZE, i / GRID_Y_SIZE, 255, 0, 0);
+         }
+      }
    }
 
 

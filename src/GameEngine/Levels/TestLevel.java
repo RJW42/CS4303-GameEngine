@@ -1,9 +1,13 @@
 package GameEngine.Levels;
 
+import GameEngine.Components.CollisionComponents.BaseCollisionComponent;
 import GameEngine.Components.TerrianComponents.AdvancedTerrainGenerator;
+import GameEngine.Components.TerrianComponents.BossLevelTerrainGenerator;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
+import GameEngine.GameObjects.Player;
 import GameEngine.GameObjects.Terrain;
 import GameEngine.GameEngine;
+import processing.core.PVector;
 
 import java.util.Random;
 
@@ -31,15 +35,15 @@ public class TestLevel extends Level{
       seed = new Random().nextInt();
       System.out.println(seed);
 
-      Terrain terrain = new Terrain(sys, seed, AdvancedTerrainGenerator::new);
+      Terrain terrain = new Terrain(sys, seed, BossLevelTerrainGenerator::new);
 
       TerrainGenerator generator = terrain.getComponent(TerrainGenerator.class);
       generator.setConfig(Terrain.WIDTH, Terrain.HEIGHT); //, Terrain.WALK_ITERATIONS, Terrain.WALK_STEPS);
       generator.createWorld();
 
-      //sys.spawn(new Ball(sys, new PVector(1, 5f)), 0);
       sys.terrain = terrain;
       sys.spawn(terrain, 0);
+//      sys.spawn(new Player(sys, new PVector(3, 3)), 0);
    }
 
    public boolean updateAndCanAdvance() {

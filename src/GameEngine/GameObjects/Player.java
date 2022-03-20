@@ -3,6 +3,7 @@ package GameEngine.GameObjects;
 import GameEngine.Components.CollisionComponents.BaseCollisionComponent;
 import GameEngine.Components.CollisionComponents.CircleCollisionComponent;
 import GameEngine.Components.CollisionComponents.Collideable;
+import GameEngine.Components.ForceManager;
 import GameEngine.Components.PlayerComponents.*;
 import GameEngine.Components.Renderers.CircleRenderer;
 import GameEngine.Components.Renderers.ImageRenderer;
@@ -43,6 +44,7 @@ public class Player extends GameObject implements Collideable {
       // Add regular components
       this.components.add(new ImageRenderer(this, BODY_SPRITE, COLLISION_RAD*2f, COLLISION_RAD*2f, new PVector(0, 0)));
       this.components.add(new CharacterController(this, SPEED));
+      this.components.add(new ForceManager(this, new PVector(0, 0), new PVector(0, 0)));
 
       // Add collision components to regular
       this.components.addAll(this.collision_components);

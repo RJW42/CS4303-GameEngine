@@ -18,7 +18,7 @@ public class Config {
 
    // Constructor
    public Config(){
-      if(!init(GameEngine.CONFIG_FOLDER + GameEngine.CONFIG_FILE)){
+      if(!init(GameEngine.CONFIG_FOLDER + GameEngine.DEFAULT_CONFIG_FILE)){
          // Failed to read try reading the config folder
          System.out.println(" - Attempting to read the default config file");
          if(!init(GameEngine.CONFIG_FOLDER + GameEngine.DEFAULT_CONFIG_FILE)){

@@ -23,10 +23,10 @@ public class TerrainCollider extends Component {
    }
 
    @Override
-   public void draw() {
-      // todo: make update
+   public void update() {
       if(created_collisions)
          return;
+
       created_collisions = true;
 
       // Create collision components
@@ -47,10 +47,10 @@ public class TerrainCollider extends Component {
       Terrain parent = (Terrain) this.parent;
 
       // Make collision component
-      RectCollisionComponent comp = new RectCollisionComponent(parent, null, Terrain.CELL_SIZE - 0.05f);
+      RectCollisionComponent comp = new RectCollisionComponent(parent, null, Terrain.CELL_SIZE);
       comp.stationary = true;
-      comp.offset.x = x * Terrain.CELL_SIZE + 0.025f;
-      comp.offset.y = (y + 1) * Terrain.CELL_SIZE + 0.025f;
+      comp.offset.x = x * Terrain.CELL_SIZE;
+      comp.offset.y = ((y + 1) * Terrain.CELL_SIZE);
       comp.start();
 
       parent.addComponent(comp);

@@ -22,7 +22,7 @@ public class CollisionHandler {
    }
 
    public static void player_wall_collision(CircleCollisionComponent player, RectCollisionComponent terrain){
-
+      System.out.println("COLL");
    }
 
 }
