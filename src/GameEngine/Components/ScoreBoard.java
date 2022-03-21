@@ -86,6 +86,7 @@ public class ScoreBoard extends Component {
 
 
    private void username_callback(String username, boolean escaped){
+      // Todo: check if the username is valid less than 10 chars ect..
       this.username = username;
       saveScore();
       display_scores();

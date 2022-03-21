@@ -35,6 +35,10 @@ public class Config {
 
 
    // Methods
+   public void save(){
+      // Todo: implement this if it is wanted
+   }
+
    public void reset_to_default(){
       if(FileUtils.copyAndReplaceFile(
               GameEngine.DEFAULT_CONFIG_FOLDER + GameEngine.DEFAULT_CONFIG_FILE,
