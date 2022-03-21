@@ -152,10 +152,6 @@ public class InputManager {
    public void keyPressed(KeyEvent event) {
       int i = event.getKeyCode() % KEYS_SIZE;
       String s = getEventString(event);
-      System.out.println();
-      System.out.println(s);
-      System.out.println(i);
-      get_key_code(s).ifPresent(System.out::println);
 
       // Record this key press
       keys_pressed[i] = true;

@@ -44,7 +44,7 @@ public class TestLevel extends Level{
 
       sys.terrain = terrain;
       sys.spawn(terrain, 0);
-//      sys.spawn(new Player(sys, new PVector(3, 3)), 0);
+      sys.spawn(new Player(sys, new PVector(3, 3)), 0);
 //      sys.spawn(new GameOver(sys, 0), 0);
    }
 
