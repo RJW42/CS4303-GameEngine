@@ -19,6 +19,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class GameEngine extends PApplet {
+   public static final String DEFAULT_CONFIG_FOLDER= "GameEngine/Resources/Defaults/";
    public static final String DEFAULT_CONFIG_FILE  = "default_config.txt";
    public static final String SAVES_LOCATION = "GameEngine/Resources/Saves/scoreboard.csv";
    public static final String SPRITE_FOLDER  = "GameEngine/Resources/Sprites";
