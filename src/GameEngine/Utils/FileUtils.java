@@ -55,13 +55,16 @@ public class FileUtils {
          String line = reader.readLine();
          while (line != null){
             // Check if the line is a comment
-            if(line.strip().length() == 0 || line.strip().charAt(0) == '#')
+            if(line.strip().length() == 0 || line.strip().charAt(0) == '#') {
+               line = reader.readLine();
                continue;
+            }
 
             // Check line is a pair
             String[] pair = line.split("=");
             if (pair.length != 2){
                System.out.println(" - Bad line in config: " + line);
+               line = reader.readLine();
                continue;
             }
 

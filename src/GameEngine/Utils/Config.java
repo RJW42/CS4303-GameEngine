@@ -23,7 +23,7 @@ public class Config {
          System.out.println(" - Attempting to read the default config file");
          if(!init(GameEngine.DEFAULT_CONFIG_FOLDER + GameEngine.DEFAULT_CONFIG_FILE)){
             // Failed to read the default config file
-            System.out.println(" - No config file found");
+            System.err.println(" - Failed to read the default config");
             System.exit(0);
          }
 
@@ -48,7 +48,6 @@ public class Config {
       }
       // Failed to reset to default
       System.err.println(" Failed to reset config file to default ");
-      System.exit(-1);
    }
 
 

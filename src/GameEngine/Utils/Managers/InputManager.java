@@ -2,15 +2,21 @@ package GameEngine.Utils.Managers;
 
 import GameEngine.GameEngine;
 import GameEngine.Triggers.InputComplete;
+import GameEngine.Utils.FileUtils;
 import processing.core.PConstants;
 import processing.event.Event;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
+import java.util.HashMap;
+import java.util.Locale;
 import java.util.Optional;
 
 public class InputManager {
    // Attributes
+   public static final String[] REQUIRED_CONTROLS = new String[]{
+      "UP", "DOWN", "LEFT", "RIGHT"
+   };
    public static final int KEYS_SIZE = 512;
    public static final int MOUSE_SIZE = 128;
    private final GameEngine sys;
@@ -26,7 +32,7 @@ public class InputManager {
    private Key[] tracker_mouse_keys;
    private InputComplete current_callback;
    private StringBuilder current_string_builder;
-
+   private HashMap<String, Key> key_mappings;
 
 
    // Constructor
@@ -36,6 +42,20 @@ public class InputManager {
       this.mouse_pressed = new boolean[MOUSE_SIZE];
       this.tracked_keyboard_keys = new Key[KEYS_SIZE];
       this.tracker_mouse_keys = new Key[MOUSE_SIZE];
+
+      // Load in the controls
+      if(!init(GameEngine.CONFIG_FOLDER + GameEngine.CONTROLS_FILE)){
+         // Failed to read try reading the defaults controls
+         System.out.println(" - Attempting to read the default controls file");
+         if(!init(GameEngine.DEFAULT_CONFIG_FOLDER + GameEngine.DEFAULT_CONTROLS_FILE)){
+            System.err.println(" - Failed to read in the default controls");
+            System.exit(0);
+         }
+
+         // Save the defaults
+         System.out.println(" - Read in the defaults saving");
+         reset_to_defaults();
+      }
    }
 
    // Methods
@@ -52,7 +72,17 @@ public class InputManager {
     * @return reference to that key
     */
    public Key getKey(String name){
-      // Todo: implement
+      // Upper case the name to prevent issues with that
+      name = name.toUpperCase();
+
+      // check if set
+      if(key_mappings.containsKey(name)){
+         return key_mappings.get(name);
+      }
+
+      // Not set err and close
+      System.err.println("Could not find mapping for key: " + name);
+      System.exit(0);
       return null;
    }
 
@@ -201,20 +231,56 @@ public class InputManager {
    private static final String SHIFT         = "SHIFT";
    private static final String TAB           = "TAB";
 
+
    public void reset_to_defaults(){
-      // Todo: implement
+      if(FileUtils.copyAndReplaceFile(
+              GameEngine.DEFAULT_CONFIG_FOLDER + GameEngine.DEFAULT_CONTROLS_FILE,
+              GameEngine.CONFIG_FOLDER + GameEngine.CONTROLS_FILE
+      )) {
+         return;
+      }
+      // Failed to reset to default
+      System.err.println(" Failed to reset control file to default ");
    }
+
 
    public void save(){
       // Todo: implement this if it is wanted
+      //       it should be called by set mappings
    }
 
 
    private boolean init(String file_loc){
+      // Init mappings
+      key_mappings = new HashMap<>();
+
       // Open the file
       System.out.println("Reading controls file");
+      boolean parsed_controls = FileUtils.parseConfigFile(file_loc).map(
+         pairs -> pairs
+            .stream()
+            .reduce(true, (val, pair) -> {
+               // Parse each pair in the controls file
+               if(!parse_line(pair.first, pair.second)){
+                  return false;
+               }
+               return val;
+            }, Boolean::logicalOr)
+      ).orElse(false);
 
-      return false;
+      // Check if the controls have been parsed
+      if(!parsed_controls){
+         return false;
+      }
+
+      // Check all desired controls have been parsed
+      for(String control : REQUIRED_CONTROLS){
+         if(!key_mappings.containsKey(control)) {
+            System.err.println(" - Controls file missing mapping for: " + control);
+            return false;
+         }
+      }
+      return true;
    }
 
 
@@ -228,6 +294,38 @@ public class InputManager {
       System.err.println("Invalid event class found in get event string");
       System.exit(0);
       return null;
+   }
+
+
+   private boolean parse_line(String key, String value){
+      // Parse the value
+      return get_key_code(value).map(key_index -> {
+         // Valid key index
+         if(key_mappings.containsKey(key))
+            return true;
+
+         // Create key and continue
+         Key key_ref = new Key();
+         key_ref.pressed = false;
+
+         tracked_keyboard_keys[key_index] = key_ref;
+         key_mappings.put(key, key_ref);
+
+         return true;
+      }).orElseGet(() -> get_mouse_code(value).map(mouse_index -> {
+         // Valid key index
+         if(key_mappings.containsKey(key))
+            return true;
+
+         // Create key and continue
+         Key key_ref = new Key();
+         key_ref.pressed = false;
+
+         tracker_mouse_keys[mouse_index] = key_ref;
+         key_mappings.put(key, key_ref);
+
+         return true;
+      }).orElse(false));
    }
 
 
