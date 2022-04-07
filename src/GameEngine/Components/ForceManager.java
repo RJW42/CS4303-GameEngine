@@ -9,6 +9,7 @@ public class ForceManager extends Component {
    // Attributes
    public PVector velocity;
    public PVector acceleration;
+   public boolean grounded;
 
    // Constructor
    public ForceManager(GameObject parent, PVector start_velocity, PVector start_acceleration) {

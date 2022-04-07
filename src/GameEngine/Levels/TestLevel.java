@@ -3,6 +3,7 @@ package GameEngine.Levels;
 import GameEngine.Components.CollisionComponents.BaseCollisionComponent;
 import GameEngine.Components.TerrianComponents.AdvancedTerrainGenerator;
 import GameEngine.Components.TerrianComponents.BossLevelTerrainGenerator;
+import GameEngine.Components.TerrianComponents.PerlinWormTerrainGenerator;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
 import GameEngine.GameObjects.GameOver;
 import GameEngine.GameObjects.Player;

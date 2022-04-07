@@ -15,13 +15,13 @@ public class CollisionHandler {
 
       // Player Terrian Collision
       if(obj1.parent instanceof Player && obj2.parent instanceof Terrain){
-         player_wall_collision((CircleCollisionComponent) obj1, (RectCollisionComponent) obj2);
+         player_wall_collision((RectCollisionComponent) obj1, (Player) obj1.parent, (RectCollisionComponent) obj2);
       } else if(obj2.parent instanceof Player && obj1.parent instanceof Terrain){
-         player_wall_collision((CircleCollisionComponent) obj2, (RectCollisionComponent) obj1);
+         player_wall_collision((RectCollisionComponent) obj2, (Player) obj2.parent, (RectCollisionComponent) obj1);
       }
    }
 
-   public static void player_wall_collision(CircleCollisionComponent player, RectCollisionComponent terrain){
+   public static void player_wall_collision(RectCollisionComponent player_col, Player player_obj, RectCollisionComponent terrain){
       System.out.println("COLL");
    }
 
