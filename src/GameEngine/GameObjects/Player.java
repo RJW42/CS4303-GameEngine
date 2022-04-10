@@ -42,6 +42,7 @@ public class Player extends GameObject implements Collideable {
       // Add collision components
       this.collision_components = new ArrayList<>();
       this.collision_components.add(new RectCollisionComponent(this, null, COLLISION_WIDTH, COLLISION_HEIGHT));
+      //this.collision_components.add(new RectCollisionComponent(this, null, new PVector(0, -(COLLISION_HEIGHT - 0.05f)), COLLISION_WIDTH, 0.05f));
 
       // Add regular components
       this.components.add(new RectRenderer(this, new PVector(0, 32, 128), COLLISION_WIDTH, COLLISION_HEIGHT));

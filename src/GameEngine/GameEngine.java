@@ -41,7 +41,7 @@ public class GameEngine extends PApplet {
    public static int GRID_Y_SIZE             = WORLD_HEIGHT / (int)GRID_SIZE;
    public static int TARGET_FPS              = 60;
 
-   public boolean DISPLAY_BOUNDS          = false;
+   public boolean DISPLAY_BOUNDS          = true;
    public boolean DISPLAY_COLS            = false;
    public boolean ENABLE_PAUSE            = false;
    public boolean DISPLAY_FPS             = false;

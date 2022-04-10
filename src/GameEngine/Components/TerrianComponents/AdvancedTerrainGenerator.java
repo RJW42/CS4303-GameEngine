@@ -12,7 +12,8 @@ public class AdvancedTerrainGenerator extends TerrainGenerator {
    public static final boolean DISPLAY_REGIONS  = false;
    public static final boolean ENSURE_ROOMS     = false;
    public static final float MIN_SPACE          = 0.46f;
-   public static final int NUM_WALLS            = 0;
+   public static final int NUM_WALLS_VERT       = 0;
+   public static final int NUM_WALLS_HOR        = 0;
 
    private static int r_mask = 255;
    private static int g_mask = 65280;
@@ -474,12 +475,12 @@ public class AdvancedTerrainGenerator extends TerrainGenerator {
       iterations[0] = world;
 
       if(!ENSURE_ROOMS)
-         addWalls(iterations[0], NUM_WALLS);
+         addWalls(iterations[0], NUM_WALLS_VERT, NUM_WALLS_HOR);
 
       for (int i = 1; i < num_iterations + 1; i++) {
          // Add walls to the world to ensure differnet rooms
          if(ENSURE_ROOMS)
-            addWalls(iterations[i - 1], NUM_WALLS);
+            addWalls(iterations[i - 1], NUM_WALLS_VERT, NUM_WALLS_HOR);
 
          // Update the world
          for (int x = 0; x < width; x++) {
@@ -521,17 +522,21 @@ public class AdvancedTerrainGenerator extends TerrainGenerator {
    }
 
 
-   private void addWalls(int[] world, int num_walls){
+   private void addWalls(int[] world, int num_walls_vert, int num_walls_hor){
       // Add Walls to mid lines
-      int h_offset = height / (num_walls + 1);
-      int w_offset = width / (num_walls + 1);
+      int h_offset = height / (num_walls_vert + 1);
+      int w_offset = width / (num_walls_hor + 1);
 
-      for(int i = 0; i < num_walls; i++) {
+      for(int i = 0; i < num_walls_vert; i++) {
          int h = h_offset * (i + 1);
-         int w = w_offset * (i + 1);
 
          for (int x = 0; x < width; x++)
             world[getIndex(x, h)] = Terrain.WALL;
+      }
+
+      for(int i = 0; i < num_walls_hor; i++) {
+         int w = w_offset * (i + 1);
+
          for (int y = 0; y < height; y++)
             world[getIndex(w, y)] = Terrain.WALL;
       }
