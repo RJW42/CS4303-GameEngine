@@ -29,8 +29,9 @@ public class CollisionHandler {
       // Track list of collisions
       // Handle this list in order of closeness
       ForceManager force_manager = player_obj.getComponent(ForceManager.class);
+      Optional<RayRectResult> collision_info = dynamic_rect_vs_rect_col(player_col, force_manager.velocity, terrain);
 
-      if(dynamic_rect_vs_rect_col(player_col, force_manager.velocity, terrain).isPresent()){
+      if(collision_info.isPresent()){
          player_obj.pos.x -= force_manager.velocity.x * player_obj.sys.DELTA_TIME;
          player_obj.pos.y -= force_manager.velocity.y * player_obj.sys.DELTA_TIME;
          force_manager.velocity = new PVector(0, 0);
@@ -58,7 +59,7 @@ public class CollisionHandler {
 
       PVector ray_origin = PVector.add(in.pos(), new PVector(in.width /2f, -in.height /2f));
 
-      Optional<RayRectResult> result = ray_vs_rect_col(ray_origin, in_vel, target_pos, target_width, target_height);
+      Optional<RayRectResult> result = ray_vs_rect_col(ray_origin, PVector.mult(in_vel, in.sys.DELTA_TIME), target_pos, target_width, target_height);
 
       if(result.isEmpty() || result.get().t_hit_near > 1f){
          return Optional.empty();

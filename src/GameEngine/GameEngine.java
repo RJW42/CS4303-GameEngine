@@ -183,35 +183,6 @@ public class GameEngine extends PApplet {
       // Draw game objects
       drawGameObjects();
 
-      if(terrain.getCollisionComponents() != null && terrain.getCollisionComponents().size() > 0) {
-         RectCollisionComponent comp = (RectCollisionComponent) terrain.getCollisionComponent();
-         PVector mouse_pos = new PVector(mouse_x, mouse_y);
-         PVector rect_pos = comp.pos(); // new PVector(5, 5);
-         rect_pos.y -= comp.height;
-
-         PVector ray_point = new PVector(0, 12);
-         PVector ray_dir = PVector.sub(mouse_pos, ray_point);
-
-         float rect_width = comp.width;
-         float rect_height = comp.height;
-
-
-         line(ray_point.x, ray_point.y, mouse_x, mouse_y);
-
-         Optional<CollisionHandler.RayRectResult> result = CollisionHandler.ray_vs_rect_col(ray_point, ray_dir, rect_pos, rect_width, rect_height);
-
-         if (result.isEmpty() || result.get().t_hit_near > 1f) {
-            fill(255);
-            rect(rect_pos.x, rect_pos.y, rect_width, rect_height);
-         } else {
-            fill(0);
-            rect(rect_pos.x, rect_pos.y, rect_width, rect_height);
-            fill(255);
-            circle(result.get().contact_point.x, result.get().contact_point.y, 0.1f);
-            line(result.get().contact_point.x, result.get().contact_point.y, result.get().contact_point.x + result.get().contact_normal.x, result.get().contact_point.y + result.get().contact_normal.y);
-         }
-      }
-
       // Draw any debug graphics
       debug();
 
