@@ -34,6 +34,7 @@ public class ForceManager extends Component {
 
    public void update() {
       // Update velocity and position
+      System.out.println(velocity);
       velocity.add(PVector.mult(acceleration, sys.DELTA_TIME));
       parent.pos.add(PVector.mult(velocity, sys.DELTA_TIME));
    }
