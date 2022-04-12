@@ -34,7 +34,9 @@ public class RectCollisionComponent extends BaseCollisionComponent{
       if(sys.DISPLAY_BOUNDS){
          sys.stroke(0, 255, 0);
          sys.noFill();
-         sys.rect(get_x(), get_y() - 1, width, height);
+         sys.rect(get_x(), get_y() - height, width, height);
+         sys.fill(255);
+         sys.circle(get_x(), get_y(), 0.1f);
       }
    }
 }

@@ -20,7 +20,7 @@ public class Player extends GameObject implements Collideable {
    // Attributes
    public static final float COLLISION_HEIGHT= 0.75f;
    public static final float COLLISION_WIDTH = 0.5f;
-   public static final float SPEED           = 2f;
+   public static final float SPEED           = 0.1f;
    public static final int STARTING_LIVES    = 3;
 
    private final ArrayList<BaseCollisionComponent> collision_components;

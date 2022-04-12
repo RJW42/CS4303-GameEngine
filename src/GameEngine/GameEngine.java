@@ -3,6 +3,7 @@ package GameEngine;
 import GameEngine.Components.CollisionComponents.BaseCollisionComponent;
 import GameEngine.Components.CollisionComponents.Collideable;
 import GameEngine.Components.CollisionComponents.CollisionHandlers.CollisionHandler;
+import GameEngine.Components.CollisionComponents.RectCollisionComponent;
 import GameEngine.GameObjects.*;
 import GameEngine.Levels.*;
 import GameEngine.Utils.Config;
@@ -12,6 +13,7 @@ import GameEngine.Utils.Managers.ImageManager;
 import ddf.minim.Minim;
 import processing.core.PApplet;
 import processing.core.PImage;
+import processing.core.PVector;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
@@ -20,7 +22,7 @@ import java.util.stream.Collectors;
 
 public class GameEngine extends PApplet {
    public static final String DEFAULT_CONFIG_FOLDER   = "GameEngine/Resources/Defaults/";
-   public static final String DEFAULT_CONTROLS_FILE    = "default_controls.txt";
+   public static final String DEFAULT_CONTROLS_FILE   = "default_controls.txt";
    public static final String DEFAULT_CONFIG_FILE     = "default_config.txt";
    public static final String SAVES_LOCATION = "GameEngine/Resources/Saves/scoreboard.csv";
    public static final String SPRITE_FOLDER  = "GameEngine/Resources/Sprites";
@@ -181,6 +183,35 @@ public class GameEngine extends PApplet {
       // Draw game objects
       drawGameObjects();
 
+      if(terrain.getCollisionComponents() != null && terrain.getCollisionComponents().size() > 0) {
+         RectCollisionComponent comp = (RectCollisionComponent) terrain.getCollisionComponent();
+         PVector mouse_pos = new PVector(mouse_x, mouse_y);
+         PVector rect_pos = comp.pos(); // new PVector(5, 5);
+         rect_pos.y -= comp.height;
+
+         PVector ray_point = new PVector(0, 12);
+         PVector ray_dir = PVector.sub(mouse_pos, ray_point);
+
+         float rect_width = comp.width;
+         float rect_height = comp.height;
+
+
+         line(ray_point.x, ray_point.y, mouse_x, mouse_y);
+
+         Optional<CollisionHandler.RayRectResult> result = CollisionHandler.ray_vs_rect_col(ray_point, ray_dir, rect_pos, rect_width, rect_height);
+
+         if (result.isEmpty() || result.get().t_hit_near > 1f) {
+            fill(255);
+            rect(rect_pos.x, rect_pos.y, rect_width, rect_height);
+         } else {
+            fill(0);
+            rect(rect_pos.x, rect_pos.y, rect_width, rect_height);
+            fill(255);
+            circle(result.get().contact_point.x, result.get().contact_point.y, 0.1f);
+            line(result.get().contact_point.x, result.get().contact_point.y, result.get().contact_point.x + result.get().contact_normal.x, result.get().contact_point.y + result.get().contact_normal.y);
+         }
+      }
+
       // Draw any debug graphics
       debug();
 
@@ -320,6 +351,9 @@ public class GameEngine extends PApplet {
 
    private void resolveGameObjectCollisions(){
       this.collisions.clear();
+
+      CollisionHandler.start_collisions();
+
       for(int i = 0; i < GRID_X_SIZE * GRID_Y_SIZE; i++) {
          ArrayList<BaseCollisionComponent> collision_square = collision_grid[i];
 
@@ -333,6 +367,8 @@ public class GameEngine extends PApplet {
                displayGridCell(i % GRID_X_SIZE, i / GRID_Y_SIZE, 255, 0, 0);
          }
       }
+
+      CollisionHandler.end_collisions();
    }
 
 

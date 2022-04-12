@@ -26,18 +26,18 @@ public class BossLevelTerrainGenerator extends TerrainGenerator{
       Arrays.fill(world, Terrain.AIR);
 
       // Add walls to world
-      for(int x = 0; x < width; x++) {
-         world[getIndex(x, 0)] = Terrain.WALL;
-         world[getIndex(x, height - 1)] = Terrain.WALL;
-      }
-      for(int y= 0; y < height; y++) {
-         world[getIndex(0, y)] = Terrain.WALL;
-         world[getIndex(width - 1, y)] = Terrain.WALL;
-      }
-      world[getIndex(1, 1)] = Terrain.WALL;
+//      for(int x = 0; x < width; x++) {
+//         world[getIndex(x, 0)] = Terrain.WALL;
+//         world[getIndex(x, height - 1)] = Terrain.WALL;
+//      }
+//      for(int y= 0; y < height; y++) {
+//         world[getIndex(0, y)] = Terrain.WALL;
+//         world[getIndex(width - 1, y)] = Terrain.WALL;
+//      }
+//      world[getIndex(1, 1)] = Terrain.WALL;
       world[getIndex(5, 5)] = Terrain.WALL;
-      world[getIndex(4, 5)] = Terrain.WALL;
-      world[getIndex(3, 5)] = Terrain.WALL;
+//      world[getIndex(4, 5)] = Terrain.WALL;
+//      world[getIndex(3, 5)] = Terrain.WALL;
 
       return world;
    }

@@ -43,19 +43,19 @@ public class CharacterController extends Component {
 
    private void updateVelocity(){
       if(up.pressed){
-         force_manager.velocity.y = speed;
+         force_manager.velocity.y += speed;
       } else if(down.pressed){
-         force_manager.velocity.y = -speed;
+         force_manager.velocity.y += -speed;
       } else {
-         force_manager.velocity.y = 0;
+         //force_manager.velocity.y = 0;
       }
 
       if(left.pressed){
-         force_manager.velocity.x = -speed;
+         force_manager.velocity.x += -speed;
       } else if(right.pressed){
-         force_manager.velocity.x = speed;
+         force_manager.velocity.x += speed;
       } else {
-         force_manager.velocity.x = 0;
+         //force_manager.velocity.x = 0;
       }
    }
 }
