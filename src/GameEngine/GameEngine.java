@@ -50,7 +50,7 @@ public class GameEngine extends PApplet {
    public float TIME_FACTOR               = 1f;
    public float DELTA_TIME                = 1f / TARGET_FPS; // 1 / DELTA_TIME == current FPS
    public float TOTAL_TIME                = 0f;
-   public float GRAVITY                   = 9.8f;
+   public float GRAVITY                   = 16f;
 
    /* Game Engine Variables */
    private Minim minim;

@@ -20,10 +20,13 @@ public class Player extends GameObject implements Collideable {
    // Attributes
    public static final float COLLISION_HEIGHT= 0.75f;
    public static final float COLLISION_WIDTH = 0.5f;
-   public static final float SPEED           = 0.1f;
+   public static final float ACCELERATION    = 12f;
+   public static final float MAX_SPEED       = 4f;
+   public static final float FRICTION        = 0.06f;
    public static final int STARTING_LIVES    = 3;
 
    private final ArrayList<BaseCollisionComponent> collision_components;
+   private ForceManager force_manager;
 
    public boolean is_dead = false;
 
@@ -42,12 +45,16 @@ public class Player extends GameObject implements Collideable {
       // Add collision components
       this.collision_components = new ArrayList<>();
       this.collision_components.add(new RectCollisionComponent(this, null, COLLISION_WIDTH, COLLISION_HEIGHT));
-      //this.collision_components.add(new RectCollisionComponent(this, null, new PVector(0, -(COLLISION_HEIGHT - 0.05f)), COLLISION_WIDTH, 0.05f));
+      this.collision_components.add(new RectCollisionComponent(this, this::ground_collision, new PVector(0.05f, -(COLLISION_HEIGHT - 0.05f)), COLLISION_WIDTH - 0.1f, 0.05f));
 
       // Add regular components
+      this.force_manager = new ForceManager(
+              this, new PVector(0, 0), new PVector(0, 0), FRICTION
+      );
+
       this.components.add(new RectRenderer(this, new PVector(0, 32, 128), COLLISION_WIDTH, COLLISION_HEIGHT));
-      this.components.add(new CharacterController(this, SPEED));
-      this.components.add(new ForceManager(this, new PVector(0, 0), new PVector(0, 0)));
+      this.components.add(new CharacterController(this, ACCELERATION, MAX_SPEED));
+      this.components.add(force_manager);
 
       // Add collision components to regular
       this.components.addAll(this.collision_components);
@@ -57,6 +64,17 @@ public class Player extends GameObject implements Collideable {
    @Override
    public boolean isDestroyed() {
       return is_dead;
+   }
+
+   private boolean ground_collision(BaseCollisionComponent comp){
+      // Check if collided with ground
+      if(comp.parent != sys.terrain)
+         return false;
+
+      force_manager.grounded = true;
+      force_manager.set_grounded = true;
+
+      return true;
    }
 
    @Override
