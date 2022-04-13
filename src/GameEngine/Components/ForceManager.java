@@ -60,8 +60,6 @@ public class ForceManager extends Component {
 
       // Add friction
       if(apply_friction && frames_grounded > 1){
-         System.out.println(velocity.x);
-
          if(Math.abs(velocity.x) < 0.05)
             velocity.x = 0;
 

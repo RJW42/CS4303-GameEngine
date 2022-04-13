@@ -8,3 +8,4 @@ DOWN    = S
 LEFT    = A
 RIGHT   = D
 JUMP    = SPACE
+GRAPPLE = MOUSE_LEFT
