@@ -14,6 +14,9 @@ public class ForceManager extends Component {
    public boolean apply_friction;
    public float friction;
 
+   public PVector grapple_base;
+   public float grapple_length;
+
    private int frames_grounded = 0;
 
 
@@ -53,8 +56,37 @@ public class ForceManager extends Component {
 
       // Update velocity and position
       velocity.add(PVector.mult(acceleration, sys.DELTA_TIME));
-      parent.pos.add(PVector.mult(velocity, sys.DELTA_TIME));
+      if(grapple_base != null)
+         apply_pendulum();
+      else
+         parent.pos.add(PVector.mult(velocity, sys.DELTA_TIME));
 
+      // Add frictions and gravity
+      update_velocities();
+
+      // Update grounded check
+      set_grounded = false;
+   }
+
+
+   private void apply_pendulum(){
+      PVector direction_to_base = PVector.sub(grapple_base, parent.pos).normalize();
+      float curr_dist_to_base = PVector.dist(grapple_base, parent.pos);
+      float speed_to_base = Math.round(PVector.dot(velocity, direction_to_base));
+
+      if(speed_to_base >= 0 || curr_dist_to_base <= grapple_length) {
+         parent.pos.add(PVector.mult(velocity, sys.DELTA_TIME));
+         return; // Moving towards base, so do not want to apply grapple physics
+      }
+
+      velocity.sub(PVector.mult(direction_to_base, speed_to_base));
+      PVector new_pos = PVector.sub(grapple_base, PVector.mult(direction_to_base, grapple_length));
+      parent.pos.x = new_pos.x;
+      parent.pos.y = new_pos.y;
+   }
+
+
+   private void update_velocities(){
       // Add gravity
       velocity.y -= sys.GRAVITY * sys.DELTA_TIME;
 
@@ -66,14 +98,11 @@ public class ForceManager extends Component {
          velocity.x -= velocity.x * friction;
       }
 
-
       // Reset acceleration
       acceleration.x = 0;
       acceleration.y = 0;
-
-      // Update grounded check
-      set_grounded = false;
    }
+
 
    public void draw() {
 

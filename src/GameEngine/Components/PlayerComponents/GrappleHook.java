@@ -7,7 +7,6 @@ import GameEngine.Components.TerrianComponents.TerrainGenerator;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.GameObjects.Terrain;
 import GameEngine.Utils.Managers.InputManager;
-import GameEngine.Utils.Pair;
 import processing.core.PVector;
 
 import java.util.Optional;
@@ -15,11 +14,17 @@ import java.util.Optional;
 
 public class GrappleHook extends Component {
    // Attributes
+   private static final int MAX_DISTANCE = 1000; // Todo: wanna check this at some point
+
    private ForceManager force_manager;
    private InputManager.Key fire;
 
    private TerrainGenerator generator;
    private int[] world;
+
+   private boolean fired;
+   private PVector base;
+   private boolean can_release;
 
    // Constructor
    public GrappleHook(GameObject parent) {
@@ -27,6 +32,8 @@ public class GrappleHook extends Component {
 
       // Init attributes
       this.fire = sys.input_manager.getKey("grapple");
+      this.fired = false;
+      this.can_release = false;
    }
 
 
@@ -38,28 +45,64 @@ public class GrappleHook extends Component {
    }
 
    public void update() {
-
+      if(!fired)
+         handle_firing();
+      else
+         handle_swing();
    }
 
    public void draw() {
-      sys.stroke(0, 255, 0);
-      sys.line(parent.pos.x, parent.pos.y, sys.mouse_x, sys.mouse_y);
+      if(!fired)
+         return;
 
+      // Draw grapple
+      sys.stroke(255);
+      sys.line(parent.pos.x, parent.pos.y, base.x, base.y);
+   }
+
+
+   private void handle_firing(){
+      // Wait for fire key
+      if(!fire.pressed) {
+         can_release = false;
+         return;
+      }
+
+      if(can_release)
+         return;
+
+      // User fired check for collision
       Optional<PVector> maybe_point = cast_ray(
-              parent.pos.copy(), PVector.sub(new PVector(sys.mouse_x, sys.mouse_y), parent.pos).normalize(), 100f
+              parent.pos, PVector.sub(new PVector(sys.mouse_x, sys.mouse_y), parent.pos).normalize()
       );
 
       if(maybe_point.isEmpty())
          return;
 
-      PVector point = maybe_point.get();
-      System.out.println("YTee");
-
-      sys.circle(point.x, point.y, 0.1f);
+      // Recivied valid point, create grapple
+      fired = true;
+      base = maybe_point.get();
+      force_manager.grapple_base = base;
+      force_manager.grapple_length = PVector.dist(parent.pos, base);
    }
 
+   private void handle_swing(){
+      // Check grapple still connected
+      Optional<PVector> maybe_point = cast_ray(
+              base, PVector.sub(parent.pos, base).normalize()
+      );
 
-   private Optional<PVector> cast_ray(PVector ray_start, PVector ray_direction, float max_distance){
+      if(!fire.pressed)
+         can_release = true;
+
+      if((maybe_point.isPresent() && PVector.dist(maybe_point.get(), base) < PVector.dist(base, parent.pos)) || (can_release && fire.pressed)){
+         // No longer fired
+         force_manager.grapple_base = null;
+         fired = false;
+      }
+   }
+
+   private Optional<PVector> cast_ray(PVector ray_start, PVector ray_direction){
       // Cast a ray until it hits a wall. Get the position of the hit on the wall
       // Init values
       PVector ray_unit_step_size = new PVector(
@@ -94,7 +137,7 @@ public class GrappleHook extends Component {
       boolean hit_wall = false;
       float curr_distance = 0f;
 
-      while(!hit_wall && curr_distance < max_distance){
+      while(!hit_wall && curr_distance < (float) MAX_DISTANCE){
          if(ray_length_1d.x < ray_length_1d.y){
             // Walk In X Direction
             current_cell.x += step.x;
