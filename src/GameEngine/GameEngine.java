@@ -43,7 +43,7 @@ public class GameEngine extends PApplet {
    public static int GRID_Y_SIZE             = WORLD_HEIGHT / (int)GRID_SIZE;
    public static int TARGET_FPS              = 60;
 
-   public boolean DISPLAY_BOUNDS          = true;
+   public boolean DISPLAY_BOUNDS          = false;
    public boolean DISPLAY_COLS            = false;
    public boolean ENABLE_PAUSE            = false;
    public boolean DISPLAY_FPS             = false;
@@ -58,6 +58,7 @@ public class GameEngine extends PApplet {
    public ImageManager sprite_manager;
    public ScoreManager score_manager;
    public AudioManager audio_manager;
+   public GameObject chase_object;
    public Config config;
    public float mouse_x;
    public float mouse_y;
@@ -125,7 +126,7 @@ public class GameEngine extends PApplet {
       audio_manager = new AudioManager(this, minim);
 
       // Init level manager
-      level_manager = new LevelManager(this, new TestLevel(this));
+      level_manager = new LevelManager(this, new MapBuilder(this, 60, 60));
    }
 
 
@@ -151,11 +152,7 @@ public class GameEngine extends PApplet {
 
    public void draw() {
       // Scale screen from metric to pixel
-      strokeWeight(1 / PIXEL_TO_METER_X);
-      scale(PIXEL_TO_METER_X, PIXEL_TO_METER_Y); // Set to metric
-
-      scale(1f, -1f); // Set 0,0 to bottom left
-      translate(0, -WORLD_HEIGHT);
+      scale_screen();
 
       // Get Mouse Posistion
       mouse_x = mouseX / PIXEL_TO_METER_X;
@@ -191,6 +188,23 @@ public class GameEngine extends PApplet {
 
       // Check if the level should advance
       level_manager.update();
+   }
+   
+   
+   private void scale_screen(){
+      // Apply default scaling
+      strokeWeight(1 / PIXEL_TO_METER_X);
+      scale(PIXEL_TO_METER_X, PIXEL_TO_METER_Y); // Set to metric
+
+      scale(1f, -1f); // Set 0,0 to bottom left
+      translate(0, -WORLD_HEIGHT);
+
+      // Chase object if set
+      if(chase_object == null)
+         return;
+
+      translate(chase_object.pos.x, chase_object.pos.y);
+      scale(2);
    }
 
 

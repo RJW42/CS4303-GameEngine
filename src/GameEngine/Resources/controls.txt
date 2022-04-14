@@ -3,9 +3,15 @@
 #   - keyboard values: SPACE, ENTER, A-Z, SHIFT, CNTRL, TAB, 1-9
 #   - all other values: KEY_NUM, e.g. KEY_19
 # Controls defined below
+# Player Controls
 UP      = W
 DOWN    = S
 LEFT    = A
 RIGHT   = D
 JUMP    = SPACE
 GRAPPLE = MOUSE_LEFT
+# Map editing controls
+MB-UP   = W
+MB-DOWN    = S
+MB-LEFT    = A
+MB-RIGHT   = D

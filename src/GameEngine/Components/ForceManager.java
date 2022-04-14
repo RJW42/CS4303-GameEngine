@@ -72,7 +72,7 @@ public class ForceManager extends Component {
    private void apply_pendulum(){
       PVector direction_to_base = PVector.sub(grapple_base, parent.pos).normalize();
       float curr_dist_to_base = PVector.dist(grapple_base, parent.pos);
-      float speed_to_base = Math.round(PVector.dot(velocity, direction_to_base));
+      float speed_to_base = PVector.dot(velocity, direction_to_base);
 
       if(speed_to_base >= 0 || curr_dist_to_base <= grapple_length) {
          parent.pos.add(PVector.mult(velocity, sys.DELTA_TIME));
@@ -81,6 +81,12 @@ public class ForceManager extends Component {
 
       velocity.sub(PVector.mult(direction_to_base, speed_to_base));
       PVector new_pos = PVector.sub(grapple_base, PVector.mult(direction_to_base, grapple_length));
+
+      if(new_pos.equals(parent.pos)){
+         parent.pos.add(PVector.mult(velocity, sys.DELTA_TIME));
+         return; // New position t0o similar to old, so use velocity to update
+      }
+
       parent.pos.x = new_pos.x;
       parent.pos.y = new_pos.y;
    }
