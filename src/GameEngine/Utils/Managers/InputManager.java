@@ -301,7 +301,7 @@ public class InputManager {
             return true;
 
          // Create key and continue
-         Key key_ref = new Key();
+         Key key_ref = tracked_keyboard_keys[key_index] == null ? new Key() : tracked_keyboard_keys[key_index];
          key_ref.pressed = false;
 
          tracked_keyboard_keys[key_index] = key_ref;

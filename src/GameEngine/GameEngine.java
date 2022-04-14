@@ -127,6 +127,7 @@ public class GameEngine extends PApplet {
 
       // Init level manager
       level_manager = new LevelManager(this, new MapBuilder(this, 60, 60));
+      //level_manager = new LevelManager(this, new TestLevel(this));
    }
 
 
