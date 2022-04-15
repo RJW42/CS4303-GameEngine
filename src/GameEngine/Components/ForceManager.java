@@ -56,10 +56,10 @@ public class ForceManager extends Component {
 
       // Update velocity and position
       velocity.add(PVector.mult(acceleration, sys.DELTA_TIME));
+      parent.pos.add(PVector.mult(velocity, sys.DELTA_TIME));
+
       if(grapple_base != null)
-         apply_pendulum();
-      else
-         parent.pos.add(PVector.mult(velocity, sys.DELTA_TIME));
+         apply_pendulum(); // Apply grapphle phyics if needed
 
       // Add frictions and gravity
       update_velocities();
@@ -75,7 +75,6 @@ public class ForceManager extends Component {
       float speed_to_base = PVector.dot(velocity, direction_to_base);
 
       if(speed_to_base >= 0 || curr_dist_to_base <= grapple_length) {
-         parent.pos.add(PVector.mult(velocity, sys.DELTA_TIME));
          return; // Moving towards base, so do not want to apply grapple physics
       }
 
@@ -83,7 +82,6 @@ public class ForceManager extends Component {
       PVector new_pos = PVector.sub(grapple_base, PVector.mult(direction_to_base, grapple_length));
 
       if(new_pos.equals(parent.pos)){
-         parent.pos.add(PVector.mult(velocity, sys.DELTA_TIME));
          return; // New position t0o similar to old, so use velocity to update
       }
 
