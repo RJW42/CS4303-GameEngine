@@ -35,14 +35,14 @@ public class GameEngine extends PApplet {
    public static final float GRID_SIZE       = 1;
    public static float PIXEL_TO_METER_X      = -1;
    public static float PIXEL_TO_METER_Y      = -1;
-   private static int SCREEN_HEIGHT          = 960;
-   private static int SCREEN_WIDTH           = 960;
+   public static int SCREEN_HEIGHT           = 960;
+   public static int SCREEN_WIDTH            = 960;
    public static int WORLD_HEIGHT            = 18;
    public static int WORLD_WIDTH             = 32;
    public static int GRID_X_SIZE             = WORLD_WIDTH / (int)GRID_SIZE;
    public static int GRID_Y_SIZE             = WORLD_HEIGHT / (int)GRID_SIZE;
    public static int TARGET_FPS              = 60;
-   public static float UI_SCALE              = 1f;
+   public static int UI_SCALE                = 5;
 
    public boolean DISPLAY_BOUNDS          = false;
    public boolean DISPLAY_COLS            = false;

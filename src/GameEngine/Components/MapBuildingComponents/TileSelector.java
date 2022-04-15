@@ -49,10 +49,10 @@ public class TileSelector extends Component {
    }
 
    public void draw() {
-      if(current_index == -1)
-         return;
-
-      generator.getWorld()[current_index] = Terrain.WALL;
-      renderer.resetMasks();
+//      if(current_index == -1)
+//         return;
+//
+//      generator.getWorld()[current_index] = Terrain.WALL;
+//      renderer.resetMasks();
    }
 }

@@ -3,7 +3,9 @@ package GameEngine.GameObjects;
 
 import GameEngine.Components.MapBuildingComponents.NoClipController;
 import GameEngine.Components.MapBuildingComponents.TileSelector;
-import GameEngine.Components.UIRenderers.UIRectRenderer;
+import GameEngine.Components.MapBuildingComponents.ToolSelector;
+import GameEngine.Components.MapBuildingComponents.Tools.ChangeTileType;
+import GameEngine.Components.MapBuildingComponents.Tools.PlaceTile;
 import GameEngine.GameEngine;
 import processing.core.PVector;
 
@@ -24,8 +26,11 @@ public class MapEditor extends GameObject {
       // Add regular components 
       this.components.add(new NoClipController(this, SPEED));
       this.components.add(new TileSelector(this));
+      this.components.add(new ToolSelector(this));
 
-      this.components.add(new UIRectRenderer(this, new PVector(0, 0, 255), 100f, 50f));
+      // Add tools
+      this.components.add(new PlaceTile(this));
+      this.components.add(new ChangeTileType(this));
    }
 
 

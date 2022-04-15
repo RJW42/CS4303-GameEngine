@@ -1,6 +1,7 @@
 package GameEngine.GameObjects;
 
 import GameEngine.Components.Component;
+import GameEngine.Components.MapBuildingComponents.Tools.Tool;
 import GameEngine.GameEngine;
 import processing.core.PVector;
 

@@ -48,7 +48,7 @@ public class MapBuilder extends Level{
       MapEditor controller = new MapEditor(sys, new PVector(map_height / 2f, map_height / 2f));
 
       sys.chase_object = controller;
-      sys.spawn(controller, 1);
+      sys.spawn(controller, 3);
       sys.spawn(new Pointer(sys), 2);
    }
 
