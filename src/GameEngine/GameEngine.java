@@ -42,6 +42,7 @@ public class GameEngine extends PApplet {
    public static int GRID_X_SIZE             = WORLD_WIDTH / (int)GRID_SIZE;
    public static int GRID_Y_SIZE             = WORLD_HEIGHT / (int)GRID_SIZE;
    public static int TARGET_FPS              = 60;
+   public static float UI_SCALE              = 1f;
 
    public boolean DISPLAY_BOUNDS          = false;
    public boolean DISPLAY_COLS            = false;
@@ -63,6 +64,8 @@ public class GameEngine extends PApplet {
    public Config config;
    public float mouse_x;
    public float mouse_y;
+   public float mouse_ui_x;
+   public float mouse_ui_y;
 
    private boolean pause;
    private boolean frame_skip;
@@ -130,7 +133,7 @@ public class GameEngine extends PApplet {
       audio_manager = new AudioManager(this, minim);
 
       // Init level manager
-      level_manager = new LevelManager(this, new MapBuilder(this, 60, 60));
+      level_manager = new LevelManager(this, new MapBuilder(this, 64, 36));
       //level_manager = new LevelManager(this, new TestLevel(this));
    }
 
@@ -150,6 +153,7 @@ public class GameEngine extends PApplet {
       // Use screen size to init constants
       PIXEL_TO_METER_X = (float)SCREEN_WIDTH / WORLD_WIDTH;
       PIXEL_TO_METER_Y = (float)SCREEN_HEIGHT / WORLD_HEIGHT;
+      //PIXEL_TO_METER_Y = PIXEL_TO_METER_X;
 
       // reset grid sizes
       clearGameObjects();
@@ -202,23 +206,41 @@ public class GameEngine extends PApplet {
       scale(1f, -1f); // Set 0,0 to bottom left
       translate(0, -WORLD_HEIGHT);
 
-      // Get Mouse Posistion
+      // Get mouse position
       mouse_x = mouseX / PIXEL_TO_METER_X;
       mouse_y = WORLD_HEIGHT - (mouseY / PIXEL_TO_METER_Y);
+
+      // Get the mouse ui position
+      mouse_ui_x = ((float) mouseX / SCREEN_WIDTH);
+      mouse_ui_y = (1 - (float) mouseY / SCREEN_HEIGHT);
 
       // Chase object if set
       if(chase_object == null)
          return;
 
+      // Get the offset based of the chase object
       PVector chase_pos = chase_object.pos;
       float translate_x = (WORLD_WIDTH  / 2f - chase_pos.x * chase_zoom);
       float translate_y = (WORLD_HEIGHT / 2f - chase_pos.y * chase_zoom);
       translate(translate_x, translate_y);
 
+      // Update mouses position to represent this translation Todo: could make this more efficient
       mouse_x = chase_pos.x - WORLD_WIDTH / (chase_zoom * 2) + ((float) mouseX / SCREEN_WIDTH) * (WORLD_WIDTH / chase_zoom);
-      mouse_y = chase_pos.y - WORLD_WIDTH / (chase_zoom * 2) + (1 - (float) mouseY / SCREEN_WIDTH) * (WORLD_WIDTH / chase_zoom);
+      mouse_y = chase_pos.y - WORLD_HEIGHT / (chase_zoom * 2) + (1 - (float) mouseY / SCREEN_HEIGHT) * (WORLD_HEIGHT / chase_zoom);
 
+      // Scale according to chase settings
       scale(chase_zoom);
+   }
+
+   public void pushUI(){
+      pushMatrix();
+      resetMatrix();
+      scale(1, -1);
+      translate(0, -SCREEN_HEIGHT);
+   }
+
+   public void popUI(){
+      popMatrix();
    }
 
 

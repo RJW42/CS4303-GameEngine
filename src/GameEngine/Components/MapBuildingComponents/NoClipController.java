@@ -14,6 +14,9 @@ public class NoClipController extends Component {
    private InputManager.Key left;
    private InputManager.Key right;
    private InputManager.Key down;
+   private InputManager.Key zoom_in;
+   private InputManager.Key zoom_out;
+
 
 
    // Constructor
@@ -29,6 +32,8 @@ public class NoClipController extends Component {
       this.down   = sys.input_manager.getKey("mb-down");
       this.left   = sys.input_manager.getKey("mb-left");
       this.right  = sys.input_manager.getKey("mb-right");
+      this.zoom_in   = sys.input_manager.getKey("mb-zoom-in");
+      this.zoom_out  = sys.input_manager.getKey("mb-zoom-out");
    }
 
    public void update() {
@@ -41,6 +46,11 @@ public class NoClipController extends Component {
          parent.pos.x += speed * sys.DELTA_TIME;
       else if(this.left.pressed)
          parent.pos.x -= speed * sys.DELTA_TIME;
+
+      if(this.zoom_in.pressed)
+         sys.chase_zoom += 0.1f;
+      else if(this.zoom_out.pressed)
+         sys.chase_zoom -= sys.chase_zoom > 1 ? 0.1f : 0;
    }
 
    public void draw() {

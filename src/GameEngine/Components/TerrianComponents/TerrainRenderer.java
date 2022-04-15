@@ -47,14 +47,18 @@ public class TerrainRenderer extends Component {
 
 
       // Set the world masks
-      for(int x = 0; x < Terrain.WIDTH; x++)
-         for(int y = 0; y < Terrain.HEIGHT; y++)
-            world_masks[generator.getIndex(x, y)] = getMasks(x, y);
+      resetMasks();
    }
 
    @Override
    public void update() {
 
+   }
+
+   public void resetMasks(){
+      for(int x = 0; x < Terrain.WIDTH; x++)
+         for(int y = 0; y < Terrain.HEIGHT; y++)
+            world_masks[generator.getIndex(x, y)] = getMasks(x, y);
    }
 
    public void resetColours(){

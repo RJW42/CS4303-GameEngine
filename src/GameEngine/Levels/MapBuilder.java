@@ -1,6 +1,5 @@
 package GameEngine.Levels;
 
-import GameEngine.Components.CollisionComponents.BaseCollisionComponent;
 import GameEngine.Components.TerrianComponents.*;
 import GameEngine.GameObjects.*;
 import GameEngine.GameEngine;
@@ -46,7 +45,7 @@ public class MapBuilder extends Level{
       sys.spawn(terrain, 0);
 
       // Spawn the map editor object and set the view mode to chase
-      MapBuilderController controller = new MapBuilderController(sys, new PVector(map_height / 2f, map_height / 2f));
+      MapEditor controller = new MapEditor(sys, new PVector(map_height / 2f, map_height / 2f));
 
       sys.chase_object = controller;
       sys.spawn(controller, 1);
