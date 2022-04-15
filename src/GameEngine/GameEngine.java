@@ -254,6 +254,14 @@ public class GameEngine extends PApplet {
       popMatrix();
    }
 
+   public void uiText(String str, float x, float y){
+      pushMatrix();
+      translate(0, SCREEN_HEIGHT);
+      scale(1, -1);
+      super.text(str, x, GameEngine.SCREEN_HEIGHT - y);
+      popMatrix();
+   }
+
 
    @Override
    public void image(PImage img, float x, float y){

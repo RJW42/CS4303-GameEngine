@@ -41,7 +41,8 @@ public class ToolSelector extends Component {
    }
 
    public void update() {
-
+      // Check if the mouse is over any of the tools
+      tools.forEach(Tool::check_hover);
    }
 
    public void draw() {
@@ -51,6 +52,7 @@ public class ToolSelector extends Component {
       sys.rect(x_pox, y_pos, width, height);
 
       // Draw each tool
+      tools.forEach(Tool::draw_border);
       tools.forEach(Tool::draw_icon);
 
       sys.popUI();
@@ -68,11 +70,25 @@ public class ToolSelector extends Component {
       for(int i = 0; i < tools.size(); i++){
          Tool tool = tools.get(i);
 
-         tool.active = false;
+         tool.selector = this;
          tool.height = tool_icon_size - TOOL_BORDER_SIZE * scale * 2;
          tool.width = tool_icon_size - TOOL_BORDER_SIZE * scale * 2;
          tool.x = x_pox + TOOL_BORDER_SIZE * scale + i * tool_icon_size;
          tool.y = y_pos + TOOL_BORDER_SIZE * scale;
+         tool.border_width = TOOL_BORDER_SIZE * scale;
       }
+   }
+
+   public void set_active(Tool tool){
+      // Todo: change this, to be better
+      if(current_tool != null){
+         this.current_tool.cancel();
+      }
+
+      this.current_tool = tool;
+   }
+
+   public void set_unactive(){
+      this.current_tool = null;
    }
 }
