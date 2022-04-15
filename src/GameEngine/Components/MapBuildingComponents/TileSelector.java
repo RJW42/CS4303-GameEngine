@@ -16,6 +16,7 @@ public class TileSelector extends Component {
 
    private TerrainGenerator generator;
    private TerrainRenderer renderer;
+   private TileSelector selector;
 
 
    // Constructor
@@ -49,10 +50,7 @@ public class TileSelector extends Component {
    }
 
    public void draw() {
-//      if(current_index == -1)
-//         return;
-//
-//      generator.getWorld()[current_index] = Terrain.WALL;
-//      renderer.resetMasks();
+      sys.fill(255, 100f);
+      sys.rect(current_x ,current_y, Terrain.CELL_SIZE, Terrain.CELL_SIZE);
    }
 }

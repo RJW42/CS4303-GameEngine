@@ -47,6 +47,9 @@ public abstract class Tool extends Component {
       sys.fill(0);
       sys.textSize(50);
       sys.uiText(text, x + width / 2, y + height / 2);
+
+      // Todo: use this https://stackoverflow.com/questions/64146977/how-do-you-find-out-the-height-and-width-of-a-pfont-string-in-processing-or-java
+      //       to make the text centered
    };
 
    public void draw_border() {

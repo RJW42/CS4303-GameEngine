@@ -49,7 +49,6 @@ public class MapBuilder extends Level{
 
       sys.chase_object = controller;
       sys.spawn(controller, 3);
-      sys.spawn(new Pointer(sys), 2);
    }
 
    public boolean updateAndCanAdvance() {
