@@ -59,6 +59,7 @@ public class GameEngine extends PApplet {
    public ScoreManager score_manager;
    public AudioManager audio_manager;
    public GameObject chase_object;
+   public float chase_zoom;
    public Config config;
    public float mouse_x;
    public float mouse_y;
@@ -107,6 +108,9 @@ public class GameEngine extends PApplet {
       // Use screen size to init constants
       PIXEL_TO_METER_X = (float)SCREEN_WIDTH / WORLD_WIDTH;
       PIXEL_TO_METER_Y = (float)SCREEN_HEIGHT / WORLD_HEIGHT;
+
+      // Set default zoom
+      chase_zoom = 3f;
    }
 
 
@@ -140,6 +144,8 @@ public class GameEngine extends PApplet {
       // Init World Sizes
       WORLD_HEIGHT = world_height;
       WORLD_WIDTH = world_width;
+      GRID_X_SIZE = world_width;
+      GRID_Y_SIZE = world_height;
 
       // Use screen size to init constants
       PIXEL_TO_METER_X = (float)SCREEN_WIDTH / WORLD_WIDTH;
@@ -154,10 +160,6 @@ public class GameEngine extends PApplet {
    public void draw() {
       // Scale screen from metric to pixel
       scale_screen();
-
-      // Get Mouse Posistion
-      mouse_x = mouseX / PIXEL_TO_METER_X;
-      mouse_y = WORLD_HEIGHT - (mouseY / PIXEL_TO_METER_Y);
 
       // Handle any pause mechanics
       if(ENABLE_PAUSE)
@@ -200,12 +202,23 @@ public class GameEngine extends PApplet {
       scale(1f, -1f); // Set 0,0 to bottom left
       translate(0, -WORLD_HEIGHT);
 
+      // Get Mouse Posistion
+      mouse_x = mouseX / PIXEL_TO_METER_X;
+      mouse_y = WORLD_HEIGHT - (mouseY / PIXEL_TO_METER_Y);
+
       // Chase object if set
       if(chase_object == null)
          return;
 
-      translate(chase_object.pos.x, chase_object.pos.y);
-      scale(2);
+      PVector chase_pos = chase_object.pos;
+      float translate_x = (WORLD_WIDTH  / 2f - chase_pos.x * chase_zoom);
+      float translate_y = (WORLD_HEIGHT / 2f - chase_pos.y * chase_zoom);
+      translate(translate_x, translate_y);
+
+      mouse_x = chase_pos.x - WORLD_WIDTH / (chase_zoom * 2) + ((float) mouseX / SCREEN_WIDTH) * (WORLD_WIDTH / chase_zoom);
+      mouse_y = chase_pos.y - WORLD_WIDTH / (chase_zoom * 2) + (1 - (float) mouseY / SCREEN_WIDTH) * (WORLD_WIDTH / chase_zoom);
+
+      scale(chase_zoom);
    }
 
 

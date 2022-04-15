@@ -2,10 +2,7 @@ package GameEngine.Levels;
 
 import GameEngine.Components.CollisionComponents.BaseCollisionComponent;
 import GameEngine.Components.TerrianComponents.*;
-import GameEngine.GameObjects.GameOver;
-import GameEngine.GameObjects.MapBuilderController;
-import GameEngine.GameObjects.Player;
-import GameEngine.GameObjects.Terrain;
+import GameEngine.GameObjects.*;
 import GameEngine.GameEngine;
 import processing.core.PVector;
 
@@ -53,6 +50,7 @@ public class MapBuilder extends Level{
 
       sys.chase_object = controller;
       sys.spawn(controller, 1);
+      sys.spawn(new Pointer(sys), 2);
    }
 
    public boolean updateAndCanAdvance() {

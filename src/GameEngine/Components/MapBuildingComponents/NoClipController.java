@@ -33,14 +33,14 @@ public class NoClipController extends Component {
 
    public void update() {
       if(this.up.pressed)
-         parent.pos.y -= speed * sys.DELTA_TIME;
-      else if(this.down.pressed)
          parent.pos.y += speed * sys.DELTA_TIME;
+      else if(this.down.pressed)
+         parent.pos.y -= speed * sys.DELTA_TIME;
 
       if(this.right.pressed)
-         parent.pos.x -= speed * sys.DELTA_TIME;
-      else if(this.left.pressed)
          parent.pos.x += speed * sys.DELTA_TIME;
+      else if(this.left.pressed)
+         parent.pos.x -= speed * sys.DELTA_TIME;
    }
 
    public void draw() {
