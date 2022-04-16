@@ -2,33 +2,42 @@ package GameEngine.GameObjects;
 
 
 import GameEngine.Components.CollisionComponents.BaseCollisionComponent;
+import GameEngine.Components.CollisionComponents.CircleCollisionComponent;
 import GameEngine.Components.CollisionComponents.Collideable;
 import GameEngine.Components.ForceManager;
+import GameEngine.Components.Renderers.CircleRenderer;
 import GameEngine.GameEngine;
+import processing.core.PVector;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class Bullet extends GameObject implements Collideable {
-   // Todo: implement
-
    // Attributes
    public boolean is_dead = false;
+   public GameObject parent;
+   public float momentum;
 
    private ArrayList<BaseCollisionComponent> collision_components;
 
 
    // Constructor
-   public Bullet(GameEngine sys) {
+   public Bullet(GameEngine sys, GameObject parent, PVector start_vel, PVector spawn_location, float radius, float mass) {
       super(sys);
+
+      // Init Attributes
+      this.parent = parent;
+      this.pos = spawn_location;
+      this.momentum = mass * start_vel.mag();
 
       // Add collision components 
       this.collision_components = new ArrayList<>();
-      // Todo: complete this
+      this.collision_components.add(new CircleCollisionComponent(this, this::onCollision, new PVector(-radius, radius), radius));
 
       // Add regular components 
-      // Todo: finish this this.components.add(new ForceManager(this, ));
+      this.components.add(new ForceManager(this, start_vel, new PVector(0, 0), 0));
+      this.components.add(new CircleRenderer(this, new PVector(255, 0, 0), radius));
 
 
       // Add collision components to regular
@@ -40,6 +49,12 @@ public class Bullet extends GameObject implements Collideable {
    @Override
    public boolean isDestroyed() {
       return is_dead;
+   }
+
+   public boolean onCollision(BaseCollisionComponent other){
+      // Todo: implement this
+      System.out.println(" - Bullet Collision");
+      return true;
    }
 
    @Override
