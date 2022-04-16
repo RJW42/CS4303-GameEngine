@@ -22,7 +22,7 @@ public class GrappleHook extends Component {
    private TerrainGenerator generator;
    private int[] world;
 
-   private boolean fired;
+   public boolean fired;
    private PVector base;
    private boolean can_release;
 

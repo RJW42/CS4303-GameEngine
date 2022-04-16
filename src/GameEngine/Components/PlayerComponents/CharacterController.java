@@ -2,20 +2,22 @@ package GameEngine.Components.PlayerComponents;
 
 import GameEngine.Components.Component;
 import GameEngine.Components.ForceManager;
-import GameEngine.Components.Renderers.ImageRenderer;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.Utils.Managers.InputManager;
 import processing.core.PVector;
-
-import java.util.List;
 
 public class CharacterController extends Component {
    // Attributes
    public float speed;
    public float max_speed;
+   public float reel_distance = 3;
+   public float reel_speed    = 1.5f;
 
    private ForceManager force_manager;
-   private InputManager.Key up;
+   private GrappleHook grapple_hook;
+   private InputManager.Key reel_in;
+   private InputManager.Key reel_out;
+   private InputManager.Key jump;
    private InputManager.Key left;
    private InputManager.Key right;
 
@@ -30,7 +32,9 @@ public class CharacterController extends Component {
       // Init attributes
       this.speed  = speed;
       this.max_speed = max_speed;
-      this.up     = sys.input_manager.getKey("jump");
+      this.reel_in   = sys.input_manager.getKey("up");
+      this.reel_out   = sys.input_manager.getKey("down");
+      this.jump   = sys.input_manager.getKey("jump");
       this.left   = sys.input_manager.getKey("left");
       this.right  = sys.input_manager.getKey("right");
    }
@@ -39,6 +43,7 @@ public class CharacterController extends Component {
    @Override
    public void start() {
       this.force_manager = parent.getComponent(ForceManager.class);
+      this.grapple_hook = parent.getComponent(GrappleHook.class);
    }
 
    public void update() {
@@ -47,10 +52,21 @@ public class CharacterController extends Component {
    }
 
    private void update_velocity(){
-      if(up.pressed && can_jump){
+      // Jumping
+      if(jump.pressed && can_jump){
          force_manager.velocity.y = 8;
       }
 
+      // Grapple hook
+      if(grapple_hook.fired && reel_in.pressed && force_manager.grapple_length > 1f){
+         // Todo: make this smoother
+         force_manager.grapple_length -= reel_distance * sys.DELTA_TIME;
+         force_manager.applyForce(PVector.sub(force_manager.grapple_base, parent.pos).mult(reel_speed));
+      }else if(grapple_hook.fired && reel_out.pressed) {
+         force_manager.grapple_length += reel_distance * sys.DELTA_TIME;
+      }
+
+      // Left right movement
       if(left.pressed){
          if(force_manager.velocity.x > 0)
             force_manager.velocity.x = 0;
@@ -76,7 +92,7 @@ public class CharacterController extends Component {
 
       can_jump = false;
 
-      if(!up.pressed){
+      if(!jump.pressed){
          can_double_jump = true;
          return;
       }
