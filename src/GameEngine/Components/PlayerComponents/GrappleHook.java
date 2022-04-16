@@ -167,5 +167,6 @@ public class GrappleHook extends Component {
       // Hit wall determine if this is before or after the target
       PVector hit_point = PVector.add(ray_start, ray_direction.mult(curr_distance));
       return Optional.of(hit_point);
+      // Todo: This isn't exactly perfect. if the wall blocking the ray is the one the grapple is attached to
    }
 }
