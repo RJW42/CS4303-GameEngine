@@ -8,6 +8,8 @@ import java.io.*;
 public class TerrainLoader {
    private TerrainLoader(){} // Util class for writing and loading maps from file
 
+   private static final String SAVE_LOC      = "./GameEngine/Resources/Levels/";
+
    // Core Properties
    private static final String WORLD_WIDTH   = "world-width";
    private static final String WORLD_HEIGHT  = "world-height";
@@ -74,7 +76,8 @@ public class TerrainLoader {
       // Add complex elements
       core.put(WORLD_ARR, world_to_JSON(generator));
 
-      System.out.println(core);
+      // Write to disk
+      write_file(core, file_name);
    }
 
 
@@ -113,7 +116,7 @@ public class TerrainLoader {
       // Load file contents into string builder
       StringBuilder res = new StringBuilder();
 
-      try(BufferedReader br = new BufferedReader(new FileReader(file_name))){
+      try(BufferedReader br = new BufferedReader(new FileReader(SAVE_LOC + file_name))){
          String line;
          while((line = br.readLine()) != null)
             res.append(line);
@@ -128,7 +131,7 @@ public class TerrainLoader {
 
    private static boolean write_file(JSONObject content, String file_name){
       // Write the json object to the given file
-      try(BufferedWriter bw = new BufferedWriter(new FileWriter(file_name))){
+      try(BufferedWriter bw = new BufferedWriter(new FileWriter(SAVE_LOC + file_name))){
          bw.write(content.toString());
       }catch (IOException e){
          System.err.println(" - Failed to write terrain file: " + e.getMessage());

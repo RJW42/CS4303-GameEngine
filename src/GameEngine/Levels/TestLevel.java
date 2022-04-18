@@ -1,6 +1,7 @@
 package GameEngine.Levels;
 
 import GameEngine.Components.TerrianComponents.BasicTerrainGenerator;
+import GameEngine.Components.TerrianComponents.LoadedTerrainGenerator;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
 import GameEngine.Components.TerrianComponents.TerrainLoader;
 import GameEngine.GameObjects.Player;
@@ -34,13 +35,17 @@ public class TestLevel extends Level{
       seed = new Random().nextInt();
       System.out.println(seed);
 
-      Terrain terrain = new Terrain(sys, seed, BasicTerrainGenerator::new);
+      //Terrain terrain = new Terrain(sys, seed, BasicTerrainGenerator::new);
+      Terrain terrain = new Terrain(sys, seed, LoadedTerrainGenerator::new);
 
-      TerrainGenerator generator = terrain.getComponent(TerrainGenerator.class);
-      generator.setConfig(Terrain.WIDTH, Terrain.HEIGHT); //, Terrain.WALK_ITERATIONS, Terrain.WALK_STEPS);
-      generator.createWorld();
+      //TerrainGenerator generator = terrain.getComponent(TerrainGenerator.class);
+      //generator.setConfig(Terrain.WIDTH, Terrain.HEIGHT); //, Terrain.WALK_ITERATIONS, Terrain.WALK_STEPS);
+      //generator.createWorld();
 
-      TerrainLoader.saveTerrain(generator, "test-terrain.json");
+      LoadedTerrainGenerator generator = terrain.getComponent(LoadedTerrainGenerator.class);
+      generator.loadTerrain("test-terrain.json");
+
+      //TerrainLoader.saveTerrain(generator, "test-terrain.json");
 
       sys.terrain = terrain;
       sys.spawn(terrain, 0);
