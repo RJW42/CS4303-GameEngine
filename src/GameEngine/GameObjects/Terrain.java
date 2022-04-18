@@ -30,7 +30,7 @@ public class Terrain extends GameObject implements Collideable {
       this(sys, new Random().nextInt(), new TerrainGenerator.TerrainSupplier() {
          @Override
          public TerrainGenerator get(GameObject parent, int seed) {
-            return new AdvancedTerrainGenerator(parent, seed);
+            return new BasicTerrainGenerator(parent, seed);
          }
       });
    }

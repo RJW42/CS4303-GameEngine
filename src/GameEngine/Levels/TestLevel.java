@@ -1,11 +1,7 @@
 package GameEngine.Levels;
 
-import GameEngine.Components.CollisionComponents.BaseCollisionComponent;
-import GameEngine.Components.TerrianComponents.AdvancedTerrainGenerator;
-import GameEngine.Components.TerrianComponents.BossLevelTerrainGenerator;
-import GameEngine.Components.TerrianComponents.PerlinWormTerrainGenerator;
+import GameEngine.Components.TerrianComponents.BasicTerrainGenerator;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
-import GameEngine.GameObjects.GameOver;
 import GameEngine.GameObjects.Player;
 import GameEngine.GameObjects.Terrain;
 import GameEngine.GameEngine;
@@ -37,7 +33,7 @@ public class TestLevel extends Level{
       seed = new Random().nextInt();
       System.out.println(seed);
 
-      Terrain terrain = new Terrain(sys, seed, BossLevelTerrainGenerator::new);
+      Terrain terrain = new Terrain(sys, seed, BasicTerrainGenerator::new);
 
       TerrainGenerator generator = terrain.getComponent(TerrainGenerator.class);
       generator.setConfig(Terrain.WIDTH, Terrain.HEIGHT); //, Terrain.WALK_ITERATIONS, Terrain.WALK_STEPS);

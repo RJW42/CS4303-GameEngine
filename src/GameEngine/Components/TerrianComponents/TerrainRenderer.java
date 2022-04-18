@@ -19,7 +19,12 @@ public class TerrainRenderer extends Component {
    private static final int TOP_RIGHT_MASK   = 32;
    private static final int BOTTOM_LEFT_MASK = 64;
    private static final int BOTTOM_RIGHT_MASK= 128;
+
    public static  final float BORDER_WIDTH   = 0.15f;
+
+   private static int r_mask = 255;
+   private static int g_mask = 65280;
+   private static int b_mask = 16711680;
 
    private PVector air_colour       = new PVector(146, 153, 156);
    private PVector border_colour    = new PVector(151, 186, 201);
@@ -64,9 +69,9 @@ public class TerrainRenderer extends Component {
    public void resetColours(){
       int h = new Random().nextInt(360);
       if(random_colour) {
-         air_colour = AdvancedTerrainGenerator.hsl_colour(h, 1f, 0.75f);
-         border_colour = AdvancedTerrainGenerator.hsl_colour(h, 1f, 0.6f);
-         wall_colour = AdvancedTerrainGenerator.hsl_colour(h, 1f, 0.1f);
+         air_colour = hsl_colour(h, 1f, 0.75f);
+         border_colour = hsl_colour(h, 1f, 0.6f);
+         wall_colour = hsl_colour(h, 1f, 0.1f);
       }
    }
 
@@ -148,7 +153,7 @@ public class TerrainRenderer extends Component {
 
 
    private void drawDebug(float x, float y, int colour){
-      PVector c = AdvancedTerrainGenerator.int_to_rgb(colour);
+      PVector c = int_to_rgb(colour);
       sys.fill(c.x, c.y, c.z);
       sys.noStroke();
       sys.square((x / Terrain.WIDTH) * GameEngine.WORLD_WIDTH, (y / Terrain.HEIGHT) * GameEngine.WORLD_HEIGHT, (float)GameEngine.WORLD_WIDTH / Terrain.WIDTH);
@@ -184,5 +189,74 @@ public class TerrainRenderer extends Component {
 
    private boolean isAir(int x, int y){
       return (generator.validWalkCord(x, y) && world[generator.getIndex(x, y)] == Terrain.AIR);
+   }
+
+
+   private static int random_colour(){
+      // Init attributes
+      float r, g, b;
+      int h = new Random().nextInt(360);
+      float s = 1f;
+      float l = 0.75f;
+
+      float c = (1-Math.abs(2*l - 1))*s;
+      float x = c*(1-Math.abs((h/60f)%2 - 1));
+      float m = l-c/2f;
+
+      if(h <= 60){
+         r = c; g = x; b = 0;
+      }else if(h <= 120){
+         r  = x; g = c; b = 0;
+      }else if(h <= 180){
+         r = 0; g = x; b = x;
+      }else if(h <= 240){
+         r = 0; g = x; b = c;
+      }else if(h >= 300){
+         r = x; g = 0; b = c;
+      }else{
+         r =  c; g = 0; b = x;
+      }
+      r = (r+m)*255;
+      g = (g+m)*255;
+      b = (b+m)*255;
+
+      // return colour;
+      return rgb_to_int((int)r, (int)g, (int)b);
+   }
+
+
+   public static PVector hsl_colour(int h, float s, float l){
+      float r,g,b;
+      float c = (1-Math.abs(2*l - 1))*s;
+      float x = c*(1-Math.abs((h/60f)%2 - 1));
+      float m = l-c/2f;
+
+      if(h <= 60){
+         r = c; g = x; b = 0;
+      }else if(h <= 120){
+         r  = x; g = c; b = 0;
+      }else if(h <= 180){
+         r = 0; g = x; b = x;
+      }else if(h <= 240){
+         r = 0; g = x; b = c;
+      }else if(h >= 300){
+         r = x; g = 0; b = c;
+      }else{
+         r =  c; g = 0; b = x;
+      }
+      r = (r+m)*255;
+      g = (g+m)*255;
+      b = (b+m)*255;
+
+      return new PVector(r, g, b);
+   }
+
+
+   public static int rgb_to_int(int r, int g, int b){
+      return (r & r_mask) | ((g << 8 & g_mask) | ((b << 16) & b_mask));
+   }
+
+   public static PVector int_to_rgb(int i){
+      return new PVector(i & r_mask, (i & g_mask) >> 8, (i & b_mask) >> 16);
    }
 }

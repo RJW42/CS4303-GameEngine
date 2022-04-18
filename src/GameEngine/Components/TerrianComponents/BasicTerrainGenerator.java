@@ -1,19 +1,18 @@
 package GameEngine.Components.TerrianComponents;
 
 
-import GameEngine.Components.Component;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.GameObjects.Terrain;
 
 import java.util.Arrays;
 
 
-public class BossLevelTerrainGenerator extends TerrainGenerator{
+public class BasicTerrainGenerator extends TerrainGenerator{
    // Attributes
    private int[] world;
 
    // Constructor
-   public BossLevelTerrainGenerator(GameObject parent, int seed) {
+   public BasicTerrainGenerator(GameObject parent, int seed) {
       super(parent, seed);
    }
 
