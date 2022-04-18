@@ -2,6 +2,7 @@ package GameEngine.Levels;
 
 import GameEngine.Components.TerrianComponents.BasicTerrainGenerator;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
+import GameEngine.Components.TerrianComponents.TerrainLoader;
 import GameEngine.GameObjects.Player;
 import GameEngine.GameObjects.Terrain;
 import GameEngine.GameEngine;
@@ -38,6 +39,8 @@ public class TestLevel extends Level{
       TerrainGenerator generator = terrain.getComponent(TerrainGenerator.class);
       generator.setConfig(Terrain.WIDTH, Terrain.HEIGHT); //, Terrain.WALK_ITERATIONS, Terrain.WALK_STEPS);
       generator.createWorld();
+
+      TerrainLoader.saveTerrain(generator, "test-terrain.json");
 
       sys.terrain = terrain;
       sys.spawn(terrain, 0);

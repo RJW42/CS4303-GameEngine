@@ -11,10 +11,13 @@ public abstract class TerrainGenerator extends Component {
    // Attributes
    protected int width, height, seed;
 
+   public PVector player_spawn_loc; // Todo: set this
+
    // Constructor
    public TerrainGenerator(GameObject parent, int seed){
       super(parent);
       this.seed = seed;
+      this.player_spawn_loc = new PVector(0,0);
    }
 
    // Methods
@@ -48,6 +51,4 @@ public abstract class TerrainGenerator extends Component {
    public interface TerrainSupplier {
       public TerrainGenerator get(GameObject parent, int seed);
    }
-
-
 }
