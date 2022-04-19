@@ -28,6 +28,8 @@ public class InputManager {
    public Event latest_event;
    public String current_string;
 
+   public Key mouse_click;
+
    private Key[] tracked_keyboard_keys;
    private Key[] tracker_mouse_keys;
    private InputComplete current_callback;
@@ -56,6 +58,9 @@ public class InputManager {
          System.out.println(" - Read in the defaults saving");
          reset_to_defaults();
       }
+
+      // Init attributes
+      this.mouse_click = (tracker_mouse_keys[PConstants.LEFT] == null) ? (tracker_mouse_keys[PConstants.LEFT] = new Key()) : tracker_mouse_keys[PConstants.LEFT];
    }
 
    // Methods
@@ -151,7 +156,7 @@ public class InputManager {
    /* ***** Processing Functions ***** */
    public void keyPressed(KeyEvent event) {
       int i = event.getKeyCode() % KEYS_SIZE;
-      String s = getEventString(event);
+      // String s = getEventString(event);
 
       // Record this key press
       keys_pressed[i] = true;

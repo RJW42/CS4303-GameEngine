@@ -1,6 +1,7 @@
 package GameEngine.Levels;
 
 import GameEngine.GameEngine;
+import GameEngine.GameObjects.MainMenu.MenuSelector;
 
 
 public class MainMenu extends Level{
@@ -26,6 +27,7 @@ public class MainMenu extends Level{
       //       create_level
       //       controls
       //       maybe settings like sound
+      sys.spawn(new MenuSelector(sys), 1);
    }
 
    public boolean updateAndCanAdvance() {
