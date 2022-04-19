@@ -18,10 +18,10 @@ public class UIButton extends Component {
    public PVector hover_border_colour;
    public boolean rect_fill;
    public PVector pos;
+   public float width;
+   public float height;
 
    private String text;
-   private float width;
-   private float height;
    private float padding;
    private float border_width;
    private float text_height;
@@ -35,7 +35,7 @@ public class UIButton extends Component {
 
 
    // Constructor
-   public UIButton(GameObject parent, CallBack callback, String text, PVector pos, PVector text_colour, PVector rect_colour, PVector hover_border_colour, PVector hover_text_colour, PVector hover_rect_colour, PVector border_colour, float padding, float border_width, float width, float height, boolean rect_fill) {
+   public UIButton(GameObject parent, CallBack callback, String text, PVector pos, PVector text_colour, PVector rect_colour, PVector border_colour, PVector hover_text_colour, PVector hover_rect_colour, PVector hover_border_colour, float padding, float border_width, float width, float height, boolean rect_fill) {
       super(parent);
 
       // Init attributes
@@ -97,8 +97,8 @@ public class UIButton extends Component {
 
       sys.rectMode(PConstants.CENTER);
 
-      if(mouse_over) sys.stroke(border_colour.x, border_colour.y, border_colour.z);
-      else sys.stroke(hover_border_colour.x, hover_border_colour.y, hover_border_colour.z);
+      if(mouse_over) sys.stroke(hover_border_colour.x, hover_border_colour.y, hover_border_colour.z);
+      else sys.stroke(border_colour.x, border_colour.y, border_colour.z);
 
       sys.strokeWeight(border_width);
       sys.rect(pos.x, pos.y, width, height);
@@ -106,8 +106,8 @@ public class UIButton extends Component {
       // Draw text
       sys.textSize(text_size);
 
-      if(mouse_over) sys.fill(text_colour.x, text_colour.y, text_colour.z);
-      else sys.fill(hover_text_colour.x, hover_text_colour.y, hover_text_colour.z);
+      if(mouse_over) sys.fill(hover_text_colour.x, hover_text_colour.y, hover_text_colour.z);
+      else sys.fill(text_colour.x, text_colour.y, text_colour.z);
 
       sys.textAlign(PConstants.CENTER);
       sys.uiText(text, pos.x, pos.y - text_height / 2);

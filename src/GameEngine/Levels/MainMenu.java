@@ -2,11 +2,11 @@ package GameEngine.Levels;
 
 import GameEngine.GameEngine;
 import GameEngine.GameObjects.MainMenu.MenuSelector;
+import GameEngine.Levels.Level;
 
 
-public class MainMenu extends Level{
+public class MainMenu extends Level {
    // Attributes
-   boolean stop = false;
 
    // Constructor
    public MainMenu(GameEngine sys) {
