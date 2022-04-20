@@ -1,6 +1,7 @@
-package GameEngine.Components;
+package GameEngine.Components.UIComponents;
 
 
+import GameEngine.Components.Component;
 import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.Utils.Managers.InputManager;
@@ -58,6 +59,7 @@ public class UIButton extends Component {
 
       // set text size if needed
       apply_scaling();
+      reset_text_size();
    }
 
 
@@ -120,7 +122,9 @@ public class UIButton extends Component {
       width *= GameEngine.UI_SCALE;
       height *= GameEngine.UI_SCALE;
       padding *= GameEngine.UI_SCALE;
+   }
 
+   public void reset_text_size(){
       // Get max height of text
       text_size = 2;
 

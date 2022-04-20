@@ -8,7 +8,7 @@ import java.io.*;
 public class TerrainLoader {
    private TerrainLoader(){} // Util class for writing and loading maps from file
 
-   private static final String SAVE_LOC      = "./GameEngine/Resources/Levels/";
+   public static final String SAVE_LOC      = "./GameEngine/Resources/Levels/";
 
    // Core Properties
    private static final String WORLD_WIDTH   = "world-width";

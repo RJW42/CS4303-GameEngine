@@ -1,7 +1,8 @@
 package GameEngine.GameObjects.MainMenu;
 
 
-import GameEngine.Components.UIButton;
+import GameEngine.Components.UIComponents.LevelList;
+import GameEngine.Components.UIComponents.UIButton;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.GameEngine;
 import processing.core.PVector;
@@ -18,12 +19,22 @@ public class LevelSelector extends GameObject {
    public LevelSelector(GameEngine sys) {
       super(sys);
 
-      // Add regular components 
-      this.components.add(new UIButton(this, this::back_clicked, "Back",
-              new PVector(GameEngine.SCREEN_WIDTH / 2, GameEngine.SCREEN_HEIGHT /2),
+      // Add regular components
+      UIButton back_button = new UIButton(this, this::back_clicked, "Back",
+              new PVector(GameEngine.SCREEN_WIDTH / 2, GameEngine.SCREEN_HEIGHT / 2 + 400),
               TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, TEXT_HOVER_COLOUR, BUTTON_HOVER_COLOUR, BORDER_HOVER_COLOUR,
               PADDING, BORDER_WIDTH, WIDTH, HEIGHT, true
-      ));
+      );
+
+      LevelList levels_list = new LevelList(this,
+              new PVector(GameEngine.SCREEN_WIDTH / 2, GameEngine.SCREEN_HEIGHT / 2 + 200),
+              TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, TEXT_HOVER_COLOUR, BUTTON_HOVER_COLOUR, BORDER_HOVER_COLOUR,
+              PADDING, BORDER_WIDTH, WIDTH, HEIGHT
+      );
+
+      // Todo: set height properly
+      this.components.add(back_button);
+      this.components.add(levels_list);
    }
 
 

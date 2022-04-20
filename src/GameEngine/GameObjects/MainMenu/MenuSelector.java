@@ -1,7 +1,7 @@
 package GameEngine.GameObjects.MainMenu;
 
 
-import GameEngine.Components.UIButton;
+import GameEngine.Components.UIComponents.UIButton;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.GameEngine;
 import processing.core.PVector;
