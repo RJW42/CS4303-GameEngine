@@ -1,12 +1,11 @@
-package GameEngine.Components.MapBuildingComponents;
+package GameEngine.Components.MapEditorComponents;
 
 
 import GameEngine.Components.Component;
-import GameEngine.Components.MapBuildingComponents.Tools.Tool;
+import GameEngine.Components.MapEditorComponents.Tools.Tool;
 import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 

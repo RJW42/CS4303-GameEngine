@@ -22,6 +22,7 @@ public class UIButton extends Component {
    public float width;
    public float height;
    public String text;
+   public Icon icon_renderer;
 
    private float padding;
    private float border_width;
@@ -37,6 +38,15 @@ public class UIButton extends Component {
 
    // Constructor
    public UIButton(GameObject parent, CallBack callback, String text, PVector pos, PVector text_colour, PVector rect_colour, PVector border_colour, PVector hover_text_colour, PVector hover_rect_colour, PVector hover_border_colour, float padding, float border_width, float width, float height, boolean rect_fill) {
+      this(parent, callback, text, null, pos, text_colour, rect_colour, border_colour, hover_text_colour, hover_rect_colour, hover_border_colour, padding, border_width, width, height, rect_fill);
+   }
+
+
+   public UIButton(GameObject parent, CallBack callback, Icon draw, PVector pos, PVector text_colour, PVector rect_colour, PVector border_colour, PVector hover_text_colour, PVector hover_rect_colour, PVector hover_border_colour, float padding, float border_width, float width, float height, boolean rect_fill) {
+      this(parent, callback, null, draw, pos, text_colour, rect_colour, border_colour, hover_text_colour, hover_rect_colour, hover_border_colour, padding, border_width, width, height, rect_fill);
+   }
+
+   public UIButton(GameObject parent, CallBack callback, String text, Icon draw, PVector pos, PVector text_colour, PVector rect_colour, PVector border_colour, PVector hover_text_colour, PVector hover_rect_colour, PVector hover_border_colour, float padding, float border_width, float width, float height, boolean rect_fill) {
       super(parent);
 
       // Init attributes
@@ -44,6 +54,7 @@ public class UIButton extends Component {
       this.width = width;
       this.height = height;
       this.text = text;
+      this.icon_renderer = draw;
       this.padding = padding;
       this.border_width = border_width;
       this.text_colour = text_colour;
@@ -113,7 +124,8 @@ public class UIButton extends Component {
       else sys.fill(text_colour.x, text_colour.y, text_colour.z);
 
       sys.textAlign(PConstants.CENTER);
-      sys.uiText(text, pos.x, pos.y - text_height / 2);
+      if(icon_renderer != null) icon_renderer.draw(this);
+      else sys.uiText(text, pos.x, pos.y - text_height / 2);
 
       sys.rectMode(PConstants.CORNER);
       sys.popUI();
@@ -145,5 +157,9 @@ public class UIButton extends Component {
 
    public interface CallBack{
       public void onClick();
+   }
+
+   public interface Icon{
+      public void draw(UIButton parent);
    }
 }

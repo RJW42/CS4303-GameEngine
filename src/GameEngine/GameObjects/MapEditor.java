@@ -1,11 +1,11 @@
 package GameEngine.GameObjects;
 
 
-import GameEngine.Components.MapBuildingComponents.NoClipController;
-import GameEngine.Components.MapBuildingComponents.TileSelector;
-import GameEngine.Components.MapBuildingComponents.ToolSelector;
-import GameEngine.Components.MapBuildingComponents.Tools.ChangeTileType;
-import GameEngine.Components.MapBuildingComponents.Tools.PlaceTile;
+import GameEngine.Components.MapEditorComponents.NoClipController;
+import GameEngine.Components.MapEditorComponents.TileSelector;
+import GameEngine.Components.MapEditorComponents.ToolSelector;
+import GameEngine.Components.MapEditorComponents.Tools.ChangeTileType;
+import GameEngine.Components.MapEditorComponents.Tools.PlaceTile;
 import GameEngine.GameEngine;
 import processing.core.PVector;
 

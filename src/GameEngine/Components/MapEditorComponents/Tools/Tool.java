@@ -1,8 +1,8 @@
-package GameEngine.Components.MapBuildingComponents.Tools;
+package GameEngine.Components.MapEditorComponents.Tools;
 
 
 import GameEngine.Components.Component;
-import GameEngine.Components.MapBuildingComponents.ToolSelector;
+import GameEngine.Components.MapEditorComponents.ToolSelector;
 import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
 import processing.core.PConstants;

@@ -1,4 +1,4 @@
-package GameEngine.Components.MapBuildingComponents;
+package GameEngine.Components.MapEditorComponents;
 
 
 import GameEngine.Components.Component;

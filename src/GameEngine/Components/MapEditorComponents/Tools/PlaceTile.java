@@ -1,7 +1,6 @@
-package GameEngine.Components.MapBuildingComponents.Tools;
+package GameEngine.Components.MapEditorComponents.Tools;
 
 
-import GameEngine.Components.Component;
 import GameEngine.GameObjects.GameObject;
 
 

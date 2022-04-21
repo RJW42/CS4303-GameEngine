@@ -1,4 +1,4 @@
-package GameEngine.Components.MapBuildingComponents;
+package GameEngine.Components.MapEditorComponents;
 
 
 import GameEngine.Components.Component;
@@ -16,7 +16,6 @@ public class TileSelector extends Component {
 
    private TerrainGenerator generator;
    private TerrainRenderer renderer;
-   private TileSelector selector;
 
 
    // Constructor
