@@ -20,6 +20,14 @@ public abstract class TerrainGenerator extends Component {
       this.player_spawn_loc = new PVector(0,0);
    }
 
+   public int getWidth(){
+      return width;
+   }
+
+   public int getHeight(){
+      return height;
+   }
+
    // Methods
    public abstract int[] createWorld();
    public abstract int[] getWorld();

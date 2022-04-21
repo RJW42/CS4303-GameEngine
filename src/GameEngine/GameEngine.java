@@ -59,6 +59,7 @@ public class GameEngine extends PApplet {
    public ImageManager sprite_manager;
    public ScoreManager score_manager;
    public AudioManager audio_manager;
+   public LevelManager level_manager;
    public GameObject chase_object;
    public float chase_zoom;
    public Config config;
@@ -76,7 +77,6 @@ public class GameEngine extends PApplet {
    private ArrayList<GameObject>[] objects_to_add;
    private ArrayList<BaseCollisionComponent>[] collision_grid;
    private HashMap<BaseCollisionComponent, HashSet<BaseCollisionComponent>> collisions;
-   private LevelManager level_manager;
 
    /* Game Specific Variables */
    public Terrain terrain;

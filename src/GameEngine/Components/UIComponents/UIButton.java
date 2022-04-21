@@ -21,8 +21,8 @@ public class UIButton extends Component {
    public PVector pos;
    public float width;
    public float height;
+   public String text;
 
-   private String text;
    private float padding;
    private float border_width;
    private float text_height;
@@ -56,6 +56,7 @@ public class UIButton extends Component {
       this.callback = callback;
 
       this.mouse_click = sys.input_manager.mouse_click;
+      this.was_clicked = mouse_click.pressed;
 
       // set text size if needed
       apply_scaling();
@@ -113,6 +114,8 @@ public class UIButton extends Component {
 
       sys.textAlign(PConstants.CENTER);
       sys.uiText(text, pos.x, pos.y - text_height / 2);
+
+      sys.rectMode(PConstants.CORNER);
       sys.popUI();
    }
 

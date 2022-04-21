@@ -2,12 +2,12 @@ package GameEngine.Components.UIComponents;
 
 
 import GameEngine.Components.Component;
-import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
+import GameEngine.Levels.MainMenu;
+import GameEngine.Levels.PlayLevel;
 import processing.core.PVector;
 
 import java.io.File;
-import java.util.Arrays;
 
 import static GameEngine.Components.TerrianComponents.TerrainLoader.SAVE_LOC;
 import static GameEngine.GameEngine.UI_SCALE;
@@ -15,7 +15,7 @@ import static processing.core.PApplet.trim;
 
 public class LevelList extends Component {
    // Attributes
-   public static final int MAX_ITEMS_ON_LIST = 2;
+   public static final int MAX_ITEMS_ON_LIST = 3;
    public static final float SPACING         = 1;
 
    public PVector text_colour;
@@ -25,6 +25,8 @@ public class LevelList extends Component {
    public PVector hover_rect_colour;
    public PVector hover_border_colour;
    public PVector pos;
+   public float item_width;
+   public float item_height;
    public float width;
    public float height;
 
@@ -43,8 +45,8 @@ public class LevelList extends Component {
 
       // Init attributes
       this.pos = pos;
-      this.width = item_width;
-      this.height = item_height;
+      this.item_width = item_width;
+      this.item_height = item_height;
       this.padding = padding;
       this.border_width = border_width;
       this.text_colour = text_colour;
@@ -62,24 +64,15 @@ public class LevelList extends Component {
    public void start() {
 
    }
-
-
    public void update() {
-      // Todo: implement this function 
-      //       Called every frame during update stage  
    }
-
-
    public void draw() {
-      // Todo: implement this function 
-      //       Called every frame during draw stage  
    }
 
 
    private void clicked(int id){
-      // Todo: implement, load this level
-      System.out.println(id);
-
+      // Start playing the given level
+      sys.level_manager.startLevel(new PlayLevel(sys, files[id + root_position].getName()));
    }
 
 
@@ -87,13 +80,27 @@ public class LevelList extends Component {
       // Move all files up by one
       if(root_position == 0)
          return; // Can't do that as already at top
-      System.out.println("UP");
-      // Todo: finish here !!!!!!!
+
+      root_position -= 1;
+
+      for(int i = 0; i < buttons.length; i++){
+         buttons[i].text = get_level_name( i + root_position);
+         buttons[i].reset_text_size();
+      }
    }
 
 
    private void down_pressed(){
-      System.out.println("DOWN");
+      // Move all files down by one
+      if(root_position == files.length - buttons.length)
+         return; // Can't do that as already at bottom
+
+      root_position += 1;
+
+      for(int i = 0; i < buttons.length; i++){
+         buttons[i].text = get_level_name( i + root_position);
+         buttons[i].reset_text_size();
+      }
    }
 
 
@@ -120,7 +127,7 @@ public class LevelList extends Component {
                  get_level_name(i),
                  new PVector(pos.x, button_y),
                  text_colour, rect_colour, border_colour, hover_text_colour, hover_rect_colour,
-                 hover_border_colour, padding, border_width, width, height, true
+                 hover_border_colour, padding, border_width, item_width, item_height, true
          );
 
          button_y -= button.height + SPACING * UI_SCALE;
@@ -129,6 +136,17 @@ public class LevelList extends Component {
          buttons[i] = button;
          parent.addComponent(button);
       }
+
+      // Use calculate the total width and height of the list
+      width = buttons[0].width;
+      height = ((up_button != null ? up_button.pos.y : buttons[0].pos.y)
+                  - buttons[buttons.length - 1].pos.y) +
+               ((up_button != null) ?
+                       (up_button.height / 2f + buttons[buttons.length - 1].height / 2f) :
+                       buttons[0].height);
+
+      // update position based off this height
+      pos.y -= height / 2f - buttons[0].height;
    }
 
 
@@ -138,14 +156,14 @@ public class LevelList extends Component {
               parent, this::up_pressed, "↑",
               new PVector(pos.x, button_y),
               text_colour, rect_colour, border_colour, hover_text_colour, hover_rect_colour,
-              hover_border_colour, padding, border_width, width / 2 - 0.5f, height, true
+              hover_border_colour, padding, border_width, item_width / 2 - 0.5f, item_height, true
       );
 
       down_button = new UIButton(
               parent, this::down_pressed, "↓",
               new PVector(pos.x, button_y),
               text_colour, rect_colour, border_colour, hover_text_colour, hover_rect_colour,
-              hover_border_colour, padding, border_width, width / 2 - 0.5f, height, true
+              hover_border_colour, padding, border_width, item_width / 2 - 0.5f, item_height, true
       );
 
       up_button.pos.x -= up_button.width / 2 + 0.5f * UI_SCALE;
@@ -156,6 +174,7 @@ public class LevelList extends Component {
 
       return button_y - down_button.height - SPACING * UI_SCALE;
    }
+
 
    private String get_level_name(int i){
       return files[i].getName().split("\\.")[0];

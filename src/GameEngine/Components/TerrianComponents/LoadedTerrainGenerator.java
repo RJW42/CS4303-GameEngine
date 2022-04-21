@@ -21,6 +21,9 @@ public class LoadedTerrainGenerator extends TerrainGenerator{
    public void loadTerrain(String file_loc){
       // Load the world into this terrain generator
       TerrainLoader.loadTerrain(this, file_loc);
+
+      Terrain.WIDTH = getWidth();
+      Terrain.HEIGHT = getHeight();
    }
 
    @Override

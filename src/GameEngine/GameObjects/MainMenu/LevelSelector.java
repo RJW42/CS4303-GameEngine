@@ -19,7 +19,7 @@ public class LevelSelector extends GameObject {
    public LevelSelector(GameEngine sys) {
       super(sys);
 
-      // Add regular components
+      // Create buttons
       UIButton back_button = new UIButton(this, this::back_clicked, "Back",
               new PVector(GameEngine.SCREEN_WIDTH / 2, GameEngine.SCREEN_HEIGHT / 2 + 400),
               TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, TEXT_HOVER_COLOUR, BUTTON_HOVER_COLOUR, BORDER_HOVER_COLOUR,
@@ -27,12 +27,15 @@ public class LevelSelector extends GameObject {
       );
 
       LevelList levels_list = new LevelList(this,
-              new PVector(GameEngine.SCREEN_WIDTH / 2, GameEngine.SCREEN_HEIGHT / 2 + 200),
+              new PVector(GameEngine.SCREEN_WIDTH / 2, GameEngine.SCREEN_HEIGHT / 2),
               TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, TEXT_HOVER_COLOUR, BUTTON_HOVER_COLOUR, BORDER_HOVER_COLOUR,
               PADDING, BORDER_WIDTH, WIDTH, HEIGHT
       );
 
-      // Todo: set height properly
+      // Set spacing
+      back_button.pos.y = levels_list.pos.y + levels_list.height / 2f + SPACING * GameEngine.UI_SCALE;
+
+      // Add components
       this.components.add(back_button);
       this.components.add(levels_list);
    }

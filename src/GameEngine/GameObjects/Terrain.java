@@ -26,15 +26,6 @@ public class Terrain extends GameObject implements Collideable {
 
 
    // Constructor
-   public Terrain(GameEngine sys){
-      this(sys, new Random().nextInt(), new TerrainGenerator.TerrainSupplier() {
-         @Override
-         public TerrainGenerator get(GameObject parent, int seed) {
-            return new BasicTerrainGenerator(parent, seed);
-         }
-      });
-   }
-
    public Terrain(GameEngine sys, int seed, TerrainGenerator.TerrainSupplier terrain_generator) {
       super(sys);
       this.seed = seed;

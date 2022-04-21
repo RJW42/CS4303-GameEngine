@@ -77,6 +77,9 @@ public class TerrainRenderer extends Component {
 
    @Override
    public void draw() {
+      // Ensure rect mode is correct
+      sys.rectMode(PConstants.CORNER);
+
       // Draw Each Cell
       for(int x = 0; x < Terrain.WIDTH; x++){
          for(int y = 0; y < Terrain.HEIGHT; y++){
