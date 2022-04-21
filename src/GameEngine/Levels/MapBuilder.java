@@ -12,14 +12,16 @@ public class MapBuilder extends Level{
    // Attributes
    private int map_width;
    private int map_height;
+   private String name;
 
    // Constructor
-   public MapBuilder(GameEngine sys, int map_width, int map_height) {
+   public MapBuilder(GameEngine sys, int map_width, int map_height, String name) {
       super(sys);
 
       // Init attributes
       this.map_width = map_width;
       this.map_height = map_height;
+      this.name = name;
    }
 
    // Methods

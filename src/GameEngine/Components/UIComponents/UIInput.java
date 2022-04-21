@@ -31,7 +31,11 @@ public class UIInput extends Component {
    private boolean mouse_over;
    private boolean was_clicked;
    private InputManager.Key mouse_click;
-   private boolean reading_input;
+   public boolean reading_input;
+
+   private float time_since_blink;
+   private float blink_time = 0.4f;
+   private boolean show_underscore = false;
 
    // Constructor
    public UIInput(GameObject parent, CallBack callback, String prompt, PVector pos, PVector text_colour, PVector rect_colour, PVector border_colour, float padding, float border_width, float width, float height, int max_input_length) {
@@ -99,6 +103,13 @@ public class UIInput extends Component {
    private void wait_for_input() {
       // Todo: Could do something where if the user clicks out of the input then its stops or something
       input = sys.input_manager.current_string;
+
+      time_since_blink += sys.DELTA_TIME;
+
+      if(time_since_blink > blink_time){
+         time_since_blink = 0;
+         show_underscore = !show_underscore;
+      }
    }
 
    private void input_callback(String string, boolean was_escaped){
@@ -123,7 +134,11 @@ public class UIInput extends Component {
       sys.fill(text_colour.x, text_colour.y, text_colour.z);
 
       sys.textAlign(PConstants.LEFT);
-      sys.uiText(prompt + input, pos.x - width / 2f + border_width + padding, pos.y - text_height / 2);
+
+      String text = prompt + input;
+      if(reading_input && show_underscore) text += "_";
+
+      sys.uiText(text, pos.x - width / 2f + border_width + padding, pos.y - text_height / 2);
 
       sys.rectMode(PConstants.CORNER);
       sys.popUI();

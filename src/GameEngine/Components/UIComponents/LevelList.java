@@ -15,7 +15,7 @@ import static processing.core.PApplet.trim;
 
 public class LevelList extends Component {
    // Attributes
-   public static final int MAX_ITEMS_ON_LIST = 3;
+   public static final int MAX_ITEMS_ON_LIST = 2;
    public static final float SPACING         = 1;
 
    public PVector text_colour;

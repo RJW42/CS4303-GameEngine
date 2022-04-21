@@ -5,7 +5,10 @@ import GameEngine.Components.UIComponents.UIButton;
 import GameEngine.Components.UIComponents.UIInput;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.GameEngine;
+import GameEngine.Levels.MapBuilder;
 import processing.core.PVector;
+
+import java.util.UUID;
 
 import static GameEngine.GameObjects.MainMenu.MenuSelector.*;
 import static GameEngine.GameObjects.MainMenu.MenuSelector.HEIGHT;
@@ -14,30 +17,80 @@ import static GameEngine.GameObjects.MainMenu.MenuSelector.HEIGHT;
 public class MapEditorSelector extends GameObject {
    // Attributes
    public static final int MAX_NAME_LENGTH = 10;
+   public static final int MAX_SIZE_LENGTH = 3;
+   public static final float INPUT_SPACING = 1f;
+   public static final PVector ERR_COLOUR  = new PVector(255, 0, 0);
 
    public boolean is_dead = false;
+
+   private UIInput name_input;
+   private UIInput width_input;
+   private UIInput height_input;
+   private UIButton create_button;
+
+   private int width, height;
+   private String name;
 
 
    // Constructor
    public MapEditorSelector(GameEngine sys) {
       super(sys);
 
+      // Init attributes
+      width = 0;
+      height = 0;
+      name = null;
+
       // Create buttons
       UIButton back_button = new UIButton(this, this::back_clicked, "Back",
-              new PVector(GameEngine.SCREEN_WIDTH / 2, GameEngine.SCREEN_HEIGHT / 2 + 400),
+              new PVector(GameEngine.SCREEN_WIDTH / 2f, GameEngine.SCREEN_HEIGHT / 2f),
               TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, TEXT_HOVER_COLOUR, BUTTON_HOVER_COLOUR, BORDER_HOVER_COLOUR,
-              PADDING, BORDER_WIDTH, WIDTH, HEIGHT, true
+              PADDING, BORDER_WIDTH, WIDTH - INPUT_SPACING, HEIGHT, true
       );
 
-      UIInput name_input = new UIInput(this, this::name_provided, "Name: ",
+      create_button = new UIButton(this, this::create_clicked, "Create",
+              new PVector(GameEngine.SCREEN_WIDTH / 2f, GameEngine.SCREEN_HEIGHT / 2f),
+              TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, TEXT_HOVER_COLOUR, BUTTON_HOVER_COLOUR, BORDER_HOVER_COLOUR,
+              PADDING, BORDER_WIDTH, WIDTH - INPUT_SPACING, HEIGHT, true
+      );
+
+      name_input = new UIInput(this, this::name_provided, "Name: ",
               new PVector(GameEngine.SCREEN_WIDTH / 2f, GameEngine.SCREEN_HEIGHT / 2f),
               TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, PADDING, BORDER_WIDTH,
               WIDTH * 2f, HEIGHT, MAX_NAME_LENGTH
       );
 
+      width_input =  new UIInput(this, this::width_provided, "Width: ",
+              new PVector(GameEngine.SCREEN_WIDTH / 2f, GameEngine.SCREEN_HEIGHT / 2f),
+              TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, PADDING, BORDER_WIDTH,
+              WIDTH - INPUT_SPACING, HEIGHT, MAX_SIZE_LENGTH
+      );
+
+      height_input =  new UIInput(this, this::height_provided, "Height: ",
+              new PVector(GameEngine.SCREEN_WIDTH / 2f, GameEngine.SCREEN_HEIGHT / 2f),
+              TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, PADDING, BORDER_WIDTH,
+              WIDTH - INPUT_SPACING, HEIGHT, MAX_SIZE_LENGTH
+      );
+
+      // Set button positions
+      name_input.pos.y = width_input.pos.y + width_input.height + INPUT_SPACING * GameEngine.UI_SCALE;
+
+      width_input.pos.x -= width_input.width / 2f + INPUT_SPACING * GameEngine.UI_SCALE;
+      height_input.pos.x += height_input.width / 2f + INPUT_SPACING * GameEngine.UI_SCALE;
+
+      back_button.pos.x = width_input.pos.x;
+      back_button.pos.y = width_input.pos.y - (width_input.height + INPUT_SPACING * GameEngine.UI_SCALE);
+
+      create_button.pos.y = back_button.pos.y;
+      create_button.pos.x = height_input.pos.x;
+
+
       // Add components
       this.components.add(back_button);
+      this.components.add(create_button);
       this.components.add(name_input);
+      this.components.add(width_input);
+      this.components.add(height_input);
    }
 
 
@@ -53,7 +106,67 @@ public class MapEditorSelector extends GameObject {
       sys.spawn(new MenuSelector(sys), 1);
    }
 
+   public void create_clicked(){
+      // Check can create level
+      if(name == null || width <= 0 || height <= 0 ||
+         name_input.reading_input || width_input.reading_input ||
+         height_input.reading_input
+      ){
+         create_button.border_colour = ERR_COLOUR;
+         create_button.hover_border_colour = ERR_COLOUR;
+         return;
+      }
+
+      // All valid enter level editor
+      sys.level_manager.startLevel(new MapBuilder(sys, width, height, name));
+   }
+
    public void name_provided(String name){
-      System.out.println(name);
+      // Check if name is valid
+      if(name.length() < 1){
+         // Invalid
+         name_input.border_colour = ERR_COLOUR;
+         this.name = null;
+         return;
+      }
+
+      name_input.border_colour = BORDER_COLOUR;
+      this.name = name;
+   }
+
+   public void width_provided(String width){
+      // Check if width is valid
+      int w = parse_int(width);
+
+      if(w <= 0){
+         width_input.border_colour = ERR_COLOUR;
+         this.width = 0;
+         return;
+      }
+
+      width_input.border_colour = BORDER_COLOUR;
+      this.width = w;
+   }
+
+   public void height_provided(String height){
+      // Check if width is valid
+      int h = parse_int(height);
+
+      if(h <= 0){
+         width_input.border_colour = ERR_COLOUR;
+         this.height = 0;
+         return;
+      }
+
+      width_input.border_colour = BORDER_COLOUR;
+      this.height = h;
+   }
+
+   private int parse_int(String s){
+      try{
+         return Integer.parseInt(s);
+      } catch(Exception e){
+         return 0;
+      }
    }
 }
