@@ -73,7 +73,7 @@ public class ScoreBoard extends Component {
 
       // Get username
       if(!sent_callback){
-         sys.input_manager.getInput(this::username_callback);
+         sys.input_manager.getInput(this::username_callback, 10);
          sent_callback = true;
       }
 

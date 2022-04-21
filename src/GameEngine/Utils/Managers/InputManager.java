@@ -32,9 +32,11 @@ public class InputManager {
 
    private Key[] tracked_keyboard_keys;
    private Key[] tracker_mouse_keys;
+   private HashMap<String, Key> key_mappings;
+
    private InputComplete current_callback;
    private StringBuilder current_string_builder;
-   private HashMap<String, Key> key_mappings;
+   private int current_input_max_length;
 
 
    // Constructor
@@ -97,18 +99,20 @@ public class InputManager {
       //       may want to implment this in future
    }
 
+   public boolean getInput(InputComplete callback, int max_length){
+      return getInput(callback, max_length, "");
+   }
 
-   public boolean getInput(InputComplete callback){
-      // Todo: add a max string length
-
+   public boolean getInput(InputComplete callback, int max_length, String starting_string){
       // Check if, can track input
       if(current_callback != null)
          return false; // Can's start tracking an input as already doing so
 
       // Start tracking input from keyboard
+      current_input_max_length = max_length;
       current_callback = callback;
-      current_string = "";
-      current_string_builder = new StringBuilder();
+      current_string = starting_string;
+      current_string_builder = new StringBuilder(starting_string);
 
       return true;
    }
@@ -130,14 +134,21 @@ public class InputManager {
 
       // Not an escape/entre so keep building the string
       if(latest_key.getKey() == PConstants.BACKSPACE){
-         current_string_builder.deleteCharAt(current_string_builder.length() - 1);
+         if(current_string_builder.length() > 0)
+            current_string_builder.deleteCharAt(current_string_builder.length() - 1);
+         else
+            return;
       } else if(
          (latest_key.getKey() >= 'a' && latest_key.getKey() <= 'z') ||
          (latest_key.getKey() >= 'A' && latest_key.getKey() <= 'Z') ||
          (latest_key.getKey() >= '0' && latest_key.getKey() <= '9') ||
          latest_key.getKey() == '_' || latest_key.getKey() == '-'
       ){
-         current_string_builder.append(latest_key.getKey());
+         if (current_string_builder.length() < current_input_max_length)
+            // Check current string not to long
+            current_string_builder.append(latest_key.getKey());
+         else
+            return;
       } else {
          return;
       }

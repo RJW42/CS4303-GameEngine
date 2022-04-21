@@ -48,6 +48,7 @@ public class LevelSelector extends GameObject {
    }
 
    public void back_clicked(){
+      // Switch back to menu selector
       is_dead = true;
       sys.spawn(new MenuSelector(sys), 1);
    }

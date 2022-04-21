@@ -50,7 +50,9 @@ public class MenuSelector extends GameObject {
    }
 
    public void editor_clicked(){
-      // Todo: implement
+      // Switch to editor selector
+      is_dead = true;
+      sys.spawn(new MapEditorSelector(sys), 1);
    }
 
    public void controls_clicked(){
