@@ -15,7 +15,6 @@ public class TileSelector extends Component {
    public int current_y;
 
    private TerrainGenerator generator;
-   private TerrainRenderer renderer;
 
 
    // Constructor
@@ -30,7 +29,6 @@ public class TileSelector extends Component {
    // Methods 
    public void start() {
        generator = sys.terrain.getComponent(TerrainGenerator.class);
-       renderer = sys.terrain.getComponent(TerrainRenderer.class);
    }
 
    public void update() {

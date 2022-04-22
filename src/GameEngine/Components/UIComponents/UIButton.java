@@ -30,7 +30,7 @@ public class UIButton extends Component {
    private int text_size;
    private CallBack callback;
 
-   private boolean mouse_over;
+   public boolean mouse_over;
    private boolean was_clicked;
    private InputManager.Key mouse_click;
 
