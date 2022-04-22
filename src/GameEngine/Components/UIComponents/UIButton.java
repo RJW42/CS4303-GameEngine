@@ -43,7 +43,7 @@ public class UIButton extends Component {
 
 
    public UIButton(GameObject parent, CallBack callback, Icon draw, PVector pos, PVector text_colour, PVector rect_colour, PVector border_colour, PVector hover_text_colour, PVector hover_rect_colour, PVector hover_border_colour, float padding, float border_width, float width, float height, boolean rect_fill) {
-      this(parent, callback, null, draw, pos, text_colour, rect_colour, border_colour, hover_text_colour, hover_rect_colour, hover_border_colour, padding, border_width, width, height, rect_fill);
+      this(parent, callback, "12345", draw, pos, text_colour, rect_colour, border_colour, hover_text_colour, hover_rect_colour, hover_border_colour, padding, border_width, width, height, rect_fill);
    }
 
    public UIButton(GameObject parent, CallBack callback, String text, Icon draw, PVector pos, PVector text_colour, PVector rect_colour, PVector border_colour, PVector hover_text_colour, PVector hover_rect_colour, PVector hover_border_colour, float padding, float border_width, float width, float height, boolean rect_fill) {

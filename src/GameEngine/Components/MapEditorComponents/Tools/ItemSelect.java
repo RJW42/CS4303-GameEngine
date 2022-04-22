@@ -1,36 +1,82 @@
 package GameEngine.Components.MapEditorComponents.Tools;
 
-
-import GameEngine.Components.Component;
+import GameEngine.Components.UIComponents.UIButton;
+import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
+import processing.core.PVector;
+
+import java.util.ArrayList;
+
+import static GameEngine.Components.MapEditorComponents.ToolMenu.*;
 
 
 public class ItemSelect extends Tool {
    // Attributes
-
+   public Item current_item;
+   private ArrayList<UIButton> buttons;
 
    // Constructor
    public ItemSelect(GameObject parent) {
       super(parent);
 
       // Init Attributes
-      this.icon_text = "SL";
+      this.icon = (UIButton button) -> this.render_item(current_item, button);
+      this.current_item = Item.WALL;
    }
 
 
    // Methods 
    public void start() {
-      // Todo: implement this function 
-      //       Called once when the parent game spawns object 
+      create_buttons();
    }
 
    public void update() {
-      // Todo: implement this function 
-      //       Called every frame during update stage  
+      if(active) buttons.forEach(UIButton::update);
    }
 
    public void draw() {
-      // Todo: implement this function 
-      //       Called every frame during draw stage  
+      if(active) buttons.forEach(UIButton::draw);
+   }
+
+
+   private void item_selected(Item item){
+      this.current_item = item;
+      this.active = false;
+   }
+
+
+   private void render_item(Item item, UIButton button){
+      // Todo: implement
+      sys.uiText(item.name(), button.pos.x, button.pos.y);
+   }
+
+
+   private void create_buttons(){
+      // Create a button for each item
+      buttons = new ArrayList<>();
+      float x = pos.x;
+      float y = pos.y + ITEM_HEIGHT * GameEngine.UI_SCALE;
+
+      for(Item item : Item.values()){
+         // Create button and set position
+         UIButton button = create_button(item);
+         buttons.add(button);
+
+         button.pos.y = y;
+         button.pos.x = x;
+
+         y += button.height + 2;
+
+         button.start();
+      }
+   }
+
+
+   private UIButton create_button(Item item){
+      return new UIButton(
+              parent, () -> item_selected(item), (UIButton b) -> render_item(item, b), new PVector(),
+              TEXT_C, BACKGROUND_C, BORDER_C, TEXT_C, BACKGROUND_H_C, BORDER_H_C,
+              ITEM_PADDING, ITEM_BORDER_WIDTH, ITEM_WIDTH, ITEM_HEIGHT, true
+      );
    }
 }

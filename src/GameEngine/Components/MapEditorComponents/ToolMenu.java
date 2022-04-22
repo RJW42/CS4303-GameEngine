@@ -14,16 +14,16 @@ import java.util.List;
 
 public class ToolMenu extends Component {
    // Attributes
-   private static final PVector BACKGROUND_C    = new PVector();
-   private static final PVector BORDER_C        = new PVector(255, 255, 255);
-   private static final PVector BACKGROUND_H_C  = new PVector(127, 127, 127);
-   private static final PVector BORDER_H_C      = new PVector();
-   private static final PVector TEXT_C          = new PVector(255, 0, 0);
-   private static final PVector ACTIVE_C        = new PVector(0, 255, 0);
-   private static final float ITEM_WIDTH        = 25;
-   private static final float ITEM_HEIGHT       = 25;
-   private static final float ITEM_BORDER_WIDTH = 2;
-   private static final float ITEM_PADDING      = 10;
+   public static final PVector BACKGROUND_C     = new PVector();
+   public static final PVector BORDER_C         = new PVector(255, 255, 255);
+   public static final PVector BACKGROUND_H_C   = new PVector(127, 127, 127);
+   public static final PVector BORDER_H_C       = new PVector();
+   public static final PVector TEXT_C           = new PVector(255, 0, 0);
+   public static final PVector ACTIVE_C         = new PVector(0, 255, 0);
+   public static final float ITEM_WIDTH         = 25;
+   public static final float ITEM_HEIGHT        = 25;
+   public static final float ITEM_BORDER_WIDTH  = 2;
+   public static final float ITEM_PADDING       = 10;
 
    public boolean mouse_hovering;
 
@@ -111,6 +111,7 @@ public class ToolMenu extends Component {
 
          button.pos.x = x;
          button.pos.y = y;
+         tool.pos = button.pos;
 
          x += button.width + 2;
       }
