@@ -10,9 +10,10 @@ import java.util.Random;
 
 public class MapBuilder extends Level{
    // Attributes
+   public static String name;
+
    private int map_width;
    private int map_height;
-   private String name;
 
    // Constructor
    public MapBuilder(GameEngine sys, int map_width, int map_height, String name) {
@@ -21,7 +22,7 @@ public class MapBuilder extends Level{
       // Init attributes
       this.map_width = map_width;
       this.map_height = map_height;
-      this.name = name;
+      MapBuilder.name = name;
    }
 
    // Methods
