@@ -91,6 +91,7 @@ public class GameEngine extends PApplet {
    public void settings(){
       // Load config
       config = new Config();
+      // Todo: remove world_height and width from config
 
       // Init screen size
       if(config.full_screen){
