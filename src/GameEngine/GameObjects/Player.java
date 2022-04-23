@@ -45,8 +45,8 @@ public class Player extends GameObject implements Collideable {
 
       // Add collision components
       this.collision_components = new ArrayList<>();
-      this.collision_components.add(new RectCollisionComponent(this, null, COLLISION_WIDTH, COLLISION_HEIGHT));
-      this.collision_components.add(new RectCollisionComponent(this, this::ground_collision, new PVector(0.05f, -(COLLISION_HEIGHT - 0.05f)), COLLISION_WIDTH - 0.1f, 0.05f));
+      this.collision_components.add(new RectCollisionComponent(this, null, COLLISION_WIDTH, COLLISION_HEIGHT)); // Todo: check if this is decent, the collision height for grounded
+      this.collision_components.add(new RectCollisionComponent(this, this::ground_collision, new PVector(0.05f, -(COLLISION_HEIGHT - 0f)), COLLISION_WIDTH - 0.1f, 0.05f));
 
       // Add regular components
       this.force_manager = new ForceManager(

@@ -2,6 +2,7 @@ package GameEngine.Levels;
 
 import GameEngine.Components.TerrianComponents.LoadedTerrainGenerator;
 import GameEngine.GameObjects.Player;
+import GameEngine.GameObjects.Pointer;
 import GameEngine.GameObjects.Terrain;
 import GameEngine.GameEngine;
 
@@ -41,7 +42,10 @@ public class PlayLevel extends Level{
       // Spawn entities
       sys.terrain = terrain;
       sys.spawn(terrain, 0);
-      sys.spawn(new Player(sys, generator.player_spawn_loc.copy(), 0), 2);
+
+      Player player = new Player(sys, generator.player_spawn_loc.copy(), 0);
+      sys.spawn(player, 2);
+      sys.chase_object = player;
    }
 
    public boolean updateAndCanAdvance() {

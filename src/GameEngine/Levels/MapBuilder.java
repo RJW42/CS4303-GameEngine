@@ -48,7 +48,7 @@ public class MapBuilder extends Level{
       sys.spawn(terrain, 0);
 
       // Spawn the map editor object and set the view mode to chase
-      MapEditor controller = new MapEditor(sys, new PVector(map_height / 2f, map_height / 2f));
+      MapEditor controller = new MapEditor(sys, new PVector(map_width / 2f, map_height / 2f));
 
       sys.chase_object = controller;
       sys.spawn(controller, 3);

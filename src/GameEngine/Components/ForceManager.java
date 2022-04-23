@@ -59,7 +59,7 @@ public class ForceManager extends Component {
       parent.pos.add(PVector.mult(velocity, sys.DELTA_TIME));
 
       if(grapple_base != null)
-         apply_pendulum(); // Apply grapphle phyics if needed
+         apply_pendulum(); // Apply grapple physics if needed
 
       // Add frictions and gravity
       update_velocities();

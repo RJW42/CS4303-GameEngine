@@ -4,7 +4,6 @@ package GameEngine.Components.Renderers;
 import GameEngine.Components.Component;
 import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
-import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
 
@@ -22,8 +21,8 @@ public class ImageRenderer extends Component {
       super(parent);
 
       this.sprite_name = sprite_name;
-      this.width_pixels = Math.round(GameEngine.PIXEL_TO_METER_X * width);
-      this.height_pixels = Math.round(GameEngine.PIXEL_TO_METER_Y * height);
+      this.width_pixels = Math.round(GameEngine.PIXEL_TO_METER * width);
+      this.height_pixels = Math.round(GameEngine.PIXEL_TO_METER * height);
       this.width = width;
       this.height = height;
       this.offset = offset;

@@ -33,8 +33,9 @@ public class GameEngine extends PApplet {
 
    public static final int Z_LAYERS          = 4;
    public static final float GRID_SIZE       = 1;
-   public static float PIXEL_TO_METER_X      = -1;
-   public static float PIXEL_TO_METER_Y      = -1;
+   public static float PIXEL_TO_METER        = -1;
+   public static float X_TRANSLATE           = 0;
+   public static float Y_TRANSLATE           = 0;
    public static int SCREEN_HEIGHT           = 960;
    public static int SCREEN_WIDTH            = 960;
    public static int WORLD_HEIGHT            = 18;
@@ -109,11 +110,13 @@ public class GameEngine extends PApplet {
       GRID_Y_SIZE = WORLD_HEIGHT / (int)GRID_SIZE;
 
       // Use screen size to init constants
-      PIXEL_TO_METER_X = (float)SCREEN_WIDTH / WORLD_WIDTH;
-      PIXEL_TO_METER_Y = (float)SCREEN_HEIGHT / WORLD_HEIGHT;
+      float x_scale = (float)SCREEN_WIDTH / WORLD_WIDTH;
+      float y_scale = (float)SCREEN_HEIGHT / WORLD_HEIGHT;
+
+      PIXEL_TO_METER = Math.min(x_scale, y_scale);
 
       // Set default zoom
-      chase_zoom = 3f;
+      chase_zoom = 1f;
    }
 
 
@@ -133,8 +136,8 @@ public class GameEngine extends PApplet {
       audio_manager = new AudioManager(this, minim);
 
       // Init level manager
-      level_manager = new LevelManager(this, new MainMenu(this));
-      //level_manager = new LevelManager(this, new MapBuilder(this, WORLD_WIDTH, WORLD_HEIGHT, "test"));
+      //level_manager = new LevelManager(this, new MainMenu(this));
+      level_manager = new LevelManager(this, new MapBuilder(this, 15, 10, "test"));
    }
 
 
@@ -154,8 +157,14 @@ public class GameEngine extends PApplet {
       float x_scale = (float)SCREEN_WIDTH / WORLD_WIDTH;
       float y_scale = (float)SCREEN_HEIGHT / WORLD_HEIGHT;
 
-      PIXEL_TO_METER_X = Math.min(x_scale, y_scale);
-      PIXEL_TO_METER_Y = PIXEL_TO_METER_X;
+      PIXEL_TO_METER = Math.min(x_scale, y_scale);
+
+      // Calculate the translation offsets
+      int x_usage = Math.round(PIXEL_TO_METER * WORLD_WIDTH);
+      int y_usage = Math.round(PIXEL_TO_METER * WORLD_HEIGHT);
+
+      X_TRANSLATE = (x_usage >= SCREEN_WIDTH) ? 0 : (SCREEN_WIDTH - x_usage) / 2f;
+      Y_TRANSLATE = (y_usage >= SCREEN_HEIGHT) ? 0 : (SCREEN_HEIGHT - y_usage) / 2f;
 
       // Clear any chase object
       chase_object = null;
@@ -205,15 +214,16 @@ public class GameEngine extends PApplet {
    
    private void scale_screen(){
       // Apply default scaling
-      strokeWeight(1 / PIXEL_TO_METER_X);
-      scale(PIXEL_TO_METER_X, PIXEL_TO_METER_Y); // Set to metric
+      strokeWeight(1 / PIXEL_TO_METER);
+      translate(X_TRANSLATE, Y_TRANSLATE);
+      scale(PIXEL_TO_METER, PIXEL_TO_METER); // Set to metric
 
       scale(1f, -1f); // Set 0,0 to bottom left
       translate(0, -WORLD_HEIGHT);
 
       // Get mouse position
-      mouse_x = mouseX / PIXEL_TO_METER_X;
-      mouse_y = WORLD_HEIGHT - (mouseY / PIXEL_TO_METER_Y);
+      mouse_x = (mouseX - X_TRANSLATE) / PIXEL_TO_METER;
+      mouse_y = WORLD_HEIGHT - ((mouseY - Y_TRANSLATE) / PIXEL_TO_METER);
 
       // Get the mouse ui position
       mouse_ui_x = ((float) mouseX / SCREEN_WIDTH);
@@ -230,8 +240,8 @@ public class GameEngine extends PApplet {
       translate(translate_x, translate_y);
 
       // Update mouses position to represent this translation Todo: could make this more efficient
-      mouse_x = chase_pos.x - WORLD_WIDTH / (chase_zoom * 2) + ((float) mouseX / SCREEN_WIDTH) * (WORLD_WIDTH / chase_zoom);
-      mouse_y = chase_pos.y - WORLD_HEIGHT / (chase_zoom * 2) + (1 - (float) mouseY / SCREEN_HEIGHT) * (WORLD_HEIGHT / chase_zoom);
+      mouse_x = chase_pos.x - WORLD_WIDTH / (chase_zoom * 2) + ((mouseX - X_TRANSLATE) / (WORLD_WIDTH * PIXEL_TO_METER)) * (WORLD_WIDTH / chase_zoom);
+      mouse_y = chase_pos.y - WORLD_HEIGHT / (chase_zoom * 2) + (1 - ((mouseY - Y_TRANSLATE) / (WORLD_HEIGHT * PIXEL_TO_METER))) * (WORLD_HEIGHT / chase_zoom);
 
       // Scale according to chase settings
       scale(chase_zoom);
@@ -254,8 +264,8 @@ public class GameEngine extends PApplet {
       pushMatrix();
       translate(0, WORLD_HEIGHT);
       scale(1f, -1f);
-      scale(1f / PIXEL_TO_METER_X, 1f / PIXEL_TO_METER_Y);
-      super.text(str, x * PIXEL_TO_METER_X, GameEngine.SCREEN_HEIGHT - (y * PIXEL_TO_METER_Y));
+      scale(1f / PIXEL_TO_METER, 1f / PIXEL_TO_METER);
+      super.text(str, x * PIXEL_TO_METER, GameEngine.SCREEN_HEIGHT - (y * PIXEL_TO_METER));
       popMatrix();
    }
 
@@ -273,8 +283,8 @@ public class GameEngine extends PApplet {
       pushMatrix();
       translate(0, WORLD_HEIGHT);
       scale(1f, -1f);
-      scale(1f / PIXEL_TO_METER_X, 1f / PIXEL_TO_METER_Y);
-      translate(x * PIXEL_TO_METER_X, GameEngine.SCREEN_HEIGHT - (y * PIXEL_TO_METER_Y));
+      scale(1f / PIXEL_TO_METER, 1f / PIXEL_TO_METER);
+      translate(x * PIXEL_TO_METER, GameEngine.SCREEN_HEIGHT - (y * PIXEL_TO_METER));
       super.image(img, -img.width/2, -img.height/2);
       popMatrix();
    }
@@ -284,8 +294,8 @@ public class GameEngine extends PApplet {
       pushMatrix();
       translate(0, WORLD_HEIGHT);
       scale(1f, -1f);
-      scale(1f / PIXEL_TO_METER_X, 1f / PIXEL_TO_METER_Y);
-      translate(x * PIXEL_TO_METER_X, GameEngine.SCREEN_HEIGHT - (y * PIXEL_TO_METER_Y));
+      scale(1f / PIXEL_TO_METER, 1f / PIXEL_TO_METER);
+      translate(x * PIXEL_TO_METER, GameEngine.SCREEN_HEIGHT - (y * PIXEL_TO_METER));
       rotate(angle);
       super.image(img, -img.width/2, -img.height/2);
       popMatrix();
@@ -485,7 +495,7 @@ public class GameEngine extends PApplet {
 
 
    public int getGridIndex(int grid_x, int grid_y){
-      return (GRID_Y_SIZE * grid_y) + grid_x;
+      return (GRID_X_SIZE * grid_y) + grid_x;
    }
 
 
@@ -539,9 +549,8 @@ public class GameEngine extends PApplet {
 //         line(0, i, SCREEN_HEIGHT, i);
 //      }
       for(float i = GRID_SIZE; i < WORLD_HEIGHT; i += GRID_SIZE){
-         strokeWeight(1f / PIXEL_TO_METER_Y);
+         strokeWeight(1f / PIXEL_TO_METER);
          line(i, 0, i, WORLD_WIDTH);
-         strokeWeight(1f / PIXEL_TO_METER_X);
          line(0, i, WORLD_HEIGHT, i);
       }
    }
