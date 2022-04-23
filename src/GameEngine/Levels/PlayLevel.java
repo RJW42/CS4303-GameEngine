@@ -30,8 +30,6 @@ public class PlayLevel extends Level{
       int seed = new Random().nextInt();
       System.out.println(seed);
 
-      sys.initWorld(32, 18);
-
       Terrain terrain = new Terrain(sys, seed, LoadedTerrainGenerator::new);
 
       LoadedTerrainGenerator generator = terrain.getComponent(LoadedTerrainGenerator.class);

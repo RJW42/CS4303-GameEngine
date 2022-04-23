@@ -102,6 +102,7 @@ public class MapEditorSelector extends GameObject {
 
    public void back_clicked(){
       // Switch back to main menu
+      sys.input_manager.cancelInput();
       is_dead = true;
       sys.spawn(new MenuSelector(sys), 1);
    }

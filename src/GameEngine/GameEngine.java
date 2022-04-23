@@ -155,6 +155,9 @@ public class GameEngine extends PApplet {
       PIXEL_TO_METER_Y = (float)SCREEN_HEIGHT / WORLD_HEIGHT;
       //PIXEL_TO_METER_Y = PIXEL_TO_METER_X;
 
+      // Clear any chase object
+      chase_object = null;
+
       // reset grid sizes
       clearGameObjects();
       clearCollsionObjects();

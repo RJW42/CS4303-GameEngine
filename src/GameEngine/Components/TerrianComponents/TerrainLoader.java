@@ -47,7 +47,8 @@ public class TerrainLoader {
       generator.setConfig(terrain_data.getInt(WORLD_WIDTH), terrain_data.getInt(WORLD_HEIGHT));
       generator.player_spawn_loc.x = terrain_data.getFloat(SPAWN_X);
       generator.player_spawn_loc.y = terrain_data.getFloat(SPAWN_Y);
-      // Todo: finish this
+      generator.width = terrain_data.getInt(WORLD_WIDTH);
+      generator.height = terrain_data.getInt(WORLD_HEIGHT);
 
       // Add complex elements
       world_from_json(generator, terrain_data.getJSONArray(WORLD_ARR));

@@ -118,6 +118,11 @@ public class InputManager {
    }
 
 
+   public void cancelInput(){
+      finish_callback();
+   }
+
+
    private void handle_callback(){
       // Check if the current key is an escape/enter
       if(latest_key.getKey() == PConstants.ENTER){
