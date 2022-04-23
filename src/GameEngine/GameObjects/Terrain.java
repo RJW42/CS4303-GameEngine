@@ -40,6 +40,7 @@ public class Terrain extends GameObject implements Collideable {
       // Add components
       this.components.add(new TerrainRenderer(this));
       this.components.add(new TerrainCollider(this));
+      this.components.add(new AIPathManager(this));
       this.components.add(terrain_generator.get(this, seed));
    }
 

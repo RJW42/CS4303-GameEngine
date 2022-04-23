@@ -7,12 +7,12 @@ import GameEngine.GameObjects.Terrain;
 import java.util.Arrays;
 
 
-public class MapBuilderTerrainGenerator extends TerrainGenerator{
+public class MapEditorTerrainGenerator extends TerrainGenerator{
    // Attributes
    private int[] world;
 
    // Constructor
-   public MapBuilderTerrainGenerator(GameObject parent, int seed) {
+   public MapEditorTerrainGenerator(GameObject parent, int seed) {
       super(parent, seed);
    }
 

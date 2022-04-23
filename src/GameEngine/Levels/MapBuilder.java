@@ -38,7 +38,7 @@ public class MapBuilder extends Level{
       int seed = new Random().nextInt();
       System.out.println("Terrain seed: " + seed);
 
-      Terrain terrain = new Terrain(sys, seed, MapBuilderTerrainGenerator::new);
+      Terrain terrain = new Terrain(sys, seed, MapEditorTerrainGenerator::new);
 
       TerrainGenerator generator = terrain.getComponent(TerrainGenerator.class);
       generator.setConfig(map_width, map_height);
