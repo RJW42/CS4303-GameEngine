@@ -151,9 +151,11 @@ public class GameEngine extends PApplet {
       GRID_Y_SIZE = world_height;
 
       // Use screen size to init constants
-      PIXEL_TO_METER_X = (float)SCREEN_WIDTH / WORLD_WIDTH;
-      PIXEL_TO_METER_Y = (float)SCREEN_HEIGHT / WORLD_HEIGHT;
-      //PIXEL_TO_METER_Y = PIXEL_TO_METER_X;
+      float x_scale = (float)SCREEN_WIDTH / WORLD_WIDTH;
+      float y_scale = (float)SCREEN_HEIGHT / WORLD_HEIGHT;
+
+      PIXEL_TO_METER_X = Math.min(x_scale, y_scale);
+      PIXEL_TO_METER_Y = PIXEL_TO_METER_X;
 
       // Clear any chase object
       chase_object = null;
