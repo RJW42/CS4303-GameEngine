@@ -1,14 +1,13 @@
 package GameEngine.Components.TerrianComponents;
 
 
+import GameEngine.Components.AIComponents.AIMovementController.Path;
 import GameEngine.Components.Component;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.GameObjects.Terrain;
 import processing.core.PVector;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class AIPathManager extends Component {
@@ -106,6 +105,79 @@ public class AIPathManager extends Component {
              world[generator.getIndex(x, y)] == Terrain.AIR && world[generator.getIndex(x, y - 1)] == Terrain.WALL;
    }
 
+   // ******** Graph Search ********* //
+   public Path search(PVector start, PVector end){
+      // Adapted from: // https://stackabuse.com/graphs-in-java-a-star-algorithm/
+      // First reset eval metrics on all nodes
+      nodes.forEach(Node::resetMetrics);
+
+      // Get the nodes the start and end belong to
+      Node start_node = index_to_nodes.get(generator.getIndexFromWorldPos(start.x, start.y));
+      Node end_node = index_to_nodes.get(generator.getIndexFromWorldPos(end.x, end.y));
+
+      // Perform a* search to create a path between the start and end nodes
+      // Init data structures required to perform the search
+      PriorityQueue<Node> closed_list = new PriorityQueue<>();
+      PriorityQueue<Node> open_list = new PriorityQueue<>();
+
+      start_node.f = start_node.g + start_node.getHeuristicScore(end_node);
+      open_list.add(start_node);
+
+      // Perform the search
+      while(!open_list.isEmpty()){
+         // Get next closest node
+         Node n = open_list.peek();
+         if(n == end_node){
+            // Found path to end
+            break;
+         }
+
+         // Look at all it's connecting condes
+         for(Edge edge : n.adjacent){
+            Node m = edge.node;
+            float weight = n.g + edge.weight;
+
+            if (!open_list.contains(m) && !closed_list.contains(m)) {
+               m.parent = n;
+               m.g = weight;
+               m.f = m.g + m.getHeuristicScore(end_node);
+
+               open_list.add(m);
+            }else if(weight < m.g){
+               m.parent = n;
+               m.g = weight;
+               m.f = m.g + m.getHeuristicScore(end_node);
+
+               if(closed_list.contains(m)){
+                  closed_list.remove(m);
+                  open_list.add(m);
+               }
+            }
+         }
+
+         open_list.remove(n);
+         closed_list.add(n);
+      }
+
+      // Found path to parent convert this to a usable search path
+      LinkedList<Path.Point> path = new LinkedList<>();
+      path.addFirst(new Path.Point(end));
+
+      Node n = end_node.parent;
+      while(n != start_node){
+         path.addFirst(new Path.Point(n.centre_pos));
+         n = n.parent;
+      }
+
+      path.addFirst(new Path.Point(start));
+
+      // Create output path
+      Path out = new Path();
+      out.points.addAll(path);
+
+      return out;
+   }
+
 
    // ********* Graph Representation ********* //
    private static class Node implements Comparable<Node>{
@@ -120,6 +192,7 @@ public class AIPathManager extends Component {
       public float g;
       private float h;
       private Node h_target;
+      public Node parent;
 
 
       // Constructor
@@ -128,6 +201,7 @@ public class AIPathManager extends Component {
          this.pos = pos;
          this.index = index;
          this.adjacent = new ArrayList<>();
+         this.parent = null;
       }
 
 
@@ -141,6 +215,7 @@ public class AIPathManager extends Component {
       public void resetMetrics(){
          f = Float.MAX_VALUE - 10000;
          g = Float.MAX_VALUE - 10000;
+         parent = null;
       }
 
 
