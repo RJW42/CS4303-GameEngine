@@ -137,8 +137,7 @@ public class GameEngine extends PApplet {
       audio_manager = new AudioManager(this, minim);
 
       // Init level manager
-      //level_manager = new LevelManager(this, new MainMenu(this));
-      level_manager = new LevelManager(this, new MapBuilder(this, 15, 10, "test"));
+      level_manager = new LevelManager(this, new MainMenu(this));
    }
 
 

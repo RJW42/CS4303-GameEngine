@@ -58,12 +58,15 @@ public class CharacterController extends Component {
       }
 
       // Grapple hook
-      if(grapple_hook.fired && reel_in.pressed && force_manager.grapple_length > 1f){
-         // Todo: make this smoother
-         force_manager.grapple_length -= reel_distance * sys.DELTA_TIME;
-         force_manager.applyForce(PVector.sub(force_manager.grapple_base, parent.pos).mult(reel_speed));
+      if(grapple_hook.fired && reel_in.pressed){
+         float distance = reel_distance * sys.DELTA_TIME;
+         if(force_manager.grapple_length > distance) {
+            force_manager.grapple_length -= distance;
+            force_manager.applyForce(PVector.sub(force_manager.grapple_base, parent.pos).normalize().mult(reel_distance));
+         }
       }else if(grapple_hook.fired && reel_out.pressed) {
          force_manager.grapple_length += reel_distance * sys.DELTA_TIME;
+         parent.pos.add(PVector.sub(force_manager.grapple_base, parent.pos).normalize().mult(-reel_distance * sys.DELTA_TIME));
       }
 
       // Left right movement

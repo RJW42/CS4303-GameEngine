@@ -45,7 +45,7 @@ public class PlayLevel extends Level{
 
       Player player = new Player(sys, generator.player_spawn_loc.copy(), 0);
       sys.spawn(player, 2);
-      sys.chase_object = player;
+      //sys.chase_object = player;
    }
 
    public boolean updateAndCanAdvance() {
