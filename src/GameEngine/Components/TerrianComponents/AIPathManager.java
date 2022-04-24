@@ -44,9 +44,17 @@ public class AIPathManager extends Component {
          sys.circle(node.centre_pos.x, node.centre_pos.y, 0.1f);
 
          for(Edge edge : node.adjacent){
-            sys.stroke(0, 0, 255);
-            sys.line(node.centre_pos.x, node.centre_pos.y, edge.node.centre_pos.x, edge.node.centre_pos.y);
-            sys.noStroke();
+            if(edge instanceof JumpEdge){
+               JumpEdge jedge = (JumpEdge) edge;
+
+               sys.stroke(255, 0, 0);
+               sys.line(node.centre_pos.x, node.centre_pos.y, jedge.upper_pos.x, jedge.upper_pos.y);
+               sys.line(jedge.upper_pos.x, jedge.upper_pos.y, jedge.node.centre_pos.x, jedge.node.centre_pos.y);
+            } else {
+               sys.stroke(0, 0, 255);
+               sys.line(node.centre_pos.x, node.centre_pos.y, edge.node.centre_pos.x, edge.node.centre_pos.y);
+               sys.noStroke();
+            }
          }
       }
    }
@@ -58,7 +66,14 @@ public class AIPathManager extends Component {
       generator = parent.getComponent(TerrainGenerator.class);
       int[] world = generator.getWorld();
 
-      // Create Nodes
+      // Create graph
+      create_nodes(world);
+      create_edges(world);
+      create_jump_edges(world);
+   }
+
+   private void create_nodes(int[] world){
+      // Loop over each point in the map
       for(int x = 0; x < generator.getWidth(); x++)
          for(int y = 0; y < generator.getHeight(); y++){
             // Get index of this position
@@ -71,16 +86,19 @@ public class AIPathManager extends Component {
                index_to_nodes.put(index, node);
             }
          }
+   }
 
-      // Create edges between nodes
-      for(Node node : nodes){
+
+   private void create_edges(int[] world) {
+      // Connect all nodes, in which a monster could jump/fall to them
+      for (Node node : nodes) {
          // Add any edges to node
-         for(int x_offset : new int[] {-1, 1}) {
+         for (int x_offset : new int[]{-1, 1}) {
             // Get pos of possible adjacent node
-            int x = (int)node.pos.x + x_offset;
-            int y = (int)node.pos.y;
+            int x = (int) node.pos.x + x_offset;
+            int y = (int) node.pos.y;
 
-            if(!is_valid_and_walkable(world, x, y))
+            if (!is_valid_and_walkable(world, x, y))
                continue;
 
             // Found an adjacent node
@@ -95,8 +113,46 @@ public class AIPathManager extends Component {
    }
 
 
+   private void create_jump_edges(int[] world) {
+      // Connect all adjacent nodes
+      for (Node node : nodes) {
+         // Check if there is a position to jump to above
+         int x = (int) node.pos.x;
+         int y = (int) node.pos.y + 1;
+
+         while (valid_index(x, y) && world[generator.getIndex(x, y)] == Terrain.AIR) {
+            for (int x_offset : new int[]{-1, 1}) {
+               // get possible node index
+               int node_x = x + x_offset;
+               int node_index = generator.getIndex(node_x, y);
+
+               // Check if node is walkable
+               if(!is_valid_and_walkable(world, node_x, y))
+                  continue;
+
+               // Add jump edge
+               PVector jump_pos = new PVector(node_x - x_offset + Terrain.CELL_SIZE / 2f, y + Terrain.CELL_SIZE / 2f);
+
+               node.adjacent.add(new JumpEdge(
+                  index_to_nodes.get(node_index),
+                  jump_pos,
+                  (float) (Math.pow(node.pos.x - jump_pos.x, 2) + Math.pow(node.pos.y - jump_pos.y, 2))
+               ));
+            }
+
+            // Move to next possible node
+            y += 1;
+         }
+      }
+   }
+
+
    private boolean is_walkable(int[] world, int x, int y, int index){
       return world[index] == Terrain.AIR && y > 0 && world[generator.getIndex(x, y - 1)] == Terrain.WALL;
+   }
+
+   private boolean valid_index(int x, int y){
+      return x >= 0 && x <= generator.getWidth() && y >= 0 && y <= generator.getHeight();
    }
 
 
@@ -106,7 +162,7 @@ public class AIPathManager extends Component {
    }
 
    // ******** Graph Search ********* //
-   public Path search(PVector start, PVector end){
+   public Path astar_search(PVector start, PVector end){
       // Adapted from: // https://stackabuse.com/graphs-in-java-a-star-algorithm/
       // First reset eval metrics on all nodes
       nodes.forEach(Node::resetMetrics);
@@ -243,11 +299,17 @@ public class AIPathManager extends Component {
       }
    }
 
-//   private static class JumpEdge extends Edge{
-//    // Todo: implement
-//   }
 
-//   private static class DropEdge extends Edge {
-//    // Todo: implement
-//   }
+   private static class JumpEdge extends Edge{
+      // Attributes
+      public final PVector upper_pos;
+      // public final int distance; // Todo: add
+
+      // Constructor
+      public JumpEdge(Node node, PVector upper_pos, float weight) {
+         super(node, weight);
+         this.upper_pos = upper_pos;
+      }
+   }
+
 }
