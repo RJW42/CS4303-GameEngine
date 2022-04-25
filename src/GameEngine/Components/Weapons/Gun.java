@@ -3,6 +3,7 @@ package GameEngine.Components.Weapons;
 
 import GameEngine.Components.Component;
 import GameEngine.GameObjects.GameObject;
+import processing.core.PConstants;
 import processing.core.PVector;
 
 
@@ -12,19 +13,28 @@ public class Gun extends Component {
    public float fire_time;
    public float prev_fire_time;
    public float spread_angle;
+   public float rotation_angle;
    public int num_barrels;
    public BulletFactory bullet_factory;
-   public PVector bullet_spawn_offset;
-   public Component renderer;
+   public PVector offset;
+   public GunRenderer renderer;
    public boolean active;
+   public float barrel_length;
+   public float barrel_height;
+   public PVector target_pos;
+
+   private PVector gun_pos;
 
    // Constructor
-   public Gun(GameObject parent, Component renderer, BulletFactory bullet_factory, PVector bullet_spawn_offset, float spread_angle, int num_barrels, int fire_rate, int muzzle_speed) {
+   public Gun(GameObject parent, GunRenderer renderer, BulletFactory bullet_factory, PVector offset, float spread_angle, int num_barrels, int fire_rate, int muzzle_speed, float barrel_length, float barrel_height) {
       super(parent);
 
       // Init attributes
       this.active = true;
       this.renderer = renderer;
+      this.barrel_length = barrel_length;
+      this.barrel_height = barrel_height;
+      this.target_pos = new PVector();
 
       // Init bullets per second from fire rate
       this.fire_time = (1f / fire_rate);
@@ -36,7 +46,9 @@ public class Gun extends Component {
 
       // Init factory
       this.bullet_factory = bullet_factory;
-      this.bullet_spawn_offset = bullet_spawn_offset;
+      this.offset = offset;
+
+      this.renderer.gun = this;
    }
 
 
@@ -50,31 +62,40 @@ public class Gun extends Component {
       // Update prev fire time
       prev_fire_time += sys.DELTA_TIME;
 
-      // Todo: want to test.json to see if prev_fire_time should change when not active
-      renderer.update();
+      // Get rotation angle
+      gun_pos = PVector.add(offset, parent.pos);
+
+      PVector v1 = new PVector(1, 0);
+      PVector v2 = PVector.sub(target_pos, gun_pos).normalize();
+
+      float dot = v1.x * v2.x + v1.y * v2.y;
+      float det = v1.x * v2.y - v1.y * v2.x;
+
+      rotation_angle = (float) Math.atan2(det, dot);
    }
 
    public void draw(){
-      if(active)
-         renderer.draw();
    }
 
 
-   public void fire(PVector target){
+   public void fire(){
       if(prev_fire_time >= fire_time){
-         for(int i = 0; i < num_barrels; i++)
-            spawn_bullet(target);
+         for(int i = 0; i < num_barrels; i++) {
+            spawn_bullet();
+            renderer.fire();
+         }
       }
    }
 
 
-   private void spawn_bullet(PVector target){
+   private void spawn_bullet(){
       // Reset fire time
       prev_fire_time = 0;
 
       // Create bullet velocity
-      PVector bullet_spawn_location = PVector.add(parent.pos, bullet_spawn_offset);
-      PVector vel_norm = PVector.sub(bullet_spawn_location, target).normalize().mult(-1);
+      PVector bullet_offset = PVector.fromAngle(rotation_angle).mult(barrel_length);
+      PVector bullet_spawn_location = PVector.add(gun_pos, bullet_offset);
+      PVector vel_norm = PVector.sub(bullet_spawn_location, target_pos).normalize().mult(-1);
 
       // Add spread if needed
       if(spread_angle != 0)

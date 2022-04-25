@@ -2,34 +2,42 @@ package GameEngine.Components.PlayerComponents;
 
 
 import GameEngine.Components.Component;
+import GameEngine.Components.Weapons.Gun;
 import GameEngine.GameObjects.GameObject;
+import GameEngine.Utils.Managers.InputManager;
+import processing.core.PVector;
 
 
 public class GunController extends Component {
    // Attributes
-   // Todo: implement, keeps track of all guns and which one is active
-   //       this component will also be responsible for firing the weapon
-   //       or maybe the character controller, not sure yet
+   private InputManager.Key fire;
+   private Gun gun; // Todo:make list
 
    // Constructor
    public GunController(GameObject parent) {
       super(parent);
+
+      // Init attributes
+      this.fire = sys.input_manager.getKey("fire");
    }
 
 
    // Methods 
    public void start() {
-      // Todo: implement this function 
-      //       Called once when the parent game spawns object 
+      // Todo: get all guns
+      this.gun = parent.getComponent(Gun.class);
    }
 
    public void update() {
-      // Todo: implement this function 
-      //       Called every frame during update stage  
+      // Update guns position
+      gun.target_pos.x = sys.mouse_x;
+      gun.target_pos.y = sys.mouse_y;
+
+      // Fire gun
+      if(fire.pressed)
+         gun.fire();
    }
 
    public void draw() {
-      // Todo: implement this function 
-      //       Called every frame during draw stage  
    }
 }

@@ -9,7 +9,8 @@ DOWN    = S
 LEFT    = A
 RIGHT   = D
 JUMP    = SPACE
-GRAPPLE = MOUSE_LEFT
+GRAPPLE = MOUSE_RIGHT
+FIRE    = MOUSE_LEFT
 # Map editing controls
 MB-UP       = W
 MB-DOWN     = S
