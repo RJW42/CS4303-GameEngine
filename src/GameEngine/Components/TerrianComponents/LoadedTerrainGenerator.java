@@ -10,6 +10,7 @@ import java.util.Arrays;
 public class LoadedTerrainGenerator extends TerrainGenerator{
    // Attributes
    public int[] world;
+   public int[] special_tiles;
 
    // Constructor
    public LoadedTerrainGenerator(GameObject parent, int seed) {
@@ -37,5 +38,10 @@ public class LoadedTerrainGenerator extends TerrainGenerator{
    @Override
    public int[] getWorld() {
       return world;
+   }
+
+   @Override
+   public int[] getSpecialTiles() {
+      return special_tiles;
    }
 }

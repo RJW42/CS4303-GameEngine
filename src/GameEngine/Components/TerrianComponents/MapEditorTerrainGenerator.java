@@ -10,6 +10,7 @@ import java.util.Arrays;
 public class MapEditorTerrainGenerator extends TerrainGenerator{
    // Attributes
    private int[] world;
+   private int[] special_tiles;
 
    // Constructor
    public MapEditorTerrainGenerator(GameObject parent, int seed) {
@@ -22,7 +23,9 @@ public class MapEditorTerrainGenerator extends TerrainGenerator{
    public int[] createWorld() {
       // Init world
       world = new int[width * height];
+      special_tiles = new int[width * height];
       Arrays.fill(world, Terrain.AIR);
+      Arrays.fill(special_tiles, Terrain.EMPTY);
 
       for(int i = 0; i < width; i++){
          world[getIndex(i, 0)] = Terrain.WALL;
@@ -39,5 +42,10 @@ public class MapEditorTerrainGenerator extends TerrainGenerator{
    @Override
    public int[] getWorld() {
       return world;
+   }
+
+   @Override
+   public int[] getSpecialTiles() {
+      return special_tiles;
    }
 }

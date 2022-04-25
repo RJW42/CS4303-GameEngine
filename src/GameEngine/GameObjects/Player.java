@@ -58,7 +58,7 @@ public class Player extends GameObject implements Collideable {
       this.components.add(new GrappleHook(this));
       this.components.add(force_manager);
       this.components.add(new GunController(this));
-      this.components.add(MachineGun.create(this, new PVector(0, 0)));
+      this.components.add(MachineGun.create(this, new PVector(COLLISION_WIDTH / 2f, -COLLISION_HEIGHT / 2f)));
 
       // Add collision components to regular
       this.components.addAll(this.collision_components);

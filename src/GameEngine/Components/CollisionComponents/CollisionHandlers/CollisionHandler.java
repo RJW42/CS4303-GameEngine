@@ -79,7 +79,7 @@ public class CollisionHandler {
 
 //         if(collision_info.contact_normal.y == 1){
 //            force_manager.grounded = true;
-//            // Todo: Works but not easy to get the non grounded. Could set to grounded each frame, will test.json
+//            // Todo: Works but not easy to get the non grounded. Could set to grounded each frame, will test
 //         }
          }
       }

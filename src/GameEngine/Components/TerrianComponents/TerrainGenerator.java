@@ -31,6 +31,8 @@ public abstract class TerrainGenerator extends Component {
    // Methods
    public abstract int[] createWorld();
    public abstract int[] getWorld();
+   public abstract int[] getSpecialTiles();
+
 
    public void setConfig(int width, int height){
       this.height = height;

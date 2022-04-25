@@ -31,7 +31,9 @@ public class TerrainRenderer extends Component {
    private PVector wall_colour      = new PVector(17, 25, 28);
    private boolean random_colour    = true;
    private TerrainGenerator generator;
+
    private int[] world;
+   private int[] tile_attribtues;
    private int[] world_masks;
 
    // Constructor
@@ -45,6 +47,7 @@ public class TerrainRenderer extends Component {
       // Get the world
       generator = this.parent.getComponent(TerrainGenerator.class);
       world = generator.getWorld();
+      tile_attribtues = generator.getSpecialTiles();
       world_masks = new int[world.length];
 
       // Init colours
@@ -167,22 +170,26 @@ public class TerrainRenderer extends Component {
       // Init masks
       int masks = 0;
 
+      // Check if block can be grappled
+      if(!is_hookable(x, y))
+         return masks;
+
       // Add each edge
-      if(isAir(x, y + 1))
+      if(is_air(x, y + 1))
          masks = masks | TOP_MASK;
-      if(isAir(x, y - 1))
+      if(is_air(x, y - 1))
          masks = masks | BOTTOM_MASK;
-      if(isAir(x - 1, y))
+      if(is_air(x - 1, y))
          masks = masks | LEFT_MASK;
-      if(isAir(x + 1, y))
+      if(is_air(x + 1, y))
          masks = masks | RIGHT_MASK;
-      if(isAir(x, y + 1) && !isAir(x - 1, y + 1))
+      if(is_air(x, y + 1) && is_clean_wall(x - 1, y + 1))
          masks = masks | TOP_LEFT_MASK;
-      if(isAir(x, y + 1) && !isAir(x + 1, y + 1))
+      if(is_air(x, y + 1) && is_clean_wall(x + 1, y + 1))
          masks = masks | TOP_RIGHT_MASK;
-      if(isAir(x - 1, y) && !isAir(x - 1, y + 1))
+      if(is_air(x - 1, y) && is_clean_wall(x - 1, y + 1))
          masks = masks | BOTTOM_LEFT_MASK;
-      if(isAir(x, y - 1) && !isAir(x - 1, y - 1))
+      if(is_air(x, y - 1) && is_clean_wall(x - 1, y - 1))
          masks = masks | BOTTOM_RIGHT_MASK;
 
       // Finished
@@ -190,8 +197,16 @@ public class TerrainRenderer extends Component {
    }
 
 
-   private boolean isAir(int x, int y){
+   private boolean is_clean_wall(int x, int y){
+      return !is_air(x, y) && is_hookable(x, y);
+   }
+
+   private boolean is_air(int x, int y){
       return (generator.validWalkCord(x, y) && world[generator.getIndex(x, y)] == Terrain.AIR);
+   }
+
+   private boolean is_hookable(int x, int y){
+      return (generator.validWalkCord(x, y) && tile_attribtues[generator.getIndex(x, y)] != Terrain.NON_GRAPPLE);
    }
 
 

@@ -19,6 +19,7 @@ public class TerrainLoader {
 
    // World array element properties
    private static final String WORLD_VAL     = "value";
+   private static final String VAL_ATTRIBUTE = "modifier";
 
 
    /* ***** JSON Layout *****
@@ -30,7 +31,8 @@ public class TerrainLoader {
     * goal-y: int
     * world: [
     *    {
-    *       value: int either 0 Air, 1 Wall
+    *       value: int either: 0 Air, 1 Wall
+    *       modifier: int either: 0 none, 1 non grapple,
     *    }
     * ]
     *
@@ -57,8 +59,6 @@ public class TerrainLoader {
 
    public static void saveTerrain(TerrainGenerator generator, String file_name){
       // Todo: Items to save
-      //        - world layout
-      //        - player spawn
       //        - goal loc
       //        - enemy spawn locations
       //        - lava / some other bad liquid
@@ -87,10 +87,13 @@ public class TerrainLoader {
       JSONArray world_json = new JSONArray();
 
       int[] world = generator.getWorld();
+      int[] tile_attribute = generator.getSpecialTiles();
+
       for(int i = 0; i < world.length; i++){
          JSONObject world_element = new JSONObject();
 
          world_element.put(WORLD_VAL, world[i]);
+         world_element.put(VAL_ATTRIBUTE, tile_attribute[i]);
 
          world_json.put(world_element);
       }
@@ -102,14 +105,17 @@ public class TerrainLoader {
    private static void world_from_json(LoadedTerrainGenerator generator, JSONArray world_json){
       // Init world and populate
       int[] world = new int[generator.width * generator.height];
+      int[] tile_attribute = new int[generator.width * generator.height];
 
       for(int i = 0; i < world_json.length(); i++){
          JSONObject world_element = world_json.getJSONObject(i);
 
          world[i] = world_element.getInt(WORLD_VAL);
+         tile_attribute[i] = world_element.getInt(VAL_ATTRIBUTE);
       }
 
       generator.world = world;
+      generator.special_tiles = tile_attribute;
    }
 
 
@@ -123,6 +129,7 @@ public class TerrainLoader {
             res.append(line);
       }catch (IOException e){
          System.err.println(" - Failed to read terrain file: " + e.getMessage());
+         System.exit(0);
          return null;
       }
 
@@ -130,14 +137,13 @@ public class TerrainLoader {
    }
 
 
-   private static boolean write_file(JSONObject content, String file_name){
+   private static void write_file(JSONObject content, String file_name){
       // Write the json object to the given file
       try(BufferedWriter bw = new BufferedWriter(new FileWriter(SAVE_LOC + file_name))){
          bw.write(content.toString());
       }catch (IOException e){
          System.err.println(" - Failed to write terrain file: " + e.getMessage());
-         return false;
+         System.exit(0);
       }
-      return true;
    }
 }

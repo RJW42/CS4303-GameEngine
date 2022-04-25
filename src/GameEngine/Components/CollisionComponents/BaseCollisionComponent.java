@@ -106,7 +106,7 @@ public abstract class BaseCollisionComponent extends Component {
    }
 
    protected boolean circleRectCollision(CircleCollisionComponent c, RectCollisionComponent r){
-      // Init test.json variables
+      // Init test variables
       float c_x = c.get_x() + c.rad;
       float c_y = c.get_y() - c.rad;
       float test_x = c_x;

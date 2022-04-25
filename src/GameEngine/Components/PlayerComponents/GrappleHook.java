@@ -79,9 +79,15 @@ public class GrappleHook extends Component {
       if(maybe_point.isEmpty())
          return;
 
-      // Recivied valid point, create grapple
-      fired = true;
+      // Received point, check if this point can be grappled to
       base = maybe_point.get();
+      int index = generator.getIndexFromWorldPos(base.x, base.y);
+
+      if(generator.getSpecialTiles()[index] == Terrain.NON_GRAPPLE)
+         return; // Todo: maybe want an animation for this
+
+      // Received valid point, create grapple
+      fired = true;
       force_manager.grapple_base = base;
       force_manager.grapple_length = PVector.dist(parent.pos, base);
    }

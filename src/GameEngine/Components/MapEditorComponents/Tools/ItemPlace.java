@@ -6,6 +6,7 @@ import GameEngine.Components.MapEditorComponents.TileSelector;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
 import GameEngine.Components.TerrianComponents.TerrainRenderer;
 import GameEngine.GameObjects.GameObject;
+import GameEngine.GameObjects.Terrain;
 import GameEngine.Utils.Managers.InputManager;
 
 
@@ -55,17 +56,42 @@ public class ItemPlace extends Tool {
       place_tile();
    }
 
+
+   public void draw() {
+      // Todo: draw player properly in spawn location
+
+   }
+
+
    private void place_tile(){
       // Get location to place
       prev_x = tile_selector.current_x;
       prev_y = tile_selector.current_y;
+      int world_index = generator.getIndex(prev_x, prev_y);
 
-      generator.getWorld()[generator.getIndex(prev_x, prev_y)] = (item_select.current_item == Item.WALL) ? 1 : 0;
+      int[] world = generator.getWorld();
+      int[] tile_attributes = generator.getSpecialTiles();
+
+      switch (item_select.current_item){
+         case WALL:
+            world[world_index] = Terrain.WALL;
+            break;
+         case AIR:
+            world[world_index] = Terrain.AIR;
+            break;
+         case NON_GRAPPLE_WALL:
+            world[world_index] = Terrain.WALL;
+            tile_attributes[world_index] = Terrain.NON_GRAPPLE;
+            break;
+         case SPAWN_LOCATION:
+            generator.player_spawn_loc.x = prev_x + Terrain.CELL_SIZE / 2f;
+            generator.player_spawn_loc.y = prev_y + Terrain.CELL_SIZE / 2f;
+            break;
+         default:
+            System.err.println("Unreachable point reached error in ItemPlace.java");
+            System.exit(0);
+      }
+
       renderer.resetMasks();
-   }
-
-   public void draw() {
-      // Todo: implement this function 
-      //       Called every frame during draw stage  
    }
 }

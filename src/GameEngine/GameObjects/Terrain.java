@@ -12,11 +12,17 @@ import java.util.List;
 
 public class Terrain extends GameObject implements Collideable {
    // Attributes
-   public static final int WALL = 1;
-   public static final int AIR = 0;
-   public static int WIDTH = GameEngine.WORLD_WIDTH;
-   public static int HEIGHT = GameEngine.WORLD_HEIGHT;
-   public static int CELL_SIZE = 1;
+   // Special Tile Values
+   public static final int EMPTY       = 0;
+   public static final int NON_GRAPPLE = 1;
+
+   // Tile Values
+   public static final int WALL  = 1;
+   public static final int AIR   = 0;
+
+   public static int WIDTH      = GameEngine.WORLD_WIDTH;
+   public static int HEIGHT     = GameEngine.WORLD_HEIGHT;
+   public static int CELL_SIZE  = 1;
 
    public int[] world;
    public ArrayList<BaseCollisionComponent> collision_components;
@@ -39,7 +45,6 @@ public class Terrain extends GameObject implements Collideable {
       // Add components
       this.components.add(new TerrainRenderer(this));
       this.components.add(new TerrainCollider(this));
-      this.components.add(new AIPathManager(this));
       this.components.add(terrain_generator.get(this, seed));
    }
 
