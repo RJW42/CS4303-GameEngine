@@ -21,7 +21,7 @@ import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
-public class GameEngine extends PApplet implements Runnable{
+public class GameEngine extends PApplet{
    public static final String DEFAULT_CONFIG_FOLDER   = "GameEngine/Resources/Defaults/";
    public static final String DEFAULT_CONTROLS_FILE   = "default_controls.txt";
    public static final String DEFAULT_CONFIG_FILE     = "default_config.txt";
@@ -76,6 +76,7 @@ public class GameEngine extends PApplet implements Runnable{
    private boolean frame_skip;
    private long pause_time;
    private long prev;
+   private boolean restart;
 
    private ArrayList<GameObject>[] objects;
    private ArrayList<GameObject>[] objects_to_add;
@@ -85,36 +86,14 @@ public class GameEngine extends PApplet implements Runnable{
    /* Game Specific Variables */
    public Terrain terrain;
 
-
-   private static boolean restart = false;
-   private static Semaphore sem = new Semaphore(0, true);
-
    public static void main(String[] args) {
       // Start game
-      while(true) {
-         // Launch game
-         PApplet.runSketch(new String[] { "test"}, new GameEngine());
-
-         // Wait for finish
-         try {  sem.acquire(); } catch (Exception e) {
-            System.err.println(" - Error in closing game");
-            System.exit(0);
-         }
-
-
-         // Check for restart
-         if(!restart)
-            return;
-         restart = false;
-      }
-   }
-
-   public void run(){
-      PApplet.runSketch(new String[] { "test"}, new GameEngine());
+      PApplet.main("GameEngine.GameEngine");
    }
 
    public void settings(){
       // Load config
+      restart = false;
       config = new Config();
 
       // Init screen size
@@ -207,9 +186,8 @@ public class GameEngine extends PApplet implements Runnable{
    }
 
    public void exitActual(){
-      sem.release();
-      surface.stopThread();
-      Thread.currentThread().interrupt();
+      if(restart)
+         System.exit(42);
       System.exit(0);
    }
 
