@@ -18,9 +18,10 @@ import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
 import java.util.*;
+import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
-public class GameEngine extends PApplet {
+public class GameEngine extends PApplet implements Runnable{
    public static final String DEFAULT_CONFIG_FOLDER   = "GameEngine/Resources/Defaults/";
    public static final String DEFAULT_CONTROLS_FILE   = "default_controls.txt";
    public static final String DEFAULT_CONFIG_FILE     = "default_config.txt";
@@ -32,6 +33,7 @@ public class GameEngine extends PApplet {
    public static final String CONTROLS_FILE   = "controls.txt";
 
    public static final int Z_LAYERS          = 4;
+
    public static final float GRID_SIZE       = 1;
    public static float PIXEL_TO_METER        = -1;
    public static float X_TRANSLATE           = 0;
@@ -83,16 +85,37 @@ public class GameEngine extends PApplet {
    /* Game Specific Variables */
    public Terrain terrain;
 
-   // https://www.redblobgames.com/articles/visibility/
+
+   private static boolean restart = false;
+   private static Semaphore sem = new Semaphore(0, true);
+
    public static void main(String[] args) {
-      PApplet.main("GameEngine.GameEngine");
+      // Start game
+      while(true) {
+         // Launch game
+         PApplet.runSketch(new String[] { "test"}, new GameEngine());
+
+         // Wait for finish
+         try {  sem.acquire(); } catch (Exception e) {
+            System.err.println(" - Error in closing game");
+            System.exit(0);
+         }
+
+
+         // Check for restart
+         if(!restart)
+            return;
+         restart = false;
+      }
    }
 
+   public void run(){
+      PApplet.runSketch(new String[] { "test"}, new GameEngine());
+   }
 
    public void settings(){
       // Load config
       config = new Config();
-      // Todo: remove world_height and width from config
 
       // Init screen size
       if(config.full_screen){
@@ -103,9 +126,9 @@ public class GameEngine extends PApplet {
          size(config.screen_width, config.screen_height);
          SCREEN_WIDTH = config.screen_width;
          SCREEN_HEIGHT = config.screen_height;
-         WORLD_HEIGHT = config.world_height;
-         WORLD_WIDTH = config.world_width;
       }
+
+      UI_SCALE = config.ui_scale;
 
       // Update collision grid size
       GRID_X_SIZE = WORLD_WIDTH / (int)GRID_SIZE;
@@ -175,6 +198,19 @@ public class GameEngine extends PApplet {
       // reset grid sizes
       clearGameObjects();
       clearCollsionObjects();
+   }
+
+
+   public void restart() {
+      restart = true;
+      exit();
+   }
+
+   public void exitActual(){
+      sem.release();
+      surface.stopThread();
+      Thread.currentThread().interrupt();
+      System.exit(0);
    }
 
 

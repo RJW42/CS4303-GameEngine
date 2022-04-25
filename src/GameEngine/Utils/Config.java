@@ -8,11 +8,16 @@ import java.util.Optional;
 
 public class Config {
    // Attributes
+   public static final String FULL_SCREEN    = "FULL_SCREEN";
+   public static final String WINDOW_WIDTH   = "WINDOW_WIDTH";
+   public static final String WINDOW_HEIGHT  = "WINDOW_HEIGHT";
+   public static final String UI_SCALE       = "UI_SCALE";
+   public static final String DISPLAY        = "DISPLAY";
+
    public boolean full_screen;
    public int screen_width;
    public int screen_height;
-   public int world_width;
-   public int world_height;
+   public int ui_scale;
    public int display;
 
    // Constructor
@@ -35,8 +40,18 @@ public class Config {
 
 
    // Methods
-   public void save(){
-      // Todo: implement this if it is wanted
+   public void save(String file_loc){
+      // Open and write config to file
+      try (PrintWriter writer = new PrintWriter(new FileWriter(file_loc))) {
+         writer.println(FULL_SCREEN + " = " + full_screen);
+         writer.println(DISPLAY + " = " + display);
+         writer.println(WINDOW_WIDTH + " = " + screen_width);
+         writer.println(WINDOW_HEIGHT + " = " + screen_height);
+         writer.println(UI_SCALE + " = " + ui_scale);
+      }catch (IOException e){
+         System.err.println(" - Failed to save to config file");
+         System.exit(0);
+      }
    }
 
    public void reset_to_default(){
@@ -70,14 +85,14 @@ public class Config {
 
 
    private boolean parse_line(String key, String values){
-      if(key.equalsIgnoreCase("FULL_SCREEN")){
+      if(key.equalsIgnoreCase(FULL_SCREEN)){
          return parse_fullscreen(values);
-      }else if(key.equalsIgnoreCase("WINDOW_WIDTH") || key.equalsIgnoreCase("WINDOW_HEIGHT")){
+      }else if(key.equalsIgnoreCase(WINDOW_WIDTH) || key.equalsIgnoreCase(WINDOW_HEIGHT)){
          return parse_window(key, values);
-      }else if(key.equalsIgnoreCase("WORLD_WIDTH") || key.equalsIgnoreCase("WORLD_HEIGHT")){
-         return parse_world(key, values);
-      }else if(key.equalsIgnoreCase("DISPLAY")){
+      }else if(key.equalsIgnoreCase(DISPLAY)){
          return parse_display(values);
+      }else if(key.equalsIgnoreCase(UI_SCALE)){
+         return parse_ui_scale(values);
       }
 
       // Unkown key
@@ -97,27 +112,28 @@ public class Config {
    }
 
 
+   private boolean parse_ui_scale(String value){
+      return parse_int(value).map(ui_scale -> {
+         if(ui_scale > 0) {
+            this.ui_scale = ui_scale;
+            return true;
+         } else {
+            System.err.println(" - Invalid ui scale value must be posative");
+            return false;
+         }
+      }).orElseGet(() -> {
+         System.err.println(" - Failed to parse ui scale");
+         return false;
+      });
+   }
+
+
    private boolean parse_display(String value){
       return parse_int(value).map(display -> {
          this.display = display;
          return true;
       }).orElseGet(() -> {
          System.err.println(" - Failed to parse display");
-         return false;
-      });
-   }
-
-
-   private boolean parse_world(String key, String value){
-      // Get int
-      return parse_int(value).map(num -> {
-         if(key.toUpperCase(Locale.ROOT).contains("WIDTH"))
-            this.world_width = num;
-         else
-            this.world_height = num;
-         return true;
-      }).orElseGet(() -> {
-         System.err.println(" - Failed to parse world size");
          return false;
       });
    }
