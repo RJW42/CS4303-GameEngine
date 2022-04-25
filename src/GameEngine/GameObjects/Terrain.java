@@ -1,5 +1,6 @@
 package GameEngine.GameObjects;
 
+import GameEngine.Components.AIComponents.AIMovement.AIPathManager;
 import GameEngine.Components.CollisionComponents.BaseCollisionComponent;
 import GameEngine.Components.CollisionComponents.Collideable;
 import GameEngine.Components.TerrianComponents.*;
@@ -8,8 +9,6 @@ import processing.core.PVector;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
-import java.util.function.Supplier;
 
 public class Terrain extends GameObject implements Collideable {
    // Attributes

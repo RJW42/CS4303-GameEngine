@@ -1,4 +1,4 @@
-package GameEngine.Components.AIComponents.AIMovementController;
+package GameEngine.Components.AIComponents.AIMovement;
 
 import GameEngine.Components.Component;
 import GameEngine.GameObjects.GameObject;

@@ -117,7 +117,7 @@ public class GameEngine extends PApplet {
       PIXEL_TO_METER = Math.min(x_scale, y_scale);
 
       // Set default zoom
-      chase_zoom = 1f;
+      chase_zoom = 2f;
    }
 
 

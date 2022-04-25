@@ -1,9 +1,12 @@
-package GameEngine.Components.TerrianComponents;
+package GameEngine.Components.AIComponents.AIMovement;
 
 
-import GameEngine.Components.AIComponents.AIMovementController.Path;
+import GameEngine.Components.AIComponents.AIMovement.Path;
 import GameEngine.Components.Component;
+import GameEngine.Components.ForceManager;
+import GameEngine.Components.TerrianComponents.TerrainGenerator;
 import GameEngine.GameObjects.GameObject;
+import GameEngine.GameObjects.Player;
 import GameEngine.GameObjects.Terrain;
 import processing.core.PVector;
 
@@ -16,6 +19,8 @@ public class AIPathManager extends Component {
    private final HashMap<Integer, Node> index_to_nodes;
    private TerrainGenerator generator;
 
+   public PVector player_ground_tile;
+   public Player player;
 
    // Constructor
    public AIPathManager(GameObject parent) {
@@ -24,32 +29,37 @@ public class AIPathManager extends Component {
       // Init attributes
       this.nodes = new ArrayList<>();
       this.index_to_nodes = new HashMap<>();
+      this.player_ground_tile = new PVector();
    }
 
 
    // Methods 
    public void start() {
        init_walkable_areas();
+
+       player = sys.getGameObject(Player.class);
    }
 
    public void update() {
+      update_player_ground_tile();
    }
 
 
    public void draw() {
       for(Node node : nodes){
-         sys.fill(0, 255, 0);
+         sys.fill(0, 255, 0, 127);
          sys.rect(node.pos.x, node.pos.y, Terrain.CELL_SIZE, Terrain.CELL_SIZE);
          sys.fill(255, 0, 0);
          sys.circle(node.centre_pos.x, node.centre_pos.y, 0.1f);
 
          for(Edge edge : node.adjacent){
-            if(edge instanceof JumpEdge){
-               JumpEdge jedge = (JumpEdge) edge;
+            if(edge instanceof VerticalEdge){
+               VerticalEdge jedge = (VerticalEdge) edge;
 
                sys.stroke(255, 0, 0);
                sys.line(node.centre_pos.x, node.centre_pos.y, jedge.upper_pos.x, jedge.upper_pos.y);
                sys.line(jedge.upper_pos.x, jedge.upper_pos.y, jedge.node.centre_pos.x, jedge.node.centre_pos.y);
+               sys.noStroke();
             } else {
                sys.stroke(0, 0, 255);
                sys.line(node.centre_pos.x, node.centre_pos.y, edge.node.centre_pos.x, edge.node.centre_pos.y);
@@ -57,19 +67,37 @@ public class AIPathManager extends Component {
             }
          }
       }
+      sys.fill(250, 215, 30);
+      sys.rect(player_ground_tile.x, player_ground_tile.y, Terrain.CELL_SIZE, Terrain.CELL_SIZE);
+   }
+
+   // ******** Tracking Methods ********* //
+   private void update_player_ground_tile() {
+      // Get the ground position of the player
+      float x = player.pos.x + Player.COLLISION_WIDTH / 2f;
+      float y = player.pos.y;
+      int index;
+
+      do {
+         index = generator.getIndexFromWorldPos(x, y--);
+      }while(!index_to_nodes.containsKey(index));
+
+      Node node = index_to_nodes.get(index);
+      player_ground_tile.x = node.pos.x;
+      player_ground_tile.y = node.pos.y;
    }
 
 
    // ********* Graph Generation ********* //
    private void init_walkable_areas(){
       // Loop over each point on the world
-      generator = parent.getComponent(TerrainGenerator.class);
+      generator = sys.terrain.getComponent(TerrainGenerator.class);
       int[] world = generator.getWorld();
 
       // Create graph
       create_nodes(world);
       create_edges(world);
-      create_jump_edges(world);
+      create_vertical_edges(world);
    }
 
    private void create_nodes(int[] world){
@@ -113,7 +141,7 @@ public class AIPathManager extends Component {
    }
 
 
-   private void create_jump_edges(int[] world) {
+   private void create_vertical_edges(int[] world) {
       // Connect all adjacent nodes
       for (Node node : nodes) {
          // Check if there is a position to jump to above
@@ -130,14 +158,13 @@ public class AIPathManager extends Component {
                if(!is_valid_and_walkable(world, node_x, y))
                   continue;
 
-               // Add jump edge
+               // Add Vertical edge to both nodes
                PVector jump_pos = new PVector(node_x - x_offset + Terrain.CELL_SIZE / 2f, y + Terrain.CELL_SIZE / 2f);
+               Node other_node = index_to_nodes.get(node_index);
+               float weight = (float) (Math.pow(node.pos.x - jump_pos.x, 2) + Math.pow(node.pos.y - jump_pos.y, 2));
 
-               node.adjacent.add(new JumpEdge(
-                  index_to_nodes.get(node_index),
-                  jump_pos,
-                  (float) (Math.pow(node.pos.x - jump_pos.x, 2) + Math.pow(node.pos.y - jump_pos.y, 2))
-               ));
+               node.adjacent.add(new VerticalEdge(other_node, jump_pos, weight, false));
+               other_node.adjacent.add(new VerticalEdge(node, jump_pos, weight, true));
             }
 
             // Move to next possible node
@@ -300,15 +327,16 @@ public class AIPathManager extends Component {
    }
 
 
-   private static class JumpEdge extends Edge{
+   private static class VerticalEdge extends Edge{
       // Attributes
       public final PVector upper_pos;
-      // public final int distance; // Todo: add
+      public final boolean is_upper;
 
       // Constructor
-      public JumpEdge(Node node, PVector upper_pos, float weight) {
+      public VerticalEdge(Node node, PVector upper_pos, float weight, boolean is_upper) {
          super(node, weight);
          this.upper_pos = upper_pos;
+         this.is_upper = is_upper;
       }
    }
 

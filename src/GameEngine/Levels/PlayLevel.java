@@ -1,6 +1,7 @@
 package GameEngine.Levels;
 
 import GameEngine.Components.TerrianComponents.LoadedTerrainGenerator;
+import GameEngine.GameObjects.Director;
 import GameEngine.GameObjects.Player;
 import GameEngine.GameObjects.Pointer;
 import GameEngine.GameObjects.Terrain;
@@ -42,6 +43,7 @@ public class PlayLevel extends Level{
       // Spawn entities
       sys.terrain = terrain;
       sys.spawn(terrain, 0);
+      sys.spawn(new Director(sys), 0);
 
       Player player = new Player(sys, generator.player_spawn_loc.copy(), 0);
       sys.spawn(player, 2);

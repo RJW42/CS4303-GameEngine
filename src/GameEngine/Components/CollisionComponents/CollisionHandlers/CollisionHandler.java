@@ -1,16 +1,12 @@
 package GameEngine.Components.CollisionComponents.CollisionHandlers;
 
-import GameEngine.Components.AIComponents.AIMovementController.AIMovementController;
 import GameEngine.Components.CollisionComponents.BaseCollisionComponent;
-import GameEngine.Components.CollisionComponents.CircleCollisionComponent;
 import GameEngine.Components.CollisionComponents.RectCollisionComponent;
 import GameEngine.Components.ForceManager;
-import GameEngine.Components.PlayerComponents.CharacterController;
 import GameEngine.GameObjects.Terrain;
 import GameEngine.GameObjects.Player;
 import processing.core.PVector;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 import java.util.TreeSet;
 

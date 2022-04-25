@@ -51,8 +51,7 @@ public class Gun extends Component {
       prev_fire_time += sys.DELTA_TIME;
 
       // Todo: want to test.json to see if prev_fire_time should change when not active
-      //if(active)
-         renderer.update();
+      renderer.update();
    }
 
    public void draw(){
