@@ -12,8 +12,12 @@ import static GameEngine.Components.MapEditorComponents.ToolMenu.*;
 
 public class ItemSelect extends Tool {
    // Attributes
+   public static final int BUTTON_WIDTH = 100;
+
    public Item current_item;
+
    private ArrayList<UIButton> buttons;
+   private float button_width;
 
    // Constructor
    public ItemSelect(GameObject parent) {
@@ -54,7 +58,7 @@ public class ItemSelect extends Tool {
    private void create_buttons(){
       // Create a button for each item
       buttons = new ArrayList<>();
-      float x = pos.x;
+      float x = pos.x + BUTTON_WIDTH * GameEngine.UI_SCALE / 2f - ITEM_WIDTH * GameEngine.UI_SCALE / 2f;
       float y = pos.y + ITEM_HEIGHT * GameEngine.UI_SCALE;
 
       for(Item item : Item.values()){
@@ -74,9 +78,9 @@ public class ItemSelect extends Tool {
 
    private UIButton create_button(Item item){
       return new UIButton(
-              parent, () -> item_selected(item), (UIButton b) -> render_item(item, b), new PVector(),
+              parent, () -> item_selected(item), item.name(), new PVector(),
               TEXT_C, BACKGROUND_C, BORDER_C, TEXT_C, BACKGROUND_H_C, BORDER_H_C,
-              ITEM_PADDING, ITEM_BORDER_WIDTH, ITEM_WIDTH, ITEM_HEIGHT, true
+              ITEM_PADDING, ITEM_BORDER_WIDTH, BUTTON_WIDTH, ITEM_HEIGHT, true
       );
    }
 }
