@@ -115,6 +115,7 @@ public class MapEditorSelector extends GameObject {
       ){
          create_button.border_colour = ERR_COLOUR;
          create_button.hover_border_colour = ERR_COLOUR;
+         sys.warning_display.display_warning("Enter all required values");
          return;
       }
 
@@ -127,6 +128,7 @@ public class MapEditorSelector extends GameObject {
       if(name.length() < 1){
          // Invalid
          name_input.border_colour = ERR_COLOUR;
+         sys.warning_display.display_warning("Level name bust be greater than 1");
          this.name = null;
          return;
       }
@@ -139,8 +141,9 @@ public class MapEditorSelector extends GameObject {
       // Check if width is valid
       int w = parse_int(width);
 
-      if(w <= 0){
+      if(w <= 10){
          width_input.border_colour = ERR_COLOUR;
+         sys.warning_display.display_warning("Width must be a number greater than 10");
          this.width = 0;
          return;
       }
@@ -153,13 +156,14 @@ public class MapEditorSelector extends GameObject {
       // Check if width is valid
       int h = parse_int(height);
 
-      if(h <= 0){
-         width_input.border_colour = ERR_COLOUR;
+      if(h <= 10){
+         height_input.border_colour = ERR_COLOUR;
+         sys.warning_display.display_warning("Height must be a number greather than 10");
          this.height = 0;
          return;
       }
 
-      width_input.border_colour = BORDER_COLOUR;
+      height_input.border_colour = BORDER_COLOUR;
       this.height = h;
    }
 

@@ -56,6 +56,7 @@ public class GameEngine extends PApplet {
 
    /* Game Engine Variables */
    private Minim minim;
+   public WarningDisplay warning_display;
    public InputManager input_manager;
    public ImageManager sprite_manager;
    public ScoreManager score_manager;
@@ -135,6 +136,7 @@ public class GameEngine extends PApplet {
       sprite_manager = new ImageManager(this);
       input_manager = new InputManager(this);
       audio_manager = new AudioManager(this, minim);
+      warning_display = new WarningDisplay(this);
 
       // Init level manager
       level_manager = new LevelManager(this, new MainMenu(this));
@@ -328,6 +330,8 @@ public class GameEngine extends PApplet {
          objects[i] = new ArrayList<>();
          objects_to_add[i] = new ArrayList<>();
       }
+
+      spawn(warning_display, Z_LAYERS - 1);
    }
 
 

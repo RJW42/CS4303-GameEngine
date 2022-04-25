@@ -27,6 +27,7 @@ public class MenuSelector extends GameObject {
    private UIButton level_select;
    private UIButton editor_select;
    private UIButton controls;
+   private UIButton settings;
 
 
    // Constructor
@@ -39,6 +40,7 @@ public class MenuSelector extends GameObject {
       this.components.add(level_select);
       this.components.add(editor_select);
       this.components.add(controls);
+      this.components.add(settings);
    }
 
 
@@ -56,7 +58,15 @@ public class MenuSelector extends GameObject {
    }
 
    public void controls_clicked(){
-      // Todo: implement
+      // Switch to controls menu
+      is_dead = true;
+      sys.spawn(new ControlsMenu(sys), 1);
+   }
+
+   public void settings_clicked(){
+      // Switch to settings menu
+      is_dead = true;
+      sys.spawn(new SettingsMenu(sys), 1);
    }
 
    @Override
@@ -84,9 +94,18 @@ public class MenuSelector extends GameObject {
               PADDING, BORDER_WIDTH, WIDTH, HEIGHT, true
       );
 
-      // Update buttons positions based off of button height
-      level_select.pos.y += level_select.height + SPACING * GameEngine.UI_SCALE;
-      controls.pos.y -= controls.height + SPACING * GameEngine.UI_SCALE;
+      settings = new UIButton(this, this::settings_clicked, "Settings",
+              new PVector(GameEngine.SCREEN_WIDTH / 2, GameEngine.SCREEN_HEIGHT /2),
+              TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, TEXT_HOVER_COLOUR, BUTTON_HOVER_COLOUR, BORDER_HOVER_COLOUR,
+              PADDING, BORDER_WIDTH, WIDTH, HEIGHT, true
+      );
 
+      // Update buttons positions based off of button height
+      float total_height = level_select.height * 4 + SPACING * 3 * GameEngine.UI_SCALE;
+
+      level_select.pos.y += total_height / 2;
+      editor_select.pos.y = level_select.pos.y - (level_select.height + SPACING * GameEngine.UI_SCALE);
+      controls.pos.y = editor_select.pos.y  - (editor_select.height + SPACING * GameEngine.UI_SCALE);
+      settings.pos.y = controls.pos.y - (controls.height + SPACING * GameEngine.UI_SCALE);
    }
 }

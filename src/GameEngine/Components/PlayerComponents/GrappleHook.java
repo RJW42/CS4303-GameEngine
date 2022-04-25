@@ -25,6 +25,7 @@ public class GrappleHook extends Component {
    public boolean fired;
    private PVector base;
    private boolean can_release;
+   private PVector player_point; // Todo: <- this is the point the grapple hooks to the player, used for non grapple check and other stuff
 
    // Constructor
    public GrappleHook(GameObject parent) {
@@ -45,6 +46,8 @@ public class GrappleHook extends Component {
    }
 
    public void update() {
+      player_point = parent.pos;
+
       if(!fired)
          handle_firing();
       else
@@ -57,7 +60,7 @@ public class GrappleHook extends Component {
 
       // Draw grapple
       sys.stroke(255);
-      sys.line(parent.pos.x, parent.pos.y, base.x, base.y);
+      sys.line(player_point.x, player_point.y, base.x, base.y);
    }
 
 
@@ -73,7 +76,7 @@ public class GrappleHook extends Component {
 
       // User fired check for collision
       Optional<PVector> maybe_point = cast_ray(
-              parent.pos, PVector.sub(new PVector(sys.mouse_x, sys.mouse_y), parent.pos).normalize()
+              player_point, PVector.sub(new PVector(sys.mouse_x, sys.mouse_y), player_point).normalize()
       );
 
       if(maybe_point.isEmpty())
@@ -81,7 +84,8 @@ public class GrappleHook extends Component {
 
       // Received point, check if this point can be grappled to
       base = maybe_point.get();
-      int index = generator.getIndexFromWorldPos(base.x, base.y);
+      PVector offset = PVector.sub(base, player_point).normalize().mult(0.1f);
+      int index = generator.getIndexFromWorldPos(base.x + offset.x, base.y + offset.y);
 
       if(generator.getSpecialTiles()[index] == Terrain.NON_GRAPPLE)
          return; // Todo: maybe want an animation for this
@@ -89,19 +93,19 @@ public class GrappleHook extends Component {
       // Received valid point, create grapple
       fired = true;
       force_manager.grapple_base = base;
-      force_manager.grapple_length = PVector.dist(parent.pos, base);
+      force_manager.grapple_length = PVector.dist(player_point, base);
    }
 
    private void handle_swing(){
       // Check grapple still connected
       Optional<PVector> maybe_point = cast_ray(
-              base, PVector.sub(parent.pos, base).normalize()
+              base, PVector.sub(player_point, base).normalize()
       );
 
       if(!fire.pressed)
          can_release = true;
 
-      if((maybe_point.isPresent() && PVector.dist(maybe_point.get(), base) < PVector.dist(base, parent.pos)) || (can_release && fire.pressed)){
+      if((maybe_point.isPresent() && PVector.dist(maybe_point.get(), base) < PVector.dist(base, player_point)) || (can_release && fire.pressed)){
          // No longer fired
          force_manager.grapple_base = null;
          fired = false;
