@@ -2,10 +2,8 @@ package GameEngine.Components.TerrianComponents;
 
 import GameEngine.Components.Component;
 import GameEngine.GameObjects.GameObject;
-import GameEngine.GameObjects.Terrain;
+import GameEngine.GameObjects.Core.Terrain;
 import processing.core.PVector;
-
-import java.util.function.Supplier;
 
 public abstract class TerrainGenerator extends Component {
    // Attributes

@@ -3,7 +3,7 @@ package GameEngine.Components.AIComponents.TargetFinder;
 import GameEngine.Components.Component;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
 import GameEngine.GameObjects.GameObject;
-import GameEngine.GameObjects.Terrain;
+import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.Utils.Pair;
 import processing.core.PVector;
 

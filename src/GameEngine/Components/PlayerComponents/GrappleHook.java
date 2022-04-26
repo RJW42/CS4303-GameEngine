@@ -5,7 +5,7 @@ import GameEngine.Components.Component;
 import GameEngine.Components.ForceManager;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
 import GameEngine.GameObjects.GameObject;
-import GameEngine.GameObjects.Terrain;
+import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.Utils.Managers.InputManager;
 import processing.core.PVector;
 

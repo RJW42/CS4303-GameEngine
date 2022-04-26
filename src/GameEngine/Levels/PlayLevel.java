@@ -1,11 +1,12 @@
 package GameEngine.Levels;
 
 import GameEngine.Components.TerrianComponents.LoadedTerrainGenerator;
-import GameEngine.GameObjects.Director;
-import GameEngine.GameObjects.Player;
-import GameEngine.GameObjects.Pointer;
-import GameEngine.GameObjects.Terrain;
+import GameEngine.GameObjects.Core.Director;
+import GameEngine.GameObjects.Core.Monster;
+import GameEngine.GameObjects.Core.Player;
+import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.GameEngine;
+import processing.core.PVector;
 
 import java.util.Random;
 
@@ -45,9 +46,11 @@ public class PlayLevel extends Level{
       sys.spawn(terrain, 0);
       sys.spawn(new Director(sys), 0);
 
-      Player player = new Player(sys, generator.player_spawn_loc.copy(), 0);
+      Player player = new Player(sys, generator.player_spawn_loc.copy());
       sys.spawn(player, 2);
       sys.chase_object = player;
+
+      sys.spawn(new Monster(sys, new PVector(2, 2)), 2);
    }
 
    public boolean updateAndCanAdvance() {

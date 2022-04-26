@@ -2,9 +2,7 @@ package GameEngine.Components.TerrianComponents;
 
 
 import GameEngine.GameObjects.GameObject;
-import GameEngine.GameObjects.Terrain;
-
-import java.util.Arrays;
+import GameEngine.GameObjects.Core.Terrain;
 
 
 public class LoadedTerrainGenerator extends TerrainGenerator{

@@ -1,11 +1,10 @@
 package GameEngine.Components;
 
 
-import GameEngine.Components.Component;
 import GameEngine.Components.Renderers.TextRenderer;
 import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
-import GameEngine.GameObjects.Terrain;
+import GameEngine.GameObjects.Core.Terrain;
 import processing.core.PApplet;
 import processing.core.PVector;
 import processing.event.KeyEvent;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 public class ScoreBoard extends Component {

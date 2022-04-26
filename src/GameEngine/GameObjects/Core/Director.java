@@ -1,8 +1,9 @@
-package GameEngine.GameObjects;
+package GameEngine.GameObjects.Core;
 
 
 import GameEngine.Components.AIComponents.AIMovement.AIPathManager;
 import GameEngine.GameEngine;
+import GameEngine.GameObjects.GameObject;
 
 
 public class Director extends GameObject {

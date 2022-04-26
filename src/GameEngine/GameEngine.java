@@ -4,6 +4,7 @@ import GameEngine.Components.CollisionComponents.BaseCollisionComponent;
 import GameEngine.Components.CollisionComponents.Collideable;
 import GameEngine.Components.CollisionComponents.CollisionHandlers.CollisionHandler;
 import GameEngine.GameObjects.*;
+import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.Levels.*;
 import GameEngine.Levels.MainMenu;
 import GameEngine.Utils.Config;
@@ -18,7 +19,6 @@ import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
 import java.util.*;
-import java.util.concurrent.Semaphore;
 import java.util.stream.Collectors;
 
 public class GameEngine extends PApplet{

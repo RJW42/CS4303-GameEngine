@@ -1,12 +1,11 @@
 package GameEngine.Components.MapEditorComponents.Tools;
 
 
-import GameEngine.Components.Component;
 import GameEngine.Components.MapEditorComponents.TileSelector;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
 import GameEngine.Components.TerrianComponents.TerrainRenderer;
 import GameEngine.GameObjects.GameObject;
-import GameEngine.GameObjects.Terrain;
+import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.Utils.Managers.InputManager;
 
 

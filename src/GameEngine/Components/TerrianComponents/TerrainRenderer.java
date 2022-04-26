@@ -3,7 +3,7 @@ package GameEngine.Components.TerrianComponents;
 import GameEngine.Components.Component;
 import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
-import GameEngine.GameObjects.Terrain;
+import GameEngine.GameObjects.Core.Terrain;
 import processing.core.PConstants;
 import processing.core.PVector;
 

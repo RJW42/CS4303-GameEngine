@@ -1,13 +1,11 @@
 package GameEngine.Components.AIComponents.AIMovement;
 
 
-import GameEngine.Components.AIComponents.AIMovement.Path;
 import GameEngine.Components.Component;
-import GameEngine.Components.ForceManager;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
 import GameEngine.GameObjects.GameObject;
-import GameEngine.GameObjects.Player;
-import GameEngine.GameObjects.Terrain;
+import GameEngine.GameObjects.Core.Player;
+import GameEngine.GameObjects.Core.Terrain;
 import processing.core.PVector;
 
 import java.util.*;
@@ -70,6 +68,7 @@ public class AIPathManager extends Component {
       sys.fill(250, 215, 30);
       sys.rect(player_ground_tile.x, player_ground_tile.y, Terrain.CELL_SIZE, Terrain.CELL_SIZE);
    }
+
 
    // ******** Tracking Methods ********* //
    private void update_player_ground_tile() {
@@ -163,8 +162,8 @@ public class AIPathManager extends Component {
                Node other_node = index_to_nodes.get(node_index);
                float weight = (float) (Math.pow(node.pos.x - jump_pos.x, 2) + Math.pow(node.pos.y - jump_pos.y, 2));
 
-               node.adjacent.add(new VerticalEdge(other_node, jump_pos, weight, false));
-               other_node.adjacent.add(new VerticalEdge(node, jump_pos, weight, true));
+               node.adjacent.add(new VerticalEdge(other_node, jump_pos, weight * 1000, false));
+               other_node.adjacent.add(new VerticalEdge(node, jump_pos, weight * 1000, true));
             }
 
             // Move to next possible node
@@ -197,6 +196,14 @@ public class AIPathManager extends Component {
       // Get the nodes the start and end belong to
       Node start_node = index_to_nodes.get(generator.getIndexFromWorldPos(start.x, start.y));
       Node end_node = index_to_nodes.get(generator.getIndexFromWorldPos(end.x, end.y));
+
+      if(start_node == end_node){
+         Path p = new Path();
+         p.points.add(new Path.Point(start.copy()));
+         p.points.add(new Path.Point(end.copy()));
+         System.out.println("Same");
+         return p;
+      }
 
       // Perform a* search to create a path between the start and end nodes
       // Init data structures required to perform the search
@@ -244,15 +251,18 @@ public class AIPathManager extends Component {
 
       // Found path to parent convert this to a usable search path
       LinkedList<Path.Point> path = new LinkedList<>();
-      path.addFirst(new Path.Point(end));
+      path.addFirst(new Path.Point(end.copy()));
 
       Node n = end_node.parent;
-      while(n != start_node){
+      while(n != start_node && n != null){
          path.addFirst(new Path.Point(n.centre_pos));
          n = n.parent;
       }
 
-      path.addFirst(new Path.Point(start));
+      path.addFirst(new Path.Point(start.copy()));
+
+      if(n == null) // Could not create a path to the player
+         path.removeLast();
 
       // Create output path
       Path out = new Path();
@@ -296,8 +306,8 @@ public class AIPathManager extends Component {
 
 
       public void resetMetrics(){
-         f = Float.MAX_VALUE - 10000;
-         g = Float.MAX_VALUE - 10000;
+         f = 1000000;
+         g = 1000000;
          parent = null;
       }
 

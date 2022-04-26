@@ -1,4 +1,4 @@
-package GameEngine.GameObjects;
+package GameEngine.GameObjects.Core;
 
 import GameEngine.Components.CollisionComponents.BaseCollisionComponent;
 import GameEngine.Components.CollisionComponents.CircleCollisionComponent;
@@ -11,6 +11,7 @@ import GameEngine.Components.Renderers.ImageRenderer;
 import GameEngine.Components.Renderers.RectRenderer;
 import GameEngine.Components.Weapons.MachineGun;
 import GameEngine.GameEngine;
+import GameEngine.GameObjects.GameObject;
 import processing.core.PApplet;
 import processing.core.PVector;
 
@@ -24,7 +25,6 @@ public class Player extends GameObject implements Collideable {
    public static final float ACCELERATION    = 12f;
    public static final float MAX_SPEED       = 4f;
    public static final float FRICTION        = 0.06f;
-   public static final int STARTING_LIVES    = 3;
 
    private final ArrayList<BaseCollisionComponent> collision_components;
    private ForceManager force_manager;
@@ -33,11 +33,7 @@ public class Player extends GameObject implements Collideable {
 
 
    // Constructor
-   public Player(GameEngine sys, PVector spawn_location){
-      this(sys, spawn_location, STARTING_LIVES);
-   }
-
-   public Player(GameEngine sys, PVector spawn_location, int number_lives) {
+   public Player(GameEngine sys, PVector spawn_location) {
       super(sys);
 
       // Set position
@@ -45,7 +41,11 @@ public class Player extends GameObject implements Collideable {
 
       // Add collision components
       this.collision_components = new ArrayList<>();
-      this.collision_components.add(new RectCollisionComponent(this, null, COLLISION_WIDTH, COLLISION_HEIGHT)); // Todo: check if this is decent, the collision height for grounded
+
+      RectCollisionComponent core = new RectCollisionComponent(this, null, COLLISION_WIDTH, COLLISION_HEIGHT);
+      core.tag = BaseCollisionComponent.Tag.PRIMARY;
+
+      this.collision_components.add(core);
       this.collision_components.add(new RectCollisionComponent(this, this::ground_collision, new PVector(0.05f, -(COLLISION_HEIGHT - 0f)), COLLISION_WIDTH - 0.1f, 0.05f));
 
       // Add regular components

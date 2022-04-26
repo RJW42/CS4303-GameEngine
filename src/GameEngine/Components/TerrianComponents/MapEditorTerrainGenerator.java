@@ -2,7 +2,7 @@ package GameEngine.Components.TerrianComponents;
 
 
 import GameEngine.GameObjects.GameObject;
-import GameEngine.GameObjects.Terrain;
+import GameEngine.GameObjects.Core.Terrain;
 
 import java.util.Arrays;
 

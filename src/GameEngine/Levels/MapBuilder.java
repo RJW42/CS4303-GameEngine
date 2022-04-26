@@ -3,6 +3,7 @@ package GameEngine.Levels;
 import GameEngine.Components.TerrianComponents.*;
 import GameEngine.GameObjects.*;
 import GameEngine.GameEngine;
+import GameEngine.GameObjects.Core.Terrain;
 import processing.core.PVector;
 
 import java.util.Random;

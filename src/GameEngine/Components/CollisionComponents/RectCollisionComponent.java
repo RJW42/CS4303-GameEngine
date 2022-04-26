@@ -1,8 +1,6 @@
 package GameEngine.Components.CollisionComponents;
 
-import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
-import GameEngine.GameObjects.Terrain;
 import GameEngine.Triggers.CollisionTrigger;
 import processing.core.PVector;
 

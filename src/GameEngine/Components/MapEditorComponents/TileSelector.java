@@ -3,9 +3,8 @@ package GameEngine.Components.MapEditorComponents;
 
 import GameEngine.Components.Component;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
-import GameEngine.Components.TerrianComponents.TerrainRenderer;
 import GameEngine.GameObjects.GameObject;
-import GameEngine.GameObjects.Terrain;
+import GameEngine.GameObjects.Core.Terrain;
 
 
 public class TileSelector extends Component {

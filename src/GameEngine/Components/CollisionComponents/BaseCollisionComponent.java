@@ -3,7 +3,6 @@ package GameEngine.Components.CollisionComponents;
 import GameEngine.Components.Component;
 import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
-import GameEngine.GameObjects.Terrain;
 import GameEngine.Triggers.CollisionTrigger;
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -19,6 +18,7 @@ public abstract class BaseCollisionComponent extends Component {
    public CollisionTrigger trigger;
    public boolean stationary;
    public boolean is_ground;
+   public Tag tag;
 
    private boolean set_collisions;
 
@@ -63,6 +63,12 @@ public abstract class BaseCollisionComponent extends Component {
 
          sys.circle(get_x(), get_y(), 0.05f);
       }
+   }
+
+   /* ***** Possible Tags ***** */
+   public enum Tag {
+      PRIMARY,
+      OTHER;
    }
 
    /* ***** Implemented Methods ***** */

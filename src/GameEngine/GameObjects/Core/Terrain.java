@@ -1,10 +1,11 @@
-package GameEngine.GameObjects;
+package GameEngine.GameObjects.Core;
 
 import GameEngine.Components.AIComponents.AIMovement.AIPathManager;
 import GameEngine.Components.CollisionComponents.BaseCollisionComponent;
 import GameEngine.Components.CollisionComponents.Collideable;
 import GameEngine.Components.TerrianComponents.*;
 import GameEngine.GameEngine;
+import GameEngine.GameObjects.GameObject;
 import processing.core.PVector;
 
 import java.util.ArrayList;
