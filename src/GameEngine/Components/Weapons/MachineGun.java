@@ -1,11 +1,8 @@
 package GameEngine.Components.Weapons;
 
-import GameEngine.Components.Renderers.RectRenderer;
-import GameEngine.GameObjects.Bullet;
+import GameEngine.GameObjects.Bullets.Bullet;
 import GameEngine.GameObjects.GameObject;
 import processing.core.PVector;
-
-import javax.crypto.Mac;
 
 public class MachineGun {
    public static final float SPREAD_ANGLE = 0.1f;
@@ -16,8 +13,6 @@ public class MachineGun {
    public static final float BULLET_RAD   = 0.05f;
    public static final float BARREL_LENGTH= 0.5f;
    public static final float BARREL_HEIGHT= 0.1f;
-
-   
    
    private MachineGun(){
       // Utility class no constructor
@@ -37,7 +32,7 @@ public class MachineGun {
               new BulletFactory() {
                  @Override
                  public Bullet newBullet(PVector spawn_location, PVector spawn_velocity) {
-                    return new Bullet(parent.sys, parent, spawn_velocity, spawn_location, BULLET_RAD, BULLET_MASS);
+                    return new Bullet(parent.sys, parent, spawn_velocity, spawn_location, BULLET_RAD, BULLET_MASS, 0, true);
                  }
               },
               location,

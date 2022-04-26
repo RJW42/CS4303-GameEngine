@@ -12,6 +12,7 @@ public class ForceManager extends Component {
    public boolean grounded;
    public boolean set_grounded;
    public boolean apply_friction;
+   public boolean apply_gravity;
    public float friction;
 
    public PVector grapple_base;
@@ -22,6 +23,10 @@ public class ForceManager extends Component {
 
    // Constructor
    public ForceManager(GameObject parent, PVector start_velocity, PVector start_acceleration, float friction) {
+      this(parent, start_velocity, start_acceleration, friction, true);
+   }
+
+   public ForceManager(GameObject parent, PVector start_velocity, PVector start_acceleration, float friction, boolean has_gravity) {
       super(parent);
 
       // Todo: could take in attributes such as a speed and a force limit
@@ -33,6 +38,7 @@ public class ForceManager extends Component {
       this.set_grounded = false;
       this.apply_friction = true;
       this.friction = friction;
+      this.apply_gravity = has_gravity;
    }
 
 
@@ -92,7 +98,7 @@ public class ForceManager extends Component {
 
    private void update_velocities(){
       // Add gravity
-      velocity.y -= sys.GRAVITY * sys.DELTA_TIME;
+      if(apply_gravity) velocity.y -= sys.GRAVITY * sys.DELTA_TIME;
 
       // Add friction
       if(apply_friction && frames_grounded > 1){

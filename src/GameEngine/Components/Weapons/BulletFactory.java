@@ -1,6 +1,6 @@
 package GameEngine.Components.Weapons;
 
-import GameEngine.GameObjects.Bullet;
+import GameEngine.GameObjects.Bullets.Bullet;
 import processing.core.PVector;
 
 public interface BulletFactory {

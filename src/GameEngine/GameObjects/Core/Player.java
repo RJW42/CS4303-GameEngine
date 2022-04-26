@@ -10,6 +10,7 @@ import GameEngine.Components.Renderers.CircleRenderer;
 import GameEngine.Components.Renderers.ImageRenderer;
 import GameEngine.Components.Renderers.RectRenderer;
 import GameEngine.Components.Weapons.MachineGun;
+import GameEngine.Components.Weapons.RPG;
 import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
 import processing.core.PApplet;
@@ -58,7 +59,7 @@ public class Player extends GameObject implements Collideable {
       this.components.add(new GrappleHook(this));
       this.components.add(force_manager);
       this.components.add(new GunController(this));
-      this.components.add(MachineGun.create(this, new PVector(COLLISION_WIDTH / 2f, -COLLISION_HEIGHT / 2f)));
+      this.components.add(RPG.create(this, new PVector(COLLISION_WIDTH / 2f, -COLLISION_HEIGHT / 2f)));
 
       // Add collision components to regular
       this.components.addAll(this.collision_components);
