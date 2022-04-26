@@ -34,7 +34,7 @@ public class Bullet extends GameObject implements Collideable {
       this.pos = spawn_location;
       this.momentum = mass * start_vel.mag();
       this.explosion_size = explosion_size;
-      this.explosive = explosion_size <= 0;
+      this.explosive = explosion_size >= 0;
 
       // Add collision components 
       this.collision_components = new ArrayList<>();
@@ -58,18 +58,19 @@ public class Bullet extends GameObject implements Collideable {
 
    public boolean onCollision(BaseCollisionComponent other){
       // Collided destroy bullet
+      if(is_dead) return false;
       is_dead = true;
 
       // Todo: check if other is damagable, then change to only explode on terrain and damanagable maybe
 
-      if(explosive)
-         create_explosion();
+      if(explosive) create_explosion();
 
       return true;
    }
 
    private void create_explosion(){
-
+      System.out.println("yee");
+      sys.spawn(new Explosion(sys, parent, pos.copy(), explosion_size), 2);
    }
 
    @Override

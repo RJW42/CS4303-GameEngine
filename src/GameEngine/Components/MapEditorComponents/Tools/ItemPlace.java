@@ -58,7 +58,6 @@ public class ItemPlace extends Tool {
 
    public void draw() {
       // Todo: draw player properly in spawn location
-
    }
 
 
@@ -74,9 +73,11 @@ public class ItemPlace extends Tool {
       switch (item_select.current_item){
          case WALL:
             world[world_index] = Terrain.WALL;
+            tile_attributes[world_index] = Terrain.EMPTY;
             break;
          case AIR:
             world[world_index] = Terrain.AIR;
+            tile_attributes[world_index] = Terrain.EMPTY;
             break;
          case NON_GRAPPLE_WALL:
             world[world_index] = Terrain.WALL;

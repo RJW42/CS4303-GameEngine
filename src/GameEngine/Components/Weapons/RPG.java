@@ -5,15 +5,15 @@ import GameEngine.GameObjects.GameObject;
 import processing.core.PVector;
 
 public class RPG {
-   public static final float SPREAD_ANGLE = 0.1f;
-   public static final int NUM_BARRELS    = 1;
-   public static final int FIRE_RATE      = 2;
-   public static final int MUZZLE_SPEED   = 10;
-   public static final float BULLET_MASS  = 0.5f;
-   public static final float BULLET_RAD   = 0.1f;
-   public static final float BARREL_LENGTH= 0.75f;
-   public static final float BARREL_HEIGHT= 0.15f;
-   public static final float EXPLOSION_SIZE=10;
+   public static final float SPREAD_ANGLE   = 0.1f;
+   public static final int NUM_BARRELS      = 1;
+   public static final int FIRE_RATE        = 2;
+   public static final int MUZZLE_SPEED     = 10;
+   public static final float BULLET_MASS    = 0.5f;
+   public static final float BULLET_RAD     = 0.1f;
+   public static final float BARREL_LENGTH  = 0.75f;
+   public static final float BARREL_HEIGHT  = 0.15f;
+   public static final float EXPLOSION_SIZE = 100;
 
    private RPG(){
       // Utility class no constructor

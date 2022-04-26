@@ -11,6 +11,8 @@ RIGHT   = D
 JUMP    = SPACE
 GRAPPLE = MOUSE_RIGHT
 FIRE    = MOUSE_LEFT
+RESTART_LEVEL = R
+EXIT_TO_MENU  = M
 # Map editing controls
 MB-UP       = W
 MB-DOWN     = S

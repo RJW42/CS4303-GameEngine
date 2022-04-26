@@ -6,6 +6,7 @@ import GameEngine.GameObjects.Core.Monster;
 import GameEngine.GameObjects.Core.Player;
 import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.GameEngine;
+import GameEngine.Utils.Managers.InputManager;
 import processing.core.PVector;
 
 import java.util.Random;
@@ -14,6 +15,9 @@ import java.util.Random;
 public class PlayLevel extends Level{
    // Attributes
    private String file_name;
+   private InputManager.Key restart;
+   private InputManager.Key menu;
+   private Level advance;
 
    // Constructor
    public PlayLevel(GameEngine sys, String file_name) {
@@ -29,6 +33,10 @@ public class PlayLevel extends Level{
    }
 
    public void start() {
+      // Get restart keys
+      restart = sys.input_manager.getKey("RESTART_LEVEL");
+      menu = sys.input_manager.getKey("EXIT_TO_MENU");
+
       // Create terrian
       int seed = new Random().nextInt();
       System.out.println(seed);
@@ -54,10 +62,16 @@ public class PlayLevel extends Level{
    }
 
    public boolean updateAndCanAdvance() {
-      return false;
+      if(restart.pressed){
+         advance = new PlayLevel(sys, file_name);
+      } else if(menu.pressed) {
+         advance = new MainMenu(sys);
+      }
+
+      return advance != null;
    }
 
    public Level advance() {
-      return null;
+      return advance;
    }
 }
