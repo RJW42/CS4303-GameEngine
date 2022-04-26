@@ -54,19 +54,19 @@ public class MapEditorSelector extends GameObject {
               PADDING, BORDER_WIDTH, WIDTH - INPUT_SPACING, HEIGHT, true
       );
 
-      name_input = new UIInput(this, this::name_provided, "Name: ",
+      name_input = new UIInput(this, this::name_provided, "Name: ", null,
               new PVector(GameEngine.SCREEN_WIDTH / 2f, GameEngine.SCREEN_HEIGHT / 2f),
               TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, PADDING, BORDER_WIDTH,
               WIDTH * 2f, HEIGHT, MAX_NAME_LENGTH
       );
 
-      width_input =  new UIInput(this, this::width_provided, "Width: ",
+      width_input =  new UIInput(this, this::width_provided, "Width: ", null,
               new PVector(GameEngine.SCREEN_WIDTH / 2f, GameEngine.SCREEN_HEIGHT / 2f),
               TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, PADDING, BORDER_WIDTH,
               WIDTH - INPUT_SPACING, HEIGHT, MAX_SIZE_LENGTH
       );
 
-      height_input =  new UIInput(this, this::height_provided, "Height: ",
+      height_input =  new UIInput(this, this::height_provided, "Height: ", null,
               new PVector(GameEngine.SCREEN_WIDTH / 2f, GameEngine.SCREEN_HEIGHT / 2f),
               TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, PADDING, BORDER_WIDTH,
               WIDTH - INPUT_SPACING, HEIGHT, MAX_SIZE_LENGTH

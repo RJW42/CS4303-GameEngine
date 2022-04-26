@@ -18,6 +18,7 @@ public class UIInput extends Component {
    public float width;
    public float height;
    public String prompt;
+   public String placeholder;
    public int max_input_length;
 
    private String input;
@@ -36,9 +37,10 @@ public class UIInput extends Component {
    private float time_since_blink;
    private float blink_time = 0.4f;
    private boolean show_underscore = false;
+   private boolean not_read_input = true;
 
    // Constructor
-   public UIInput(GameObject parent, CallBack callback, String prompt, PVector pos, PVector text_colour, PVector rect_colour, PVector border_colour, float padding, float border_width, float width, float height, int max_input_length) {
+   public UIInput(GameObject parent, CallBack callback, String prompt, String placeholder, PVector pos, PVector text_colour, PVector rect_colour, PVector border_colour, float padding, float border_width, float width, float height, int max_input_length) {
       super(parent);
 
       // Init Attributes
@@ -46,6 +48,7 @@ public class UIInput extends Component {
       this.width = width;
       this.height = height;
       this.prompt = prompt;
+      this.placeholder = placeholder;
       this.padding = padding;
       this.border_width = border_width;
       this.text_colour = text_colour;
@@ -66,8 +69,7 @@ public class UIInput extends Component {
 
    // Methods 
    public void start() {
-      // Todo: implement this function 
-      //       Called once when the parent game spawns object 
+
    }
 
 
@@ -75,8 +77,6 @@ public class UIInput extends Component {
       // Check if waiting for input or click
       if(reading_input) wait_for_input();
       else wait_for_click();
-
-
    }
 
    private void wait_for_click(){
@@ -115,6 +115,7 @@ public class UIInput extends Component {
    private void input_callback(String string, boolean was_escaped){
       callback.onInput(string);
       reading_input = false;
+      not_read_input = false;
    }
 
 
@@ -136,7 +137,11 @@ public class UIInput extends Component {
       sys.textAlign(PConstants.LEFT);
 
       String text = prompt + input;
-      if(reading_input && show_underscore) text += "_";
+      if(reading_input) {
+         if (show_underscore) text += "_";
+      } else if(placeholder != null && not_read_input) {
+         text = prompt + placeholder;
+      }
 
       sys.uiText(text, pos.x - width / 2f + border_width + padding, pos.y - text_height / 2);
 
@@ -155,7 +160,8 @@ public class UIInput extends Component {
 
    public void reset_text_size(){
       // Get max height and width of text
-      StringBuilder sb = new StringBuilder(prompt);
+      String init = ((prompt == null) ? "" : prompt) + ((placeholder == null) ? "" : placeholder);
+      StringBuilder sb = new StringBuilder(init);
 
       for(int i = 0; i < max_input_length; i++)
          sb.append("W");
