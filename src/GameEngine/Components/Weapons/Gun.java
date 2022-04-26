@@ -2,6 +2,7 @@ package GameEngine.Components.Weapons;
 
 
 import GameEngine.Components.Component;
+import GameEngine.Components.ForceManager;
 import GameEngine.GameObjects.GameObject;
 import processing.core.PConstants;
 import processing.core.PVector;
@@ -24,6 +25,7 @@ public class Gun extends Component {
    public PVector target_pos;
 
    private PVector gun_pos;
+   private ForceManager force_manager;
 
    // Constructor
    public Gun(GameObject parent, GunRenderer renderer, BulletFactory bullet_factory, PVector offset, float spread_angle, int num_barrels, int fire_rate, int muzzle_speed, float barrel_length, float barrel_height) {
@@ -55,6 +57,7 @@ public class Gun extends Component {
    // Methods
    public void start() {
       renderer.start();
+      force_manager = parent.getComponent(ForceManager.class);
    }
 
 
@@ -102,6 +105,10 @@ public class Gun extends Component {
          vel_norm.rotate(sys.random(-spread_angle, spread_angle));
 
       PVector bullet_vel = vel_norm.setMag(muzzle_speed);
+
+      if(force_manager != null)
+         bullet_vel.add(force_manager.velocity);
+
 
       // Create new bullet
       sys.spawn(bullet_factory.newBullet(bullet_spawn_location.copy(), bullet_vel), 2);
