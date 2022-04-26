@@ -16,6 +16,8 @@ public class Path {
    }
 
    public Point getNextPoint(){
+      if(current_index == points.size() - 1)
+         return null;
       return points.get(++current_index);
    }
 
@@ -27,10 +29,20 @@ public class Path {
    public static class Point {
       // Attributes
       public final PVector pos;
+      public boolean is_jump;
+      public boolean is_bottom;
 
       // Constructor
       public Point(PVector pos) {
          this.pos = pos;
+         this.is_jump = false;
+         this.is_bottom = false;
+      }
+
+      public Point(PVector pos, boolean is_jump, boolean is_bottom) {
+         this.pos = pos;
+         this.is_jump = is_jump;
+         this.is_bottom = is_bottom;
       }
 
       // Methods

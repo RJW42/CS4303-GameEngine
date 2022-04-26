@@ -162,8 +162,8 @@ public class AIPathManager extends Component {
                Node other_node = index_to_nodes.get(node_index);
                float weight = (float) (Math.pow(node.pos.x - jump_pos.x, 2) + Math.pow(node.pos.y - jump_pos.y, 2));
 
-               node.adjacent.add(new VerticalEdge(other_node, jump_pos, weight * 1000, false));
-               other_node.adjacent.add(new VerticalEdge(node, jump_pos, weight * 1000, true));
+               node.adjacent.add(new VerticalEdge(other_node, jump_pos, weight, false));
+               other_node.adjacent.add(new VerticalEdge(node, jump_pos, weight, true));
             }
 
             // Move to next possible node
@@ -191,7 +191,7 @@ public class AIPathManager extends Component {
    public Path astar_search(PVector start, PVector end){
       // Adapted from: // https://stackabuse.com/graphs-in-java-a-star-algorithm/
       // First reset eval metrics on all nodes
-      nodes.forEach(Node::resetMetrics);
+      //nodes.forEach(Node::resetMetrics); // Todo: still not sure if this is okay to do
 
       // Get the nodes the start and end belong to
       Node start_node = index_to_nodes.get(generator.getIndexFromWorldPos(start.x, start.y));
@@ -228,13 +228,16 @@ public class AIPathManager extends Component {
             float weight = n.g + edge.weight;
 
             if (!open_list.contains(m) && !closed_list.contains(m)) {
+               m.h_target = null;
                m.parent = n;
+               m.connection_edge = edge;
                m.g = weight;
                m.f = m.g + m.getHeuristicScore(end_node);
 
                open_list.add(m);
             }else if(weight < m.g){
                m.parent = n;
+               m.connection_edge = edge;
                m.g = weight;
                m.f = m.g + m.getHeuristicScore(end_node);
 
@@ -254,12 +257,21 @@ public class AIPathManager extends Component {
       path.addFirst(new Path.Point(end.copy()));
 
       Node n = end_node.parent;
+      boolean last_was_jump = false;
       while(n != start_node && n != null){
-         path.addFirst(new Path.Point(n.centre_pos));
+         if(n.connection_edge instanceof VerticalEdge) {
+            path.addFirst(new Path.Point(n.centre_pos, true, ((VerticalEdge) n.connection_edge).is_upper));
+            last_was_jump = true;
+         }else if (last_was_jump) {
+            path.addFirst(new Path.Point(n.centre_pos, true, !path.getFirst().is_bottom));
+            last_was_jump = false;
+         }else{
+            path.addFirst(new Path.Point(n.centre_pos));
+         }
          n = n.parent;
       }
 
-      path.addFirst(new Path.Point(start.copy()));
+      path.addFirst(new Path.Point(start.copy())); // Todo: deal with start being a jedge
 
       if(n == null) // Could not create a path to the player
          path.removeLast();
@@ -286,6 +298,7 @@ public class AIPathManager extends Component {
       private float h;
       private Node h_target;
       public Node parent;
+      public Edge connection_edge;
 
 
       // Constructor
@@ -295,6 +308,7 @@ public class AIPathManager extends Component {
          this.index = index;
          this.adjacent = new ArrayList<>();
          this.parent = null;
+         this.connection_edge = null;
       }
 
 
@@ -317,7 +331,9 @@ public class AIPathManager extends Component {
             return h; // Already calculated h
 
          // Calculate h
-         h = (float) (Math.pow(target.pos.x - pos.x, 2) + Math.pow(target.pos.y - pos.y, 2));
+         float x_diff = target.pos.x - pos.x;
+         float y_diff = target.pos.y - pos.y;
+         h = x_diff * x_diff + y_diff * y_diff;
          h_target = target;
 
          return h;

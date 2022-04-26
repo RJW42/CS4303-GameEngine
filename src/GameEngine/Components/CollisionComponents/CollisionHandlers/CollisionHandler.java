@@ -9,13 +9,15 @@ import GameEngine.GameObjects.Core.Player;
 import GameEngine.GameObjects.GameObject;
 import processing.core.PVector;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.TreeSet;
 
 public class CollisionHandler {
    // Track possible collisions
    private static final TreeSet<PossibleCollision> player_terrain_collisions = new TreeSet<>();
-   private static final TreeSet<PossibleCollision> monster_terrain_collisions = new TreeSet<>();
+   private static final HashMap<GameObject, TreeSet<PossibleCollision>> monster_terrain_collisions = new HashMap<>();
 
 
    public static void handle_collision(BaseCollisionComponent obj1, BaseCollisionComponent obj2){
@@ -45,7 +47,9 @@ public class CollisionHandler {
 
    public static void end_collisions(){
       wall_collision_end(player_terrain_collisions);
-      wall_collision_end(monster_terrain_collisions);
+
+      for(var entry : monster_terrain_collisions.entrySet())
+         wall_collision_end(entry.getValue());
    }
 
 
@@ -58,7 +62,11 @@ public class CollisionHandler {
 
    private static void monster_wall_collision(RectCollisionComponent monster_col, RectCollisionComponent terrain){
       PossibleCollision pc = wall_collision(monster_col, terrain);
-      if(pc != null) monster_terrain_collisions.add(pc);
+      if(pc != null) {
+         var set = monster_terrain_collisions.getOrDefault(monster_col.parent, new TreeSet<>());
+         set.add(pc);
+         monster_terrain_collisions.put(monster_col.parent, set);
+      }
    }
 
 
