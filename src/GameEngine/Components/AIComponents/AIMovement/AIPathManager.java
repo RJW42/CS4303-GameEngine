@@ -79,7 +79,10 @@ public class AIPathManager extends Component {
 
       do {
          index = generator.getIndexFromWorldPos(x, y--);
-      }while(!index_to_nodes.containsKey(index));
+      }while(!index_to_nodes.containsKey(index) && y >= 0);
+
+      if(y == 0)
+         return; // An error occorued the player is out of the player area
 
       Node node = index_to_nodes.get(index);
       player_ground_tile.x = node.pos.x;

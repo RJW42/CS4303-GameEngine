@@ -15,7 +15,7 @@ import static processing.core.PApplet.trim;
 
 public class LevelList extends Component {
    // Attributes
-   public static final int MAX_ITEMS_ON_LIST = 2;
+   public static final int MAX_ITEMS_ON_LIST = 3;
    public static final float SPACING         = 1;
 
    public PVector text_colour;
@@ -42,6 +42,8 @@ public class LevelList extends Component {
    // Constructor
    public LevelList(GameObject parent, PVector pos, PVector text_colour, PVector rect_colour, PVector border_colour, PVector hover_text_colour, PVector hover_rect_colour, PVector hover_border_colour, float padding, float border_width, float item_width, float item_height) {
       super(parent);
+
+      // Todo: change icons when no more levels.
 
       // Init attributes
       this.pos = pos;
