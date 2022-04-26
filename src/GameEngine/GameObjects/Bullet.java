@@ -52,8 +52,14 @@ public class Bullet extends GameObject implements Collideable {
    }
 
    public boolean onCollision(BaseCollisionComponent other){
-      // Todo: implement this
-      System.out.println(" - Bullet Collision");
+      // Check if hit wall
+      if(other.parent == sys.terrain || other.parent == parent) {
+         // Todo: spawn explosion here if one is wanted
+         is_dead = true;
+         return true;
+      }
+
+
       return true;
    }
 
