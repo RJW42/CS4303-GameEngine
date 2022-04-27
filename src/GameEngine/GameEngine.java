@@ -6,7 +6,6 @@ import GameEngine.Components.CollisionComponents.CollisionHandlers.CollisionHand
 import GameEngine.GameObjects.*;
 import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.Levels.*;
-import GameEngine.Levels.MainMenu;
 import GameEngine.Utils.Config;
 import GameEngine.Utils.Managers.AudioManager;
 import GameEngine.Utils.Managers.InputManager;
@@ -141,8 +140,8 @@ public class GameEngine extends PApplet{
       warning_display = new WarningDisplay(this);
 
       // Init level manager
-      //level_manager = new LevelManager(this, new MainMenu(this));
-      level_manager = new LevelManager(this, new MapBuilder(this, 20, 20, "test3"));
+      level_manager = new LevelManager(this, new MainMenu(this));
+      //level_manager = new LevelManager(this, new MapBuilder(this, 20, 20, "test3"));
    }
 
 
@@ -469,6 +468,9 @@ public class GameEngine extends PApplet{
             // Objects can't collide with themselves
             if(obj1.parent == obj2.parent)
                continue;
+
+            if(!obj1.active || !obj2.active)
+               return;
 
             // Check if the collision has not already occurred
             if(collision_occurred(obj1, obj2))

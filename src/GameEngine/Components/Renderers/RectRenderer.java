@@ -23,8 +23,8 @@ public class RectRenderer extends Component {
    // Methods
    @Override
    public void draw() {
-      parent.sys.fill(color.x, color.y, color.z);
-      parent.sys.noStroke();
-      parent.sys.rect(parent.pos.x, parent.pos.y, width, -height);
+      sys.fill(color.x, color.y, color.z);
+      sys.noStroke();
+      sys.rect(parent.pos.x, parent.pos.y, width, -height);
    }
 }

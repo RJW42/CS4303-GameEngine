@@ -18,6 +18,7 @@ public abstract class BaseCollisionComponent extends Component {
    public CollisionTrigger trigger;
    public boolean stationary;
    public boolean is_ground;
+   public boolean active;
    public Tag tag;
 
    private boolean set_collisions;
@@ -43,6 +44,7 @@ public abstract class BaseCollisionComponent extends Component {
       this.stationary = false;
       this.set_collisions = false;
       this.is_ground = false;
+      this.active = true;
    }
 
 

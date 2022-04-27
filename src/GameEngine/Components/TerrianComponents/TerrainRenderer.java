@@ -141,16 +141,8 @@ public class TerrainRenderer extends Component {
       for(int x = 0; x < Terrain.WIDTH; x++){
          for(int y = 0; y < Terrain.HEIGHT; y++){
             // Get index for this position then draw
-            int index = generator.getIndex(x, y);
-
-            switch (world[index]){
-               case Terrain.WALL:
-                  wall_blocks.add(create_wall(x, y));
-                  break;
-               case Terrain.AIR:
-                  air_blocks.add(create_air(x, y));
-                  break;
-            }
+            if(is_air(x, y) || is_door(x, y)) air_blocks.add(create_air(x, y));
+            else wall_blocks.add(create_wall(x, y));
          }
       }
 
@@ -239,18 +231,18 @@ public class TerrainRenderer extends Component {
       // Init masks
       int masks = 0;
 
-      // Check if block can be grappled
-      if(!is_hookable(x, y))
+      // Check if block can be grappled or is door as it has no masks
+      if(!is_hookable(x, y) || is_door(x, y))
          return masks;
 
       // Add each edge
-      if(is_air(x, y + 1))
+      if(is_air(x, y + 1) || is_door(x, y + 1))
          masks = masks | TOP_MASK;
-      if(is_air(x, y - 1))
+      if(is_air(x, y - 1) || is_door(x, y - 1))
          masks = masks | BOTTOM_MASK;
-      if(is_air(x - 1, y))
+      if(is_air(x - 1, y) || is_door(x - 1, y))
          masks = masks | LEFT_MASK;
-      if(is_air(x + 1, y))
+      if(is_air(x + 1, y) || is_door(x + 1, y))
          masks = masks | RIGHT_MASK;
       if(is_air(x, y + 1) && is_clean_wall(x - 1, y + 1))
          masks = masks | TOP_LEFT_MASK;
@@ -267,7 +259,7 @@ public class TerrainRenderer extends Component {
 
 
    private boolean is_clean_wall(int x, int y){
-      return !is_air(x, y) && is_hookable(x, y);
+      return !is_air(x, y) && is_hookable(x, y) && !is_door(x, y);
    }
 
 
@@ -276,8 +268,21 @@ public class TerrainRenderer extends Component {
    }
 
 
+   private boolean is_door(int x, int y){
+      return (generator.validWalkCord(x, y) && (
+              tile_attributes[generator.getIndex(x, y)] == Terrain.DOOR_BODY ||
+              tile_attributes[generator.getIndex(x, y)] == Terrain.DOOR_START
+      ));
+   }
+
    private boolean is_hookable(int x, int y){
       return (generator.validWalkCord(x, y) && tile_attributes[generator.getIndex(x, y)] != Terrain.NON_GRAPPLE);
+   }
+
+
+   public static PVector random_hsl_colour() {
+      int h = new Random().nextInt(360);
+      return hsl_colour(h, 1f, 0.6f);
    }
 
 

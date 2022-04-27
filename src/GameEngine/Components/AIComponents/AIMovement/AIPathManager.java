@@ -194,7 +194,7 @@ public class AIPathManager extends Component {
    public Path astar_search(PVector start, PVector end){
       // Adapted from: // https://stackabuse.com/graphs-in-java-a-star-algorithm/
       // First reset eval metrics on all nodes
-      //nodes.forEach(Node::resetMetrics); // Todo: still not sure if this is okay to do
+      nodes.forEach(Node::resetMetrics);
 
       // Get the nodes the start and end belong to
       Node start_node = index_to_nodes.get(generator.getIndexFromWorldPos(start.x, start.y));

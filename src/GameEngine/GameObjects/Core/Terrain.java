@@ -16,6 +16,8 @@ public class Terrain extends GameObject implements Collideable {
    // Special Tile Values
    public static final int EMPTY       = 0;
    public static final int NON_GRAPPLE = 1;
+   public static final int DOOR_START  = 2;
+   public static final int DOOR_BODY   = 3;
 
    // Tile Values
    public static final int WALL  = 1;
@@ -44,8 +46,8 @@ public class Terrain extends GameObject implements Collideable {
       this.pos = new PVector(0, 0);
 
       // Add components
-      this.components.add(new TerrainRenderer(this));
       this.components.add(new TerrainCollider(this));
+      this.components.add(new TerrainRenderer(this));
       this.components.add(terrain_generator.get(this, seed));
    }
 

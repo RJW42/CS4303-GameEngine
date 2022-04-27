@@ -2,16 +2,27 @@ package GameEngine.Components.TerrianComponents;
 
 import GameEngine.Components.CollisionComponents.RectCollisionComponent;
 import GameEngine.Components.Component;
+import GameEngine.GameObjects.Core.Director;
+import GameEngine.GameObjects.Core.Door;
 import GameEngine.GameObjects.Core.Terrain;
+import processing.core.PVector;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class TerrainCollider extends Component {
    // Attributes
+   public RectCollisionComponent[] colliders;
+   public boolean created_collisions;
+
    private TerrainGenerator generator;
-   private boolean created_collisions;
+
 
    // Constructor
    public TerrainCollider(Terrain parent) {
       super(parent);
+
+      // Init attributes
       created_collisions = false;
    }
 
@@ -23,13 +34,16 @@ public class TerrainCollider extends Component {
 
    @Override
    public void update() {
-      if(created_collisions)
-         return;
+      if(!created_collisions)
+         create_collisions();
+   }
 
+   private void create_collisions(){
       created_collisions = true;
 
       // Create collision components
       int[] world = generator.getWorld();
+      colliders = new RectCollisionComponent[world.length];
 
       for(int x = 0; x < Terrain.WIDTH; x++){
          for(int y = 0; y < Terrain.HEIGHT; y++){
@@ -37,6 +51,33 @@ public class TerrainCollider extends Component {
             if(world[generator.getIndex(x, y)] == Terrain.WALL && is_edge(x, y, world)) {
                create_collision(x, y); // Is an edge make it collidable
             }
+         }
+      }
+
+      // Created all collision components can now spawn doors
+      spawn_doors();
+   }
+
+
+   public void spawn_doors(){
+      // Todo: this function needs to tell the generator when all doors are created.
+      //       the generator then needs to keep track of doors which relay on all monsters in a room being
+      //       killed.
+
+      // Create all doors
+      for(int x = 0; x < Terrain.WIDTH; x++){
+         for(int y = 0; y < Terrain.HEIGHT; y++){
+            // Check if this is a door object
+            if(generator.getSpecialTiles()[generator.getIndex(x, y)] != Terrain.DOOR_START)
+               continue;
+
+            // It is spawn door
+            sys.spawn(
+               new Door(sys, true, x, y,
+                       colliders[generator.getIndex(x, y + 2)],
+                       colliders[generator.getIndex(x, y + 1)],
+                       colliders[generator.getIndex(x, y)]), 2
+            );
          }
       }
    }
@@ -54,6 +95,8 @@ public class TerrainCollider extends Component {
 
       parent.addComponent(comp);
       parent.collision_components.add(comp);
+
+      colliders[generator.getIndex(x, y)] = comp;
    }
 
    private boolean position_valid(int x, int y){
@@ -70,6 +113,6 @@ public class TerrainCollider extends Component {
       if(position_valid(x, y - 1) && world[generator.getIndex(x, y - 1)] == Terrain.AIR){
          return true;
       }
-      return position_valid(x, y + 1) && world[generator.getIndex(x, y + 1)] == Terrain.AIR;
+      return position_valid(x, y + 1) && (world[generator.getIndex(x, y + 1)] == Terrain.AIR || generator.getSpecialTiles()[generator.getIndex(x, y + 1)] == Terrain.DOOR_START);
    }
 }

@@ -37,13 +37,16 @@ public class AIMovementController extends Component {
 
 
    public void update() {
-      if(force_manager.grounded && sys.frameCount % 15 == refresh_frame) {
-         current_path = path_manager.astar_search(parent.pos, path_manager.player_ground_tile);
-         current_path.getNextPoint();
-         current_point = current_path.getCurrentPoint();
-      }
-
-      walk_path();
+      // Todo: need to change this as there is an issue when the AI is not fully on a node
+//      if(force_manager.grounded && sys.frameCount % 15 == refresh_frame) {
+//         System.out.println("A");
+//         current_path = path_manager.astar_search(parent.pos, path_manager.player_ground_tile);
+//         System.out.println("B");
+//         current_path.getNextPoint();
+//         current_point = current_path.getCurrentPoint();
+//      }
+//
+//      walk_path();
    }
 
 

@@ -2,6 +2,7 @@ package GameEngine.Components.MapEditorComponents.Tools;
 
 
 import GameEngine.Components.MapEditorComponents.TileSelector;
+import GameEngine.Components.TerrianComponents.DoorRenderer;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
 import GameEngine.Components.TerrianComponents.TerrainRenderer;
 import GameEngine.GameObjects.Core.Monster;
@@ -65,6 +66,7 @@ public class ItemPlace extends Tool {
    public void draw() {
       display_player();
       display_monsters();
+      display_doors();
    }
 
 
@@ -94,6 +96,26 @@ public class ItemPlace extends Tool {
       });
    }
 
+   private void display_doors(){
+      // Draw each door
+      int[] world = generator.getSpecialTiles();
+
+      // Todo: change this when proper door model drawn
+      for(int x = 0; x < Terrain.WIDTH; x++){
+         for(int y = 0; y < Terrain.HEIGHT; y++){
+            // Check if door
+            if(world[generator.getIndex(x, y)] != Terrain.DOOR_START)
+               continue;
+
+            // Render door
+            sys.stroke(DoorRenderer.COLOUR.x, DoorRenderer.COLOUR.y, DoorRenderer.COLOUR.z);
+            sys.strokeWeight(0.1f);
+            sys.noFill();
+            sys.rect(x, y, Terrain.CELL_SIZE, Terrain.CELL_SIZE * 3);
+         }
+      }
+   }
+
 
    private void place_tile(){
       // Get location to place
@@ -119,6 +141,9 @@ public class ItemPlace extends Tool {
             break;
          case MONSTER:
             place_monster(world, world_index);
+            break;
+         case DOOR:
+            place_door(world, tile_attributes, world_index);
             break;
          default:
             System.err.println("Unreachable point reached error in ItemPlace.java");
@@ -172,17 +197,55 @@ public class ItemPlace extends Tool {
 
 
    private void place_wall(int[] world, int[] tile_attributes, int world_index){
+      check_door(world, tile_attributes, world_index);
+
       world[world_index] = Terrain.WALL;
       tile_attributes[world_index] = Terrain.EMPTY;
    }
 
+
    private void place_air(int[] world, int[] tile_attributes, int world_index){
+      check_door(world, tile_attributes, world_index);
+
       world[world_index] = Terrain.AIR;
       tile_attributes[world_index] = Terrain.EMPTY;
    }
 
+
    private void place_non_grapple(int[] world, int[] tile_attributes, int world_index){
+      check_door(world, tile_attributes, world_index);
+
       world[world_index] = Terrain.WALL;
       tile_attributes[world_index] = Terrain.NON_GRAPPLE;
+   }
+
+
+   private void place_door(int[] world, int[] tile_attributes, int world_index) {
+      // Check space above
+      if(prev_x <= 0 || prev_x >= Terrain.WIDTH - 1 || prev_y <= 0 || prev_y >= Terrain.WIDTH - 4){
+         sys.warning_display.display_warning("Door must be placed inside world");
+         return;
+      }
+
+      // Is space place door
+      for(int i = 0; i < 3; i++){
+         int index = generator.getIndex(prev_x, prev_y + i);
+         world[index] = Terrain.WALL;
+         tile_attributes[index] = Terrain.DOOR_BODY;
+      }
+      tile_attributes[world_index] = Terrain.DOOR_START;
+   }
+
+
+   private void check_door(int[] world, int[] tile_attributes, int world_index){
+      if(tile_attributes[world_index] != Terrain.DOOR_BODY && tile_attributes[world_index] != Terrain.DOOR_START)
+         return;
+
+      // Does contain door remove it
+      world[world_index] = Terrain.AIR;
+      tile_attributes[world_index] = Terrain.AIR;
+
+      check_door(world, tile_attributes, generator.getIndex(prev_x, prev_y + 1));
+      check_door(world, tile_attributes, generator.getIndex(prev_x, prev_y - 1));
    }
 }

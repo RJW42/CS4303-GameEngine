@@ -6,7 +6,8 @@ public enum Item {
    AIR,
    NON_GRAPPLE_WALL,
    MONSTER,
-   PLAYER;
+   PLAYER,
+   DOOR;
 
    // Attributes
 

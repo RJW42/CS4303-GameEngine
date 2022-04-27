@@ -7,6 +7,9 @@ import GameEngine.Components.CollisionComponents.Collideable;
 import GameEngine.Components.ForceManager;
 import GameEngine.Components.Renderers.CircleRenderer;
 import GameEngine.GameEngine;
+import GameEngine.GameObjects.Core.Monster;
+import GameEngine.GameObjects.Core.Player;
+import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.GameObjects.GameObject;
 import processing.core.PVector;
 
@@ -58,6 +61,9 @@ public class Bullet extends GameObject implements Collideable {
 
    public boolean onCollision(BaseCollisionComponent other){
       // Collided destroy bullet
+      if(!(other.parent instanceof Terrain || other.parent instanceof Monster || other.parent instanceof Player))
+         return false;
+
       if(is_dead) return false;
       is_dead = true;
 

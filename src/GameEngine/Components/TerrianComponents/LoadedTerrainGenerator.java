@@ -30,6 +30,9 @@ public class LoadedTerrainGenerator extends TerrainGenerator{
       if(world == null){
          throw new IllegalArgumentException("loadTerrain must be called prior to create world");
       }
+
+      init_rooms();
+
       return world;
    }
 
