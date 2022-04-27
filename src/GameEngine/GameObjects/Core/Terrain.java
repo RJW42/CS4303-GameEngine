@@ -1,6 +1,5 @@
 package GameEngine.GameObjects.Core;
 
-import GameEngine.Components.AIComponents.AIMovement.AIPathManager;
 import GameEngine.Components.CollisionComponents.BaseCollisionComponent;
 import GameEngine.Components.CollisionComponents.Collideable;
 import GameEngine.Components.TerrianComponents.*;
@@ -14,10 +13,11 @@ import java.util.List;
 public class Terrain extends GameObject implements Collideable {
    // Attributes
    // Special Tile Values
-   public static final int EMPTY       = 0;
-   public static final int NON_GRAPPLE = 1;
-   public static final int DOOR_START  = 2;
-   public static final int DOOR_BODY   = 3;
+   public static final int EMPTY             = 0;
+   public static final int NON_GRAPPLE       = 1;
+   public static final int BASIC_DOOR_START  = 2;
+   public static final int DOOR_BODY         = 3;
+   public static final int KILL_DOOR_START   = 4;
 
    // Tile Values
    public static final int WALL  = 1;

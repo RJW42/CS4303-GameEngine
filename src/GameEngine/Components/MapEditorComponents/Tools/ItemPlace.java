@@ -104,9 +104,9 @@ public class ItemPlace extends Tool {
       for(int x = 0; x < Terrain.WIDTH; x++){
          for(int y = 0; y < Terrain.HEIGHT; y++){
             // Check if door
-            if(world[generator.getIndex(x, y)] != Terrain.DOOR_START)
+            if(world[generator.getIndex(x, y)] != Terrain.BASIC_DOOR_START && world[generator.getIndex(x, y)] != Terrain.KILL_DOOR_START)
                continue;
-
+            // Todo: render both types of doors
             // Render door
             sys.stroke(DoorRenderer.COLOUR.x, DoorRenderer.COLOUR.y, DoorRenderer.COLOUR.z);
             sys.strokeWeight(0.1f);
@@ -142,8 +142,11 @@ public class ItemPlace extends Tool {
          case MONSTER:
             place_monster(world, world_index);
             break;
-         case DOOR:
-            place_door(world, tile_attributes, world_index);
+         case BASIC_DOOR:
+            place_door(world, tile_attributes, world_index, Terrain.BASIC_DOOR_START);
+            break;
+         case KILL_DOOR:
+            place_door(world, tile_attributes, world_index, Terrain.KILL_DOOR_START);
             break;
          default:
             System.err.println("Unreachable point reached error in ItemPlace.java");
@@ -220,7 +223,7 @@ public class ItemPlace extends Tool {
    }
 
 
-   private void place_door(int[] world, int[] tile_attributes, int world_index) {
+   private void place_door(int[] world, int[] tile_attributes, int world_index, int type) {
       // Check space above
       if(prev_x <= 0 || prev_x >= Terrain.WIDTH - 1 || prev_y <= 0 || prev_y >= Terrain.WIDTH - 4){
          sys.warning_display.display_warning("Door must be placed inside world");
@@ -233,12 +236,12 @@ public class ItemPlace extends Tool {
          world[index] = Terrain.WALL;
          tile_attributes[index] = Terrain.DOOR_BODY;
       }
-      tile_attributes[world_index] = Terrain.DOOR_START;
+      tile_attributes[world_index] = type;
    }
 
 
    private void check_door(int[] world, int[] tile_attributes, int world_index){
-      if(tile_attributes[world_index] != Terrain.DOOR_BODY && tile_attributes[world_index] != Terrain.DOOR_START)
+      if(tile_attributes[world_index] != Terrain.DOOR_BODY && tile_attributes[world_index] != Terrain.BASIC_DOOR_START && tile_attributes[world_index] != Terrain.KILL_DOOR_START)
          return;
 
       // Does contain door remove it

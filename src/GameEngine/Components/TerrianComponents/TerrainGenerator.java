@@ -107,6 +107,34 @@ public abstract class TerrainGenerator extends Component {
    }
 
 
+   public void add_kill_door(Door door) {
+      if(rooms == null)
+         init_rooms();
+
+      // Get the room for this door
+      int index = getIndex(door.lower_x - 1, door.lower_y);
+      Room room = get_room(index);
+
+      if(room == null){
+         index = getIndex(door.lower_x - 1, door.lower_y + 1);
+         room = get_room(index);
+
+         if(room == null){
+            System.err.println("Failed to find room for door");
+            return;
+         }
+      }
+
+      // Found room add room to door
+      room.doors.add(door);
+   }
+
+
+   public Room get_room(int index){
+      return rooms.stream().filter(r -> r.points.contains(index)).findFirst().orElseGet(null);
+   }
+
+
    private void add_to_rooms(int x, int y, HashSet<Integer> visited, Room room){
       // Check if valid
       if(!validWalkCord(x, y))

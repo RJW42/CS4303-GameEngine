@@ -25,12 +25,15 @@ public class Door extends GameObject implements Collideable {
    public boolean is_dead = false;
    public boolean is_open = false;
 
+   public final int lower_x;
+   public final int lower_y;
+
    public RectCollisionComponent upper;
    public RectCollisionComponent middle;
    public RectCollisionComponent lower;
 
    private final ArrayList<BaseCollisionComponent> collision_components;
-   private DoorManager manager;
+   public final DoorManager manager;
 
    // Constructor
    public Door(GameEngine sys, boolean shoot_to_open, int lower_x, int lower_y, RectCollisionComponent upper, RectCollisionComponent middle, RectCollisionComponent lower) {
@@ -42,6 +45,8 @@ public class Door extends GameObject implements Collideable {
       this.middle = middle;
       this.lower = lower;
       this.manager = new DoorManager(this);
+      this.lower_x = lower_x;
+      this.lower_y = lower_y;
 
       // Init collision components
       this.collision_components = new ArrayList<>();

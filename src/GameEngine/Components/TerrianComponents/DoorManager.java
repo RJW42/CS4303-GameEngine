@@ -28,7 +28,7 @@ public class DoorManager extends Component {
 
    public void update() {
       // Check if should close
-      if(!door.is_open && should_close)
+      if(!door.is_open || !should_close)
          return;
 
       time_to_close -= sys.DELTA_TIME;

@@ -2,6 +2,7 @@ package GameEngine.GameObjects.Core;
 
 
 import GameEngine.Components.AIComponents.AIMovement.AIPathManager;
+import GameEngine.Components.AIComponents.KillDoorManager;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
 import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
@@ -19,6 +20,7 @@ public class Director extends GameObject {
 
       // Add regular components 
       this.components.add(new AIPathManager(this));
+      this.components.add(new KillDoorManager(this));
    }
 
 

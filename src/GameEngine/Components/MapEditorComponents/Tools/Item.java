@@ -7,7 +7,8 @@ public enum Item {
    NON_GRAPPLE_WALL,
    MONSTER,
    PLAYER,
-   DOOR;
+   BASIC_DOOR,
+   KILL_DOOR;
 
    // Attributes
 

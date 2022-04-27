@@ -271,7 +271,8 @@ public class TerrainRenderer extends Component {
    private boolean is_door(int x, int y){
       return (generator.validWalkCord(x, y) && (
               tile_attributes[generator.getIndex(x, y)] == Terrain.DOOR_BODY ||
-              tile_attributes[generator.getIndex(x, y)] == Terrain.DOOR_START
+              tile_attributes[generator.getIndex(x, y)] == Terrain.BASIC_DOOR_START ||
+              tile_attributes[generator.getIndex(x, y)] == Terrain.KILL_DOOR_START
       ));
    }
 
