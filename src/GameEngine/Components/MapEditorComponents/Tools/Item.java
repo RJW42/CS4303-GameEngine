@@ -5,7 +5,8 @@ public enum Item {
    WALL,
    AIR,
    NON_GRAPPLE_WALL,
-   SPAWN_LOCATION;
+   MONSTER,
+   PLAYER;
 
    // Attributes
 

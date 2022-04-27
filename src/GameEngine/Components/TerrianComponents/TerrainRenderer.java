@@ -65,8 +65,7 @@ public class TerrainRenderer extends Component {
 
       // Init colours and masks
       resetColours();
-      resetMasks();
-      create_graphics();
+      reset();
    }
 
    public void update() {
@@ -81,11 +80,17 @@ public class TerrainRenderer extends Component {
       draw_masks();
    }
 
-   public void resetMasks(){
-      for(int x = 0; x < Terrain.WIDTH; x++)
-         for(int y = 0; y < Terrain.HEIGHT; y++)
-            world_masks[generator.getIndex(x, y)] = get_masks(x, y);
+
+   public void reset(){
+      air_blocks.clear();
+      wall_blocks.clear();
+      edge_masks.clear();
+      rect_masks.clear();
+
+      reset_masks();
+      create_graphics();
    }
+
 
    public void resetColours(){
       int h = new Random().nextInt(360);
@@ -172,6 +177,14 @@ public class TerrainRenderer extends Component {
 //         e.height += OVERLAP_AMOUNT;
 //      });
    }
+
+
+   private void reset_masks(){
+      for(int x = 0; x < Terrain.WIDTH; x++)
+         for(int y = 0; y < Terrain.HEIGHT; y++)
+            world_masks[generator.getIndex(x, y)] = get_masks(x, y);
+   }
+
 
    private Air create_air(float x, float y){
       return new Air(

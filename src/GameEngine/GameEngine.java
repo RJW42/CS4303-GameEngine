@@ -120,7 +120,7 @@ public class GameEngine extends PApplet{
       PIXEL_TO_METER = Math.min(x_scale, y_scale);
 
       // Set default zoom
-      chase_zoom = 2f;
+      chase_zoom = 1f;
    }
 
 
@@ -141,8 +141,8 @@ public class GameEngine extends PApplet{
       warning_display = new WarningDisplay(this);
 
       // Init level manager
-      level_manager = new LevelManager(this, new MainMenu(this));
-      //level_manager = new LevelManager(this, new MapBuilder(this, 20, 20, "test3"));
+      //level_manager = new LevelManager(this, new MainMenu(this));
+      level_manager = new LevelManager(this, new MapBuilder(this, 20, 20, "test3"));
    }
 
 

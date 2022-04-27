@@ -20,6 +20,7 @@ public class Monster extends GameObject implements Collideable {
    public static final float COLLISION_HEIGHT= 0.75f;
    public static final float COLLISION_WIDTH = 0.5f;
    public static final float FRICTION        = 0.06f;
+   public static final PVector COLOUR        = new PVector(255, 32, 32);
 
    public boolean is_dead = false;
    public ForceManager force_manager;
@@ -40,7 +41,7 @@ public class Monster extends GameObject implements Collideable {
 
       // Add regular components
       this.components.add(new AIMovementController(this, new PVector(), 5));
-      this.components.add(new RectRenderer(this, new PVector(255, 32, 32), COLLISION_WIDTH, COLLISION_HEIGHT));
+      this.components.add(new RectRenderer(this, COLOUR, COLLISION_WIDTH, COLLISION_HEIGHT));
       this.components.add(force_manager);
 
 

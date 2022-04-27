@@ -5,17 +5,22 @@ import GameEngine.GameObjects.GameObject;
 import GameEngine.GameObjects.Core.Terrain;
 import processing.core.PVector;
 
+import java.util.ArrayList;
+
 public abstract class TerrainGenerator extends Component {
    // Attributes
    protected int width, height, seed;
 
-   public PVector player_spawn_loc; // Todo: set this
+   public PVector player_spawn_loc;
+   public ArrayList<PVector> monster_spawn_locs;
 
    // Constructor
    public TerrainGenerator(GameObject parent, int seed){
       super(parent);
       this.seed = seed;
+
       this.player_spawn_loc = new PVector(0,0);
+      this.monster_spawn_locs = new ArrayList<>();
    }
 
    public int getWidth(){

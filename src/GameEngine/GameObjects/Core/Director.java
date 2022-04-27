@@ -2,8 +2,10 @@ package GameEngine.GameObjects.Core;
 
 
 import GameEngine.Components.AIComponents.AIMovement.AIPathManager;
+import GameEngine.Components.TerrianComponents.TerrainGenerator;
 import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
+import processing.core.PVector;
 
 
 public class Director extends GameObject {

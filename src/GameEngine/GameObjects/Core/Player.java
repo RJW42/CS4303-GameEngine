@@ -26,6 +26,7 @@ public class Player extends GameObject implements Collideable {
    public static final float ACCELERATION    = 12f;
    public static final float MAX_SPEED       = 4f;
    public static final float FRICTION        = 0.06f;
+   public static final PVector COLOUR        = new PVector(0, 32, 128);
 
    private final ArrayList<BaseCollisionComponent> collision_components;
    private final ForceManager force_manager;
@@ -54,7 +55,7 @@ public class Player extends GameObject implements Collideable {
               this, new PVector(0, 0), new PVector(0, 0), FRICTION
       );
 
-      this.components.add(new RectRenderer(this, new PVector(0, 32, 128), COLLISION_WIDTH, COLLISION_HEIGHT));
+      this.components.add(new RectRenderer(this, COLOUR, COLLISION_WIDTH, COLLISION_HEIGHT));
       this.components.add(new CharacterController(this, ACCELERATION, MAX_SPEED));
       this.components.add(new GrappleHook(this));
       this.components.add(force_manager);

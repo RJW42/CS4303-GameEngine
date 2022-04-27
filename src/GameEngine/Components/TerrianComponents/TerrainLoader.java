@@ -2,6 +2,7 @@ package GameEngine.Components.TerrianComponents;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import processing.core.PVector;
 
 import java.io.*;
 
@@ -16,6 +17,11 @@ public class TerrainLoader {
    private static final String SPAWN_X       = "spawn-x";
    private static final String SPAWN_Y       = "spawn-y";
    private static final String WORLD_ARR     = "world";
+   private static final String MONSTERS_SPAWN= "monsters";
+
+   // Monster spawn properties
+   private static final String MONSTER_X     = "x";
+   private static final String MONSTER_Y     = "y";
 
    // World array element properties
    private static final String WORLD_VAL     = "value";
@@ -35,7 +41,12 @@ public class TerrainLoader {
     *       modifier: int either: 0 none, 1 non grapple,
     *    }
     * ]
-    *
+    * monsters: [
+    *    {
+    *       x: int,
+    *       y: int
+    *    }
+    * ]
     */
 
    public static void loadTerrain(LoadedTerrainGenerator generator, String file_name){
@@ -54,6 +65,7 @@ public class TerrainLoader {
 
       // Add complex elements
       world_from_json(generator, terrain_data.getJSONArray(WORLD_ARR));
+      monsters_from_JSON(generator, terrain_data.getJSONArray(MONSTERS_SPAWN));
    }
 
 
@@ -62,6 +74,7 @@ public class TerrainLoader {
       //        - goal loc
       //        - enemy spawn locations
       //        - lava / some other bad liquid
+      //        - doors
       //        - nests/vents maybe
 
       // Create json object to represent terrain
@@ -76,12 +89,14 @@ public class TerrainLoader {
 
       // Add complex elements
       core.put(WORLD_ARR, world_to_JSON(generator));
+      core.put(MONSTERS_SPAWN, monsters_to_JSON(generator));
 
       // Write to disk
       write_file(core, file_name);
    }
 
 
+   // ********* World ********* //
    private static JSONArray world_to_JSON(TerrainGenerator generator){
       // Parse the world array into a json array
       JSONArray world_json = new JSONArray();
@@ -119,6 +134,38 @@ public class TerrainLoader {
    }
 
 
+   // ********* Monsters ********* //
+   private static JSONArray monsters_to_JSON(TerrainGenerator generator) {
+      JSONArray monsters = new JSONArray();
+
+      for(PVector monster : generator.monster_spawn_locs) {
+         JSONObject monster_json = new JSONObject();
+
+         monster_json.put(MONSTER_X, monster.x);
+         monster_json.put(MONSTER_Y, monster.y);
+
+         monsters.put(monster_json);
+      }
+
+      return monsters;
+   }
+
+
+   private static void monsters_from_JSON(LoadedTerrainGenerator generator, JSONArray monsters_json){
+      for(int i = 0; i < monsters_json.length(); i++) {
+         JSONObject monster_json = monsters_json.getJSONObject(i);
+
+         PVector pos = new PVector(
+            monster_json.getFloat(MONSTER_X),
+            monster_json.getFloat(MONSTER_Y)
+         );
+
+         generator.monster_spawn_locs.add(pos);
+      }
+   }
+
+
+   // ********* Util ********* //
    private static String read_file(String file_name){
       // Load file contents into string builder
       StringBuilder res = new StringBuilder();

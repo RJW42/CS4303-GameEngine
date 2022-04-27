@@ -1,6 +1,7 @@
 package GameEngine.Levels;
 
 import GameEngine.Components.TerrianComponents.LoadedTerrainGenerator;
+import GameEngine.Components.TerrianComponents.TerrainGenerator;
 import GameEngine.GameObjects.Core.Director;
 import GameEngine.GameObjects.Core.Monster;
 import GameEngine.GameObjects.Core.Player;
@@ -16,7 +17,7 @@ public class PlayLevel extends Level{
    // Attributes
    public static final int DESIRED_WALLS = 20;
 
-   private String file_name;
+   private final String file_name;
    private InputManager.Key restart;
    private InputManager.Key menu;
    private Level advance;
@@ -35,6 +36,7 @@ public class PlayLevel extends Level{
       sys.background(0);
    }
 
+
    public void start() {
       // Get restart keys
       restart = sys.input_manager.getKey("RESTART_LEVEL");
@@ -44,10 +46,9 @@ public class PlayLevel extends Level{
       init_terrain();
       init_managers();
       init_player();
-
-      // Spawn monsters
-      // sys.spawn(new Monster(sys, new PVector(2, 2)), 2);
+      init_monsters();
    }
+
 
    private void init_terrain(){
       int seed = new Random().nextInt();
@@ -62,9 +63,11 @@ public class PlayLevel extends Level{
       sys.spawn(sys.terrain, 0);
    }
 
+
    private void init_managers(){
       sys.spawn(new Director(sys), 0);
    }
+
 
    private void init_player(){
       // Create player
@@ -79,6 +82,16 @@ public class PlayLevel extends Level{
 
       sys.chase_zoom = Math.min(desired_x_zoom, desired_y_zoom);
    }
+
+
+   private void init_monsters(){
+      // Spawn all monsters
+      TerrainGenerator generator = sys.terrain.getComponent(TerrainGenerator.class);
+
+      for(PVector loc : generator.monster_spawn_locs)
+         sys.spawn(new Monster(sys, loc), 2);
+   }
+
 
    public boolean updateAndCanAdvance() {
       if(restart.pressed){
