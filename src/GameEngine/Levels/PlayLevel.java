@@ -75,7 +75,7 @@ public class PlayLevel extends Level{
       sys.spawn(player, 2);
 
       // Set the player as the chase object
-      //sys.chase_object = player;
+      sys.chase_object = player;
 
       float desired_x_zoom = GameEngine.SCREEN_WIDTH / (DESIRED_WALLS * GameEngine.PIXEL_TO_METER);
       float desired_y_zoom = GameEngine.SCREEN_HEIGHT / (DESIRED_WALLS * GameEngine.PIXEL_TO_METER);

@@ -27,6 +27,9 @@ public class MapEditorTerrainGenerator extends TerrainGenerator{
       Arrays.fill(world, Terrain.AIR);
       Arrays.fill(special_tiles, Terrain.EMPTY);
 
+      Terrain.WIDTH = width;
+      Terrain.HEIGHT = height;
+
       for(int i = 0; i < width; i++){
          world[getIndex(i, 0)] = Terrain.WALL;
          world[getIndex(i, height - 1)] = Terrain.WALL;
