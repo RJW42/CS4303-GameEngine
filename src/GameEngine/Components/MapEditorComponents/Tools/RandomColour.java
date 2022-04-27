@@ -9,24 +9,22 @@ import GameEngine.GameObjects.GameObject;
 import GameEngine.Levels.MapBuilder;
 
 
-public class Save extends Tool {
+public class RandomColour extends Tool {
    // Attributes
-   private TerrainGenerator generator;
    private TerrainRenderer renderer;
 
    // Constructor
-   public Save(GameObject parent) {
+   public RandomColour(GameObject parent) {
       super(parent);
 
       // Init Attributes
-      this.icon_text = "Save";
+      this.icon_text = "Colour";
    }
 
 
-   // Methods 
+   // Methods
    public void start() {
-       generator = sys.terrain.getComponent(TerrainGenerator.class);
-       renderer = sys.terrain.getComponent(TerrainRenderer.class);
+      renderer = sys.terrain.getComponent(TerrainRenderer.class);
    }
    public void draw() {}
 
@@ -34,18 +32,9 @@ public class Save extends Tool {
       if(!active)
          return;
 
-      // Save world, and deactivate
+      // Pick colour, and deactivate
       // Todo: maybe add some cool down
       active = false;
-
-      // Check player has been placed
-      if(generator.player_spawn_loc == null){
-         sys.warning_display.display_warning("Must place player before saving");
-         return;
-      }
-
-
-      // Save world
-      TerrainLoader.saveTerrain(generator, renderer, MapBuilder.name + ".json");
+      renderer.resetColours();
    }
 }

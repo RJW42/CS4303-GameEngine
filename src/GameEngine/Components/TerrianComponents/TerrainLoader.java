@@ -18,6 +18,9 @@ public class TerrainLoader {
    private static final String SPAWN_Y       = "spawn-y";
    private static final String WORLD_ARR     = "world";
    private static final String MONSTERS_SPAWN= "monsters";
+   private static final String AIR_CLR       = "air_colour";
+   private static final String BORDER_CLR    = "border_colour";
+   private static final String WALL_CLR      = "wall_colour";
 
    // Monster spawn properties
    private static final String MONSTER_X     = "x";
@@ -26,6 +29,11 @@ public class TerrainLoader {
    // World array element properties
    private static final String WORLD_VAL     = "value";
    private static final String VAL_ATTRIBUTE = "modifier";
+
+   // RGB properties
+   private static final String COLOUR_R      = "r";
+   private static final String COLOUR_G      = "g";
+   private static final String COLOUR_B      = "b";
 
 
    /* ***** JSON Layout *****
@@ -47,9 +55,12 @@ public class TerrainLoader {
     *       y: int
     *    }
     * ]
+    * wall_colour: {r: int, g: int, b: int}
+    * air_colour: {r: int, g: int, b: int}
+    * border_colour: {r: int, g: int, b: int}
     */
 
-   public static void loadTerrain(LoadedTerrainGenerator generator, String file_name){
+   public static void loadTerrain(LoadedTerrainGenerator generator, TerrainRenderer renderer, String file_name){
       // Load file
       String terrain_string = read_file(file_name);
       // Todo: check if string null then throw error or something
@@ -63,18 +74,20 @@ public class TerrainLoader {
       generator.width = terrain_data.getInt(WORLD_WIDTH);
       generator.height = terrain_data.getInt(WORLD_HEIGHT);
 
+      renderer.wall_colour = rgb_from_JSON(terrain_data.getJSONObject(WALL_CLR));
+      renderer.air_colour = rgb_from_JSON(terrain_data.getJSONObject(AIR_CLR));
+      renderer.border_colour = rgb_from_JSON(terrain_data.getJSONObject(BORDER_CLR));
+
       // Add complex elements
       world_from_json(generator, terrain_data.getJSONArray(WORLD_ARR));
       monsters_from_JSON(generator, terrain_data.getJSONArray(MONSTERS_SPAWN));
    }
 
 
-   public static void saveTerrain(TerrainGenerator generator, String file_name){
+   public static void saveTerrain(TerrainGenerator generator, TerrainRenderer renderer, String file_name){
       // Todo: Items to save
       //        - goal loc
-      //        - enemy spawn locations
       //        - lava / some other bad liquid
-      //        - doors
       //        - nests/vents maybe
 
       // Create json object to represent terrain
@@ -85,11 +98,13 @@ public class TerrainLoader {
       core.put(WORLD_HEIGHT, generator.height);
       core.put(SPAWN_X, generator.player_spawn_loc.x);
       core.put(SPAWN_Y, generator.player_spawn_loc.y);
-      // Todo: finish this
 
       // Add complex elements
       core.put(WORLD_ARR, world_to_JSON(generator));
       core.put(MONSTERS_SPAWN, monsters_to_JSON(generator));
+      core.put(WALL_CLR, rgb_to_JSON(renderer.wall_colour));
+      core.put(AIR_CLR, rgb_to_JSON(renderer.air_colour));
+      core.put(BORDER_CLR, rgb_to_JSON(renderer.border_colour));
 
       // Write to disk
       write_file(core, file_name);
@@ -162,6 +177,28 @@ public class TerrainLoader {
 
          generator.monster_spawn_locs.add(pos);
       }
+   }
+
+   // ******** RGB ********* //
+   private static JSONObject rgb_to_JSON(PVector colour){
+      JSONObject out = new JSONObject();
+
+      out.put(COLOUR_R, (int)colour.x);
+      out.put(COLOUR_G, (int)colour.y);
+      out.put(COLOUR_B, (int)colour.z);
+
+      return out;
+   }
+
+
+   private static PVector rgb_from_JSON(JSONObject colour_json){
+      PVector out = new PVector();
+
+      out.x = colour_json.getInt(COLOUR_R);
+      out.y = colour_json.getInt(COLOUR_G);
+      out.z = colour_json.getInt(COLOUR_B);
+
+      return out;
    }
 
 

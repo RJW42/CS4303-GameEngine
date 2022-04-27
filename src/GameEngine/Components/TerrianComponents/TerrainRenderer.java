@@ -29,9 +29,9 @@ public class TerrainRenderer extends Component {
    private static final int g_mask = 65280;
    private static final int b_mask = 16711680;
 
-   private PVector air_colour       = new PVector(146, 153, 156);
-   private PVector border_colour    = new PVector(151, 186, 201);
-   private PVector wall_colour      = new PVector(17, 25, 28);
+   public PVector air_colour       = new PVector(146, 153, 156);
+   public PVector border_colour    = new PVector(151, 186, 201);
+   public PVector wall_colour      = new PVector(17, 25, 28);
    private TerrainGenerator generator;
 
    private final ArrayList<Air> air_blocks;
@@ -64,7 +64,6 @@ public class TerrainRenderer extends Component {
       world_masks = new int[world.length];
 
       // Init colours and masks
-      resetColours();
       reset();
    }
 

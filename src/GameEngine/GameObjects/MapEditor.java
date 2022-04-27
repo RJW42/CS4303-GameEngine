@@ -4,10 +4,7 @@ package GameEngine.GameObjects;
 import GameEngine.Components.MapEditorComponents.NoClipController;
 import GameEngine.Components.MapEditorComponents.TileSelector;
 import GameEngine.Components.MapEditorComponents.ToolMenu;
-import GameEngine.Components.MapEditorComponents.Tools.Exit;
-import GameEngine.Components.MapEditorComponents.Tools.ItemPlace;
-import GameEngine.Components.MapEditorComponents.Tools.ItemSelect;
-import GameEngine.Components.MapEditorComponents.Tools.Save;
+import GameEngine.Components.MapEditorComponents.Tools.*;
 import GameEngine.GameEngine;
 import GameEngine.Levels.MainMenu;
 import processing.core.PVector;
@@ -36,6 +33,7 @@ public class MapEditor extends GameObject {
       this.components.add(new ItemPlace(this));
       this.components.add(new Save(this));
       this.components.add(new Exit(this, this::on_exit));
+      this.components.add(new RandomColour(this));
    }
 
 
