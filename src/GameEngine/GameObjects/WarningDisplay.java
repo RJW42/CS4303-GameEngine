@@ -14,8 +14,8 @@ public class WarningDisplay extends GameObject {
 
    public boolean is_dead = false;
 
-   private UITextRenderer text_renderer;
-   private WarningTimer warning_timer;
+   private final UITextRenderer text_renderer;
+   private final WarningTimer warning_timer;
 
    // Constructor
    public WarningDisplay(GameEngine sys) {

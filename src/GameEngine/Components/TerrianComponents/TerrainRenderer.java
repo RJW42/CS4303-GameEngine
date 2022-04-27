@@ -20,7 +20,8 @@ public class TerrainRenderer extends Component {
    private static final int BOTTOM_LEFT_MASK = 64;
    private static final int BOTTOM_RIGHT_MASK= 128;
 
-   public static  final float BORDER_WIDTH   = 0.15f;
+   public static final float BORDER_WIDTH    = 0.15f;
+   public static final float OVERLAP_AMOUNT  = 0.01f;
 
    private static int r_mask = 255;
    private static int g_mask = 65280;
@@ -78,6 +79,7 @@ public class TerrainRenderer extends Component {
       }
    }
 
+
    @Override
    public void draw() {
       // Ensure rect mode is correct
@@ -113,6 +115,7 @@ public class TerrainRenderer extends Component {
       }
    }
 
+
    private void drawWall(float x, float y){
       // Init x, y
       x = (x / Terrain.WIDTH) * GameEngine.WORLD_WIDTH;
@@ -121,8 +124,9 @@ public class TerrainRenderer extends Component {
       // Draw wall
       sys.fill(wall_colour.x, wall_colour.y, wall_colour.z);
       sys.noStroke();
-      sys.square(x, y, (float)GameEngine.WORLD_WIDTH / Terrain.WIDTH);
+      sys.square(x - OVERLAP_AMOUNT, y - OVERLAP_AMOUNT, (float)GameEngine.WORLD_WIDTH / Terrain.WIDTH + OVERLAP_AMOUNT * 2f);
    }
+
 
    private void drawMask(float x, float y, int mask){
       // Init x, y
@@ -139,6 +143,7 @@ public class TerrainRenderer extends Component {
          sys.rect(x, y, BORDER_WIDTH, Terrain.CELL_SIZE);
       if((mask & RIGHT_MASK) == RIGHT_MASK)
          sys.rect(x + Terrain.CELL_SIZE - BORDER_WIDTH, y, BORDER_WIDTH, Terrain.CELL_SIZE);
+
       sys.noStroke();
       if((mask & TOP_LEFT_MASK) == TOP_LEFT_MASK)
          sys.arc(x, y + Terrain.CELL_SIZE, BORDER_WIDTH * 2, BORDER_WIDTH * 2, PConstants.PI, PConstants.TWO_PI - PConstants.HALF_PI);
@@ -154,7 +159,7 @@ public class TerrainRenderer extends Component {
    private void drawAir(float x, float y){
       sys.fill(air_colour.x, air_colour.y, air_colour.z);
       sys.noStroke();
-      sys.square((x / Terrain.WIDTH) * GameEngine.WORLD_WIDTH, (y / Terrain.HEIGHT) * GameEngine.WORLD_HEIGHT, (float)GameEngine.WORLD_WIDTH / Terrain.WIDTH);
+      sys.square((x / Terrain.WIDTH) * GameEngine.WORLD_WIDTH - OVERLAP_AMOUNT, (y / Terrain.HEIGHT) * GameEngine.WORLD_HEIGHT - OVERLAP_AMOUNT, (float)GameEngine.WORLD_WIDTH / Terrain.WIDTH + OVERLAP_AMOUNT * 2f);
    }
 
 
@@ -201,9 +206,11 @@ public class TerrainRenderer extends Component {
       return !is_air(x, y) && is_hookable(x, y);
    }
 
+
    private boolean is_air(int x, int y){
       return (generator.validWalkCord(x, y) && world[generator.getIndex(x, y)] == Terrain.AIR);
    }
+
 
    private boolean is_hookable(int x, int y){
       return (generator.validWalkCord(x, y) && tile_attribtues[generator.getIndex(x, y)] != Terrain.NON_GRAPPLE);

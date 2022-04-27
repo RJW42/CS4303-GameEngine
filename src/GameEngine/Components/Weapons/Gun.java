@@ -62,6 +62,8 @@ public class Gun extends Component {
 
 
    public void update() {
+      renderer.update();
+
       // Update prev fire time
       prev_fire_time += sys.DELTA_TIME;
 
@@ -78,6 +80,7 @@ public class Gun extends Component {
    }
 
    public void draw(){
+      if(active) renderer.draw();
    }
 
 
@@ -106,8 +109,8 @@ public class Gun extends Component {
 
       PVector bullet_vel = vel_norm.setMag(muzzle_speed);
 
-      if(force_manager != null)
-         bullet_vel.add(force_manager.velocity);
+//      if(force_manager != null)
+//         bullet_vel.add(force_manager.velocity);
 
 
       // Create new bullet

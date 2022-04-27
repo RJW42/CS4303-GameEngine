@@ -24,7 +24,7 @@ public class Monster extends GameObject implements Collideable {
    public boolean is_dead = false;
    public ForceManager force_manager;
 
-   private ArrayList<BaseCollisionComponent> collision_components;
+   private final ArrayList<BaseCollisionComponent> collision_components;
 
 
    // Constructor

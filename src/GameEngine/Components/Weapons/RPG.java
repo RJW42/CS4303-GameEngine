@@ -8,7 +8,7 @@ public class RPG {
    public static final float SPREAD_ANGLE   = 0.1f;
    public static final int NUM_BARRELS      = 1;
    public static final int FIRE_RATE        = 2;
-   public static final int MUZZLE_SPEED     = 10;
+   public static final int MUZZLE_SPEED     = 15;
    public static final float BULLET_MASS    = 0.5f;
    public static final float BULLET_RAD     = 0.1f;
    public static final float BARREL_LENGTH  = 0.75f;
@@ -23,8 +23,6 @@ public class RPG {
    public static Gun create(GameObject parent, PVector location) {
       // Create renderer component
       GunRenderer renderer = new RectGunRenderer(parent, location, BARREL_LENGTH, BARREL_HEIGHT);
-
-      parent.addComponent(renderer);
 
       // Create gun
       return new Gun(

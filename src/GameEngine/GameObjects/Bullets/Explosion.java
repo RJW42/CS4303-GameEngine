@@ -24,7 +24,7 @@ public class Explosion extends GameObject implements Collideable {
    public float explosion_size;
    public GameObject parent;
 
-   private ArrayList<BaseCollisionComponent> collision_components;
+   private final ArrayList<BaseCollisionComponent> collision_components;
 
 
    // Constructor

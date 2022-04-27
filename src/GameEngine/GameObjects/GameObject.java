@@ -11,7 +11,7 @@ public abstract class GameObject {
    public final GameEngine sys;
    public PVector pos;
    protected ArrayList<Component> components;
-   private ArrayList<Component> new_components;
+   private final ArrayList<Component> new_components;
 
    protected GameObject(GameEngine sys) {
       this.sys = sys;

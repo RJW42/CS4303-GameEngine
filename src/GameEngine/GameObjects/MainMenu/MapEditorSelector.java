@@ -23,10 +23,10 @@ public class MapEditorSelector extends GameObject {
 
    public boolean is_dead = false;
 
-   private UIInput name_input;
-   private UIInput width_input;
-   private UIInput height_input;
-   private UIButton create_button;
+   private final UIInput name_input;
+   private final UIInput width_input;
+   private final UIInput height_input;
+   private final UIButton create_button;
 
    private int width, height;
    private String name;

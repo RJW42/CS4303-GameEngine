@@ -22,7 +22,7 @@ public class Bullet extends GameObject implements Collideable {
    public boolean explosive;
    public float explosion_size;
 
-   private ArrayList<BaseCollisionComponent> collision_components;
+   private final ArrayList<BaseCollisionComponent> collision_components;
 
 
    // Constructor
@@ -34,7 +34,7 @@ public class Bullet extends GameObject implements Collideable {
       this.pos = spawn_location;
       this.momentum = mass * start_vel.mag();
       this.explosion_size = explosion_size;
-      this.explosive = explosion_size >= 0;
+      this.explosive = explosion_size > 0;
 
       // Add collision components 
       this.collision_components = new ArrayList<>();
