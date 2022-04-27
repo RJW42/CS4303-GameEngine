@@ -4,9 +4,9 @@ import GameEngine.Components.Component;
 import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.GameObjects.Core.Terrain;
-import processing.core.PConstants;
-import processing.core.PVector;
+import processing.core.*;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class TerrainRenderer extends Component {
@@ -23,23 +23,35 @@ public class TerrainRenderer extends Component {
    public static final float BORDER_WIDTH    = 0.15f;
    public static final float OVERLAP_AMOUNT  = 0.01f;
 
-   private static int r_mask = 255;
-   private static int g_mask = 65280;
-   private static int b_mask = 16711680;
+   private static final boolean RANDOM_COLOUR= true;
+
+   private static final int r_mask = 255;
+   private static final int g_mask = 65280;
+   private static final int b_mask = 16711680;
 
    private PVector air_colour       = new PVector(146, 153, 156);
    private PVector border_colour    = new PVector(151, 186, 201);
    private PVector wall_colour      = new PVector(17, 25, 28);
-   private boolean random_colour    = true;
    private TerrainGenerator generator;
 
+   private final ArrayList<Air> air_blocks;
+   private final ArrayList<Wall> wall_blocks;
+   private final ArrayList<RectMask> rect_masks;
+   private final ArrayList<EdgeMask> edge_masks;
+
    private int[] world;
-   private int[] tile_attribtues;
+   private int[] tile_attributes;
    private int[] world_masks;
 
    // Constructor
    public TerrainRenderer(GameObject parent) {
       super(parent);
+
+      // Init attributes
+      air_blocks = new ArrayList<>();
+      wall_blocks = new ArrayList<>();
+      rect_masks = new ArrayList<>();
+      edge_masks = new ArrayList<>();
    }
 
    // Methods
@@ -48,44 +60,79 @@ public class TerrainRenderer extends Component {
       // Get the world
       generator = this.parent.getComponent(TerrainGenerator.class);
       world = generator.getWorld();
-      tile_attribtues = generator.getSpecialTiles();
+      tile_attributes = generator.getSpecialTiles();
       world_masks = new int[world.length];
 
-      // Init colours
+      // Init colours and masks
       resetColours();
-
-
-      // Set the world masks
       resetMasks();
+      create_graphics();
    }
 
-   @Override
    public void update() {
 
+   }
+
+
+   @Override
+   public void draw() {
+      draw_air();
+      draw_walls();
+      draw_masks();
    }
 
    public void resetMasks(){
       for(int x = 0; x < Terrain.WIDTH; x++)
          for(int y = 0; y < Terrain.HEIGHT; y++)
-            world_masks[generator.getIndex(x, y)] = getMasks(x, y);
+            world_masks[generator.getIndex(x, y)] = get_masks(x, y);
    }
 
    public void resetColours(){
       int h = new Random().nextInt(360);
-      if(random_colour) {
+      if(RANDOM_COLOUR) {
          air_colour = hsl_colour(h, 1f, 0.75f);
          border_colour = hsl_colour(h, 1f, 0.6f);
          wall_colour = hsl_colour(h, 1f, 0.1f);
       }
    }
 
+   private void draw_air(){
+      sys.fill(air_colour.x, air_colour.y, air_colour.z);
+      sys.noStroke();
 
-   @Override
-   public void draw() {
-      // Ensure rect mode is correct
-      sys.rectMode(PConstants.CORNER);
+      for(Air air : air_blocks) {
+         sys.square(air.x, air.y, air.width);
+      }
+   }
 
-      // Draw Each Cell
+
+   private void draw_walls(){
+      sys.fill(wall_colour.x, wall_colour.y, wall_colour.z);
+      sys.noStroke();
+
+      for(Wall wall : wall_blocks){
+         sys.square(wall.x, wall.y, wall.width);
+      }
+   }
+
+
+   private void draw_masks(){
+      sys.fill(border_colour.x, border_colour.y, border_colour.z);
+      sys.noStroke();
+
+      for(RectMask rect : rect_masks){
+         sys.rect(rect.x, rect.y, rect.height, rect.width);
+      }
+
+      for(EdgeMask edge : edge_masks){
+         sys.arc(edge.x, edge.y, edge.width, edge.height, edge.start_rad, edge.end_rad);
+      }
+   }
+
+
+   private void create_graphics() {
+      // Loop through each index in the world and create a graphics object for it
+      // Todo: need to change this when adding doors
       for(int x = 0; x < Terrain.WIDTH; x++){
          for(int y = 0; y < Terrain.HEIGHT; y++){
             // Get index for this position then draw
@@ -93,85 +140,89 @@ public class TerrainRenderer extends Component {
 
             switch (world[index]){
                case Terrain.WALL:
-                  drawWall(x, y);
+                  wall_blocks.add(create_wall(x, y));
                   break;
                case Terrain.AIR:
-                  drawAir(x, y);
+                  air_blocks.add(create_air(x, y));
                   break;
-               default:
-                  drawDebug(x, y, world[index]);
             }
          }
       }
 
-      // Draw the masks over the cells
+      // Create the masks
       for(int x = 0; x < Terrain.WIDTH; x++){
          for(int y = 0; y < Terrain.HEIGHT; y++){
             // Get index for this position then draw
             int index = generator.getIndex(x, y);
             if(world[index] == Terrain.WALL)
-               drawMask(x, y, world_masks[index]);
+               crete_mask(x, y, world_masks[index]);
          }
       }
+
+      rect_masks.forEach(r -> {
+         r.x -= OVERLAP_AMOUNT;
+         r.y -= OVERLAP_AMOUNT;
+         r.width += OVERLAP_AMOUNT * 2;
+         r.height += OVERLAP_AMOUNT * 2;
+      });
+
+      // Todo: check this and make work
+//      edge_masks.forEach(e -> {
+//         e.width += OVERLAP_AMOUNT;
+//         e.height += OVERLAP_AMOUNT;
+//      });
+   }
+
+   private Air create_air(float x, float y){
+      return new Air(
+              (x / Terrain.WIDTH) * GameEngine.WORLD_WIDTH - OVERLAP_AMOUNT,
+              (y / Terrain.HEIGHT) * GameEngine.WORLD_HEIGHT - OVERLAP_AMOUNT,
+              (float)GameEngine.WORLD_WIDTH / Terrain.WIDTH + OVERLAP_AMOUNT * 2f
+      );
    }
 
 
-   private void drawWall(float x, float y){
+   private Wall create_wall(float x, float y){
       // Init x, y
       x = (x / Terrain.WIDTH) * GameEngine.WORLD_WIDTH;
       y = (y / Terrain.HEIGHT) * GameEngine.WORLD_HEIGHT;
 
       // Draw wall
-      sys.fill(wall_colour.x, wall_colour.y, wall_colour.z);
-      sys.noStroke();
-      sys.square(x - OVERLAP_AMOUNT, y - OVERLAP_AMOUNT, (float)GameEngine.WORLD_WIDTH / Terrain.WIDTH + OVERLAP_AMOUNT * 2f);
+      return new Wall(
+              x - OVERLAP_AMOUNT,
+              y - OVERLAP_AMOUNT,
+              (float)GameEngine.WORLD_WIDTH / Terrain.WIDTH + OVERLAP_AMOUNT * 2f
+      );
    }
 
 
-   private void drawMask(float x, float y, int mask){
+   private void crete_mask(float x, float y, int mask){
       // Init x, y
       x = (x / Terrain.WIDTH) * GameEngine.WORLD_WIDTH;
       y = (y / Terrain.HEIGHT) * GameEngine.WORLD_HEIGHT;
 
       // Draw mask
-      sys.fill(border_colour.x, border_colour.y, border_colour.z);
       if((mask & TOP_MASK) == TOP_MASK)
-         sys.rect(x, y + Terrain.CELL_SIZE - BORDER_WIDTH, Terrain.CELL_SIZE, BORDER_WIDTH);
+         rect_masks.add(new RectMask(x, y + Terrain.CELL_SIZE - BORDER_WIDTH, Terrain.CELL_SIZE, BORDER_WIDTH));
       if((mask & BOTTOM_MASK) == BOTTOM_MASK)
-         sys.rect(x, y, Terrain.CELL_SIZE, BORDER_WIDTH);
+         rect_masks.add(new RectMask(x, y, Terrain.CELL_SIZE, BORDER_WIDTH));
       if((mask & LEFT_MASK) == LEFT_MASK)
-         sys.rect(x, y, BORDER_WIDTH, Terrain.CELL_SIZE);
+         rect_masks.add(new RectMask(x, y, BORDER_WIDTH, Terrain.CELL_SIZE));
       if((mask & RIGHT_MASK) == RIGHT_MASK)
-         sys.rect(x + Terrain.CELL_SIZE - BORDER_WIDTH, y, BORDER_WIDTH, Terrain.CELL_SIZE);
+         rect_masks.add(new RectMask(x + Terrain.CELL_SIZE - BORDER_WIDTH, y, BORDER_WIDTH, Terrain.CELL_SIZE));
 
-      sys.noStroke();
       if((mask & TOP_LEFT_MASK) == TOP_LEFT_MASK)
-         sys.arc(x, y + Terrain.CELL_SIZE, BORDER_WIDTH * 2, BORDER_WIDTH * 2, PConstants.PI, PConstants.TWO_PI - PConstants.HALF_PI);
+         edge_masks.add(new EdgeMask(x, y + Terrain.CELL_SIZE, BORDER_WIDTH * 2, BORDER_WIDTH * 2, PConstants.PI, PConstants.TWO_PI - PConstants.HALF_PI));
       if((mask & TOP_RIGHT_MASK) == TOP_RIGHT_MASK)
-         sys.arc(x + Terrain.CELL_SIZE, y + Terrain.CELL_SIZE, BORDER_WIDTH * 2, BORDER_WIDTH * 2, PConstants.HALF_PI + PConstants.PI, PConstants.TWO_PI);
+         edge_masks.add(new EdgeMask(x + Terrain.CELL_SIZE, y + Terrain.CELL_SIZE, BORDER_WIDTH * 2, BORDER_WIDTH * 2, PConstants.HALF_PI + PConstants.PI, PConstants.TWO_PI));
       if((mask & BOTTOM_LEFT_MASK) == BOTTOM_LEFT_MASK)
-         sys.arc(x, y + Terrain.CELL_SIZE, BORDER_WIDTH * 2, BORDER_WIDTH * 2, 0, PConstants.HALF_PI);
+         edge_masks.add(new EdgeMask(x, y + Terrain.CELL_SIZE, BORDER_WIDTH * 2, BORDER_WIDTH * 2, 0, PConstants.HALF_PI));
       if((mask & BOTTOM_RIGHT_MASK) == BOTTOM_RIGHT_MASK)
-         sys.arc(x, y, BORDER_WIDTH * 2, BORDER_WIDTH * 2, PConstants.HALF_PI, PConstants.PI);
+         edge_masks.add(new EdgeMask(x, y, BORDER_WIDTH * 2, BORDER_WIDTH * 2, PConstants.HALF_PI, PConstants.PI));
    }
 
 
-   private void drawAir(float x, float y){
-      sys.fill(air_colour.x, air_colour.y, air_colour.z);
-      sys.noStroke();
-      sys.square((x / Terrain.WIDTH) * GameEngine.WORLD_WIDTH - OVERLAP_AMOUNT, (y / Terrain.HEIGHT) * GameEngine.WORLD_HEIGHT - OVERLAP_AMOUNT, (float)GameEngine.WORLD_WIDTH / Terrain.WIDTH + OVERLAP_AMOUNT * 2f);
-   }
-
-
-   private void drawDebug(float x, float y, int colour){
-      PVector c = int_to_rgb(colour);
-      sys.fill(c.x, c.y, c.z);
-      sys.noStroke();
-      sys.square((x / Terrain.WIDTH) * GameEngine.WORLD_WIDTH, (y / Terrain.HEIGHT) * GameEngine.WORLD_HEIGHT, (float)GameEngine.WORLD_WIDTH / Terrain.WIDTH);
-   }
-
-
-   private int getMasks(int x, int y){
+   private int get_masks(int x, int y){
       // Init masks
       int masks = 0;
 
@@ -213,40 +264,7 @@ public class TerrainRenderer extends Component {
 
 
    private boolean is_hookable(int x, int y){
-      return (generator.validWalkCord(x, y) && tile_attribtues[generator.getIndex(x, y)] != Terrain.NON_GRAPPLE);
-   }
-
-
-   private static int random_colour(){
-      // Init attributes
-      float r, g, b;
-      int h = new Random().nextInt(360);
-      float s = 1f;
-      float l = 0.75f;
-
-      float c = (1-Math.abs(2*l - 1))*s;
-      float x = c*(1-Math.abs((h/60f)%2 - 1));
-      float m = l-c/2f;
-
-      if(h <= 60){
-         r = c; g = x; b = 0;
-      }else if(h <= 120){
-         r  = x; g = c; b = 0;
-      }else if(h <= 180){
-         r = 0; g = x; b = x;
-      }else if(h <= 240){
-         r = 0; g = x; b = c;
-      }else if(h >= 300){
-         r = x; g = 0; b = c;
-      }else{
-         r =  c; g = 0; b = x;
-      }
-      r = (r+m)*255;
-      g = (g+m)*255;
-      b = (b+m)*255;
-
-      // return colour;
-      return rgb_to_int((int)r, (int)g, (int)b);
+      return (generator.validWalkCord(x, y) && tile_attributes[generator.getIndex(x, y)] != Terrain.NON_GRAPPLE);
    }
 
 
@@ -283,5 +301,63 @@ public class TerrainRenderer extends Component {
 
    public static PVector int_to_rgb(int i){
       return new PVector(i & r_mask, (i & g_mask) >> 8, (i & b_mask) >> 16);
+   }
+
+
+   /* ******** Helper Classes ********* */
+   private static class Air {
+      public float x;
+      public float y;
+      public float width;
+
+      public Air(float x, float y, float width) {
+         this.x = x;
+         this.y = y;
+         this.width = width;
+      }
+   }
+
+   private static class Wall {
+      public float x;
+      public float y;
+      public float width;
+
+      public Wall(float x, float y, float width) {
+         this.x = x;
+         this.y = y;
+         this.width = width;
+      }
+   }
+
+   private static class RectMask {
+      public float x;
+      public float y;
+      public float height;
+      public float width;
+
+      public RectMask(float x, float y, float height, float width) {
+         this.x = x;
+         this.y = y;
+         this.height = height;
+         this.width = width;
+      }
+   }
+
+   private static class EdgeMask {
+      public float x;
+      public float y;
+      public float width;
+      public float height;
+      public float start_rad;
+      public float end_rad;
+
+      public EdgeMask(float x, float y, float width, float height, float start_rad, float end_rad) {
+         this.x = x;
+         this.y = y;
+         this.width = width;
+         this.height = height;
+         this.start_rad = start_rad;
+         this.end_rad = end_rad;
+      }
    }
 }

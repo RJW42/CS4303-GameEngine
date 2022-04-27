@@ -46,7 +46,7 @@ public class PlayLevel extends Level{
       init_player();
 
       // Spawn monsters
-      sys.spawn(new Monster(sys, new PVector(2, 2)), 2);
+      // sys.spawn(new Monster(sys, new PVector(2, 2)), 2);
    }
 
    private void init_terrain(){
