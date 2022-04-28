@@ -208,6 +208,56 @@ public class AIPathManager extends Component {
          return p;
       }
 
+      // Perform the search
+      perform_search(start_node, end_node);
+
+      // Get the result of the search as a path
+      return search_to_path(start, end, start_node, end_node);
+   }
+
+
+   private Path search_to_path(PVector start, PVector end, Node start_node, Node end_node){
+      // Found path to parent convert this to a usable search path
+      LinkedList<Path.Point> path = new LinkedList<>();
+      path.addFirst(new Path.Point(end.copy()));
+
+      Node n = end_node.parent;
+      boolean last_was_jump = false;
+      boolean last_was_upper = false;
+
+      while(n != start_node && n != null){
+         // Todo: may want to change this to be a bit better but works for now
+         if(n.connection_edge instanceof VerticalEdge){
+            VerticalEdge edge = (VerticalEdge)n.connection_edge;
+
+            if(!last_was_jump) path.addFirst(new Path.Point(n.centre_pos));
+            else path.addFirst(new Path.Point(n.centre_pos, true, last_was_upper));
+
+            last_was_jump = true;
+            last_was_upper = edge.is_upper;
+         } else if(last_was_jump) {
+            path.addFirst(new Path.Point(n.centre_pos, true, last_was_upper));
+            last_was_jump = false;
+         } else {
+            path.addFirst(new Path.Point(n.centre_pos));
+         }
+         n = n.parent;
+      }
+
+      path.addFirst(new Path.Point(start.copy())); // Todo: deal with start being a jedge
+
+      if(n == null) // Could not create a path to the player
+         path.removeLast();
+
+      // Create output path
+      Path out = new Path();
+      out.points.addAll(path);
+
+      return out;
+   }
+
+
+   private void perform_search(Node start_node, Node end_node){
       // Perform a* search to create a path between the start and end nodes
       // Init data structures required to perform the search
       PriorityQueue<Node> closed_list = new PriorityQueue<>();
@@ -254,36 +304,6 @@ public class AIPathManager extends Component {
          open_list.remove(n);
          closed_list.add(n);
       }
-
-      // Found path to parent convert this to a usable search path
-      LinkedList<Path.Point> path = new LinkedList<>();
-      path.addFirst(new Path.Point(end.copy()));
-
-      Node n = end_node.parent;
-      boolean last_was_jump = false;
-      while(n != start_node && n != null){
-         if(n.connection_edge instanceof VerticalEdge) {
-            path.addFirst(new Path.Point(n.centre_pos, true, ((VerticalEdge) n.connection_edge).is_upper));
-            last_was_jump = true;
-         }else if (last_was_jump) {
-            path.addFirst(new Path.Point(n.centre_pos, true, !path.getFirst().is_bottom));
-            last_was_jump = false;
-         }else{
-            path.addFirst(new Path.Point(n.centre_pos));
-         }
-         n = n.parent;
-      }
-
-      path.addFirst(new Path.Point(start.copy())); // Todo: deal with start being a jedge
-
-      if(n == null) // Could not create a path to the player
-         path.removeLast();
-
-      // Create output path
-      Path out = new Path();
-      out.points.addAll(path);
-
-      return out;
    }
 
 
