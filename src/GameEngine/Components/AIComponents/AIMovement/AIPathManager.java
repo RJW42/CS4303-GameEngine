@@ -44,29 +44,29 @@ public class AIPathManager extends Component {
 
 
    public void draw() {
-      for(Node node : nodes){
-         sys.fill(0, 255, 0, 127);
-         sys.rect(node.pos.x, node.pos.y, Terrain.CELL_SIZE, Terrain.CELL_SIZE);
-         sys.fill(255, 0, 0);
-         sys.circle(node.centre_pos.x, node.centre_pos.y, 0.1f);
-
-         for(Edge edge : node.adjacent){
-            if(edge instanceof VerticalEdge){
-               VerticalEdge jedge = (VerticalEdge) edge;
-
-               sys.stroke(255, 0, 0);
-               sys.line(node.centre_pos.x, node.centre_pos.y, jedge.upper_pos.x, jedge.upper_pos.y);
-               sys.line(jedge.upper_pos.x, jedge.upper_pos.y, jedge.node.centre_pos.x, jedge.node.centre_pos.y);
-               sys.noStroke();
-            } else {
-               sys.stroke(0, 0, 255);
-               sys.line(node.centre_pos.x, node.centre_pos.y, edge.node.centre_pos.x, edge.node.centre_pos.y);
-               sys.noStroke();
-            }
-         }
-      }
-      sys.fill(250, 215, 30);
-      sys.rect(player_ground_tile.x, player_ground_tile.y, Terrain.CELL_SIZE, Terrain.CELL_SIZE);
+//      for(Node node : nodes){
+//         sys.fill(0, 255, 0, 127);
+//         sys.rect(node.pos.x, node.pos.y, Terrain.CELL_SIZE, Terrain.CELL_SIZE);
+//         sys.fill(255, 0, 0);
+//         sys.circle(node.centre_pos.x, node.centre_pos.y, 0.1f);
+//
+//         for(Edge edge : node.adjacent){
+//            if(edge instanceof VerticalEdge){
+//               VerticalEdge jedge = (VerticalEdge) edge;
+//
+//               sys.stroke(255, 0, 0);
+//               sys.line(node.centre_pos.x, node.centre_pos.y, jedge.upper_pos.x, jedge.upper_pos.y);
+//               sys.line(jedge.upper_pos.x, jedge.upper_pos.y, jedge.node.centre_pos.x, jedge.node.centre_pos.y);
+//               sys.noStroke();
+//            } else {
+//               sys.stroke(0, 0, 255);
+//               sys.line(node.centre_pos.x, node.centre_pos.y, edge.node.centre_pos.x, edge.node.centre_pos.y);
+//               sys.noStroke();
+//            }
+//         }
+//      }
+//      sys.fill(250, 215, 30);
+//      sys.rect(player_ground_tile.x, player_ground_tile.y, Terrain.CELL_SIZE, Terrain.CELL_SIZE);
    }
 
 

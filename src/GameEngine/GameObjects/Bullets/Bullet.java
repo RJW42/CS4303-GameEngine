@@ -4,6 +4,7 @@ package GameEngine.GameObjects.Bullets;
 import GameEngine.Components.CollisionComponents.BaseCollisionComponent;
 import GameEngine.Components.CollisionComponents.CircleCollisionComponent;
 import GameEngine.Components.CollisionComponents.Collideable;
+import GameEngine.Components.Damagable;
 import GameEngine.Components.ForceManager;
 import GameEngine.Components.Renderers.CircleRenderer;
 import GameEngine.GameEngine;
@@ -67,15 +68,14 @@ public class Bullet extends GameObject implements Collideable {
       if(is_dead) return false;
       is_dead = true;
 
-      // Todo: check if other is damagable, then change to only explode on terrain and damanagable maybe
-
+      Damagable damagable = other.parent.getComponent(Damagable.class);
+      if(damagable != null) damagable.shot(momentum);
       if(explosive) create_explosion();
 
       return true;
    }
 
    private void create_explosion(){
-      System.out.println("yee");
       sys.spawn(new Explosion(sys, parent, pos.copy(), explosion_size), 2);
    }
 

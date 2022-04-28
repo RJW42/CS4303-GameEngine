@@ -38,30 +38,28 @@ public class AIMovementController extends Component {
 
    public void update() {
       // Todo: need to change this as there is an issue when the AI is not fully on a node
-//      if(force_manager.grounded && sys.frameCount % 15 == refresh_frame) {
-//         System.out.println("A");
-//         current_path = path_manager.astar_search(parent.pos, path_manager.player_ground_tile);
-//         System.out.println("B");
-//         current_path.getNextPoint();
-//         current_point = current_path.getCurrentPoint();
-//      }
-//
-//      walk_path();
+      if(force_manager.grounded && sys.frameCount % 15 == refresh_frame) {
+         current_path = path_manager.astar_search(parent.pos, path_manager.player_ground_tile);
+         current_path.getNextPoint();
+         current_point = current_path.getCurrentPoint();
+      }
+
+      //walk_path();
    }
 
 
    public void draw(){
-      if(current_path == null)
-         return;
-
-      for(int i = current_path.current_index; i < current_path.points.size(); i++) {
-         var point = current_path.points.get(i);
-         if(point.is_jump)
-            if(point.is_bottom)  sys.fill(255, 0, 0);
-            else sys.fill(0, 255, 0);
-         else sys.fill(0);
-         sys.circle(point.pos.x, point.pos.y, 0.1f);
-      }
+//      if(current_path == null)
+//         return;
+//
+//      for(int i = current_path.current_index; i < current_path.points.size(); i++) {
+//         var point = current_path.points.get(i);
+//         if(point.is_jump)
+//            if(point.is_bottom)  sys.fill(255, 0, 0);
+//            else sys.fill(0, 255, 0);
+//         else sys.fill(0);
+//         sys.circle(point.pos.x, point.pos.y, 0.1f);
+//      }
    }
 
 

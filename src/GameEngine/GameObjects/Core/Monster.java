@@ -5,6 +5,7 @@ import GameEngine.Components.AIComponents.AIMovement.AIMovementController;
 import GameEngine.Components.CollisionComponents.BaseCollisionComponent;
 import GameEngine.Components.CollisionComponents.Collideable;
 import GameEngine.Components.CollisionComponents.RectCollisionComponent;
+import GameEngine.Components.Damagable;
 import GameEngine.Components.ForceManager;
 import GameEngine.Components.Renderers.RectRenderer;
 import GameEngine.GameObjects.GameObject;
@@ -21,10 +22,12 @@ public class Monster extends GameObject implements Collideable {
    public static final float COLLISION_WIDTH = 0.5f;
    public static final float FRICTION        = 0.06f;
    public static final PVector COLOUR        = new PVector(255, 32, 32);
+   public static final int HEALTH            = 50;
 
    public boolean is_dead = false;
-   public ForceManager force_manager;
 
+   public final ForceManager force_manager;
+   public final Damagable damagable;
    private final ArrayList<BaseCollisionComponent> collision_components;
 
 
@@ -38,11 +41,14 @@ public class Monster extends GameObject implements Collideable {
       this.force_manager = new ForceManager(
               this, new PVector(0, 0), new PVector(0, 0), FRICTION
       );
+      this.damagable = new Damagable(this, HEALTH);
 
       // Add regular components
       this.components.add(new AIMovementController(this, new PVector(), 5));
       this.components.add(new RectRenderer(this, COLOUR, COLLISION_WIDTH, COLLISION_HEIGHT));
+
       this.components.add(force_manager);
+      this.components.add(damagable);
 
 
       // Add collision components
@@ -63,6 +69,8 @@ public class Monster extends GameObject implements Collideable {
    // Methods
    @Override
    public boolean isDestroyed() {
+      if(damagable.health <= 0)
+         is_dead = true;
       return is_dead;
    }
 

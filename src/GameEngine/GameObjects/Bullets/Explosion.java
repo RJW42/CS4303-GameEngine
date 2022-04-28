@@ -4,6 +4,7 @@ package GameEngine.GameObjects.Bullets;
 import GameEngine.Components.CollisionComponents.BaseCollisionComponent;
 import GameEngine.Components.CollisionComponents.CircleCollisionComponent;
 import GameEngine.Components.CollisionComponents.Collideable;
+import GameEngine.Components.Damagable;
 import GameEngine.Components.ForceManager;
 import GameEngine.Components.Weapons.ExplosionManager;
 import GameEngine.GameObjects.Core.Player;
@@ -56,7 +57,11 @@ public class Explosion extends GameObject implements Collideable {
    }
 
    public boolean on_collision(BaseCollisionComponent other){
-      // Todo: damage the other object
+      // Damage the other object if possible
+      if(other.parent != parent) {
+         Damagable damagable = other.parent.getComponent(Damagable.class);
+         if (damagable != null) damagable.blast(this);
+      }
 
       // Check if the other object has a force manager
       if(other.parent instanceof Player){
