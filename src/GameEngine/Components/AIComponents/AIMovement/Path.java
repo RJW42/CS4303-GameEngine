@@ -29,6 +29,7 @@ public class Path {
    public static class Point {
       // Attributes
       public final PVector pos;
+      public final PVector upper_pos;
       public boolean is_jump;
       public boolean is_bottom;
 
@@ -37,10 +38,19 @@ public class Path {
          this.pos = pos;
          this.is_jump = false;
          this.is_bottom = false;
+         this.upper_pos = null;
       }
 
       public Point(PVector pos, boolean is_jump, boolean is_bottom) {
          this.pos = pos;
+         this.is_jump = is_jump;
+         this.is_bottom = is_bottom;
+         this.upper_pos = null;
+      }
+
+      public Point(PVector pos, PVector upper_pos, boolean is_jump, boolean is_bottom) {
+         this.pos = pos;
+         this.upper_pos = upper_pos;
          this.is_jump = is_jump;
          this.is_bottom = is_bottom;
       }

@@ -224,6 +224,7 @@ public class AIPathManager extends Component {
       Node n = end_node.parent;
       boolean last_was_jump = false;
       boolean last_was_upper = false;
+      PVector upper_pos = null;
 
       while(n != start_node && n != null){
          // Todo: may want to change this to be a bit better but works for now
@@ -231,16 +232,19 @@ public class AIPathManager extends Component {
             VerticalEdge edge = (VerticalEdge)n.connection_edge;
 
             if(!last_was_jump) path.addFirst(new Path.Point(n.centre_pos));
-            else path.addFirst(new Path.Point(n.centre_pos, true, last_was_upper));
+            else path.addFirst(new Path.Point(n.centre_pos, upper_pos, true, !last_was_upper));
 
             last_was_jump = true;
             last_was_upper = edge.is_upper;
+            upper_pos = edge.upper_pos;
          } else if(last_was_jump) {
-            path.addFirst(new Path.Point(n.centre_pos, true, last_was_upper));
+            System.out.println("yee");
+            path.addFirst(new Path.Point(n.centre_pos, upper_pos, true, !last_was_upper));
             last_was_jump = false;
          } else {
             path.addFirst(new Path.Point(n.centre_pos));
          }
+
          n = n.parent;
       }
 

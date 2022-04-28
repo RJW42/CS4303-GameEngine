@@ -44,8 +44,8 @@ public class Monster extends GameObject implements Collideable {
       this.damagable = new Damagable(this, HEALTH);
 
       // Add regular components
-      this.components.add(new AIMovementController(this, new PVector(), 5));
       this.components.add(new RectRenderer(this, COLOUR, COLLISION_WIDTH, COLLISION_HEIGHT));
+      this.components.add(new AIMovementController(this, new PVector(COLLISION_WIDTH / 2f, -COLLISION_HEIGHT / 2f), 5));
 
       this.components.add(force_manager);
       this.components.add(damagable);
