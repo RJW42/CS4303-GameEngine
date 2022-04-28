@@ -238,7 +238,6 @@ public class AIPathManager extends Component {
             last_was_upper = edge.is_upper;
             upper_pos = edge.upper_pos;
          } else if(last_was_jump) {
-            System.out.println("yee");
             path.addFirst(new Path.Point(n.centre_pos, upper_pos, true, !last_was_upper));
             last_was_jump = false;
          } else {
@@ -248,10 +247,18 @@ public class AIPathManager extends Component {
          n = n.parent;
       }
 
-      path.addFirst(new Path.Point(start.copy())); // Todo: deal with start being a jedge
-
-      if(n == null) // Could not create a path to the player
-         path.removeLast();
+      if(n == null) {
+         path.clear();
+      } else {
+         if(n.connection_edge instanceof VerticalEdge){
+            if(!last_was_jump) path.addFirst(new Path.Point(n.centre_pos));
+            else path.addFirst(new Path.Point(n.centre_pos, upper_pos, true, !last_was_upper));
+         } else if(last_was_jump) {
+            path.addFirst(new Path.Point(n.centre_pos, upper_pos, true, !last_was_upper));
+         } else {
+            path.addFirst(new Path.Point(start.copy())); // Todo: deal with start being a jedge
+         }
+      }
 
       // Create output path
       Path out = new Path();

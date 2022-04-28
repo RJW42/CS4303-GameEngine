@@ -21,6 +21,12 @@ public class Path {
       return points.get(++current_index);
    }
 
+   public Point peekNextPoint(){
+      if(current_index == points.size() - 1)
+         return null;
+      return points.get(current_index + 1);
+   }
+
    public Point getCurrentPoint(){
       return points.get(current_index);
    }
