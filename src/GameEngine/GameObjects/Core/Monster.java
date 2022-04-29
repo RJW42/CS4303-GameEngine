@@ -18,6 +18,8 @@ import java.util.List;
 
 public class Monster extends GameObject implements Collideable {
    // Attributes
+   public static boolean ACTIVE = true;
+
    public static final float COLLISION_HEIGHT= 0.75f;
    public static final float COLLISION_WIDTH = 0.5f;
    public static final float FRICTION        = 0.06f;

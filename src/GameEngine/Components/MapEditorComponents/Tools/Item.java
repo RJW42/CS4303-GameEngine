@@ -152,7 +152,7 @@ public enum Item {
       if(player_loc != null && generator.getIndexFromWorldPos(player_loc.x, player_loc.y) == world_index){
          generator.player_spawn_loc = null;
       }
-      if(goal_loc != null && generator.getIndexFromWorldPos(goal_loc.x, goal_loc.y) == world_index){
+      if(goal_loc != null && generator.getIndexFromWorldPos(goal_loc.x + 0.1f, goal_loc.y - 0.1f) == world_index){
          generator.goal_spawn_loc = null;
       }
    }

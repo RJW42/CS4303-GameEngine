@@ -22,6 +22,8 @@ import java.util.List;
 
 public class Player extends GameObject implements Collideable {
    // Attributes
+   public static boolean ACTIVE = true;
+
    public static final float COLLISION_HEIGHT= 0.75f;
    public static final float COLLISION_WIDTH = 0.5f;
    public static final float ACCELERATION    = 12f;

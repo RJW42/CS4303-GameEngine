@@ -7,6 +7,8 @@ import processing.core.PVector;
 
 public class ForceManager extends Component {
    // Attributes
+   public static boolean ACTIVE = true;
+
    public PVector velocity;
    public PVector acceleration;
    public boolean grounded;
@@ -52,6 +54,9 @@ public class ForceManager extends Component {
    }
 
    public void update() {
+      // Check if active
+      if(!ACTIVE) return;
+
       // Check if no longer grounded
       if(!set_grounded) {
          grounded = false;

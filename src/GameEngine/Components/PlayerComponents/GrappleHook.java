@@ -4,6 +4,7 @@ package GameEngine.Components.PlayerComponents;
 import GameEngine.Components.Component;
 import GameEngine.Components.ForceManager;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
+import GameEngine.GameObjects.Core.Player;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.Utils.Managers.InputManager;
@@ -46,6 +47,7 @@ public class GrappleHook extends Component {
    }
 
    public void update() {
+      if(!Player.ACTIVE) return;
       player_point = parent.pos;
 
       if(!fired)

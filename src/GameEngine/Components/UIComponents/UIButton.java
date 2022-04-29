@@ -28,7 +28,7 @@ public class UIButton extends Component {
    private float border_width;
    private float text_height;
    private int text_size;
-   private CallBack callback;
+   public CallBack callback;
 
    public boolean mouse_over;
    private boolean was_clicked;

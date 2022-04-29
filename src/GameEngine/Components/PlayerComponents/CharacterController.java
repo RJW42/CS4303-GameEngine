@@ -2,6 +2,7 @@ package GameEngine.Components.PlayerComponents;
 
 import GameEngine.Components.Component;
 import GameEngine.Components.ForceManager;
+import GameEngine.GameObjects.Core.Player;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.Utils.Managers.InputManager;
 import processing.core.PVector;
@@ -47,6 +48,8 @@ public class CharacterController extends Component {
    }
 
    public void update() {
+      if(!Player.ACTIVE) return;
+
       jump_check();
       update_velocity();
    }

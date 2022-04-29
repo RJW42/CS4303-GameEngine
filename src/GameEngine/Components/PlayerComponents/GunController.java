@@ -3,6 +3,7 @@ package GameEngine.Components.PlayerComponents;
 
 import GameEngine.Components.Component;
 import GameEngine.Components.Weapons.Gun;
+import GameEngine.GameObjects.Core.Player;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.Utils.Managers.InputManager;
 import processing.core.PVector;
@@ -42,6 +43,9 @@ public class GunController extends Component {
    }
 
    public void update() {
+      // Check if active
+      if(!Player.ACTIVE) return;
+
       // Update guns position
       active_gun.target_pos.x = sys.mouse_x;
       active_gun.target_pos.y = sys.mouse_y;

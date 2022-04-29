@@ -32,7 +32,7 @@ public class ItemPlace extends Tool {
       super(parent);
 
       // Init attributes
-      this.icon_text = "PL";
+      this.icon_text = "Place";
    }
 
 

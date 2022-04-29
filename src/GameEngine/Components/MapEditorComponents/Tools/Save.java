@@ -44,6 +44,11 @@ public class Save extends Tool {
          return;
       }
 
+      if(generator.goal_spawn_loc == null){
+         sys.warning_display.display_warning("Must place goal before saving");
+         return;
+      }
+
 
       // Save world
       TerrainLoader.saveTerrain(generator, renderer, MapBuilder.name + ".json");

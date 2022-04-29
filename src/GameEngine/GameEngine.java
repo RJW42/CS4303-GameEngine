@@ -63,7 +63,7 @@ public class GameEngine extends PApplet{
    public ScoreManager score_manager;
    public AudioManager audio_manager;
    public LevelManager level_manager;
-   public GameObject chase_object;
+   public PVector chase_position;
    public float chase_zoom;
    public Config config;
    public float mouse_x;
@@ -141,7 +141,7 @@ public class GameEngine extends PApplet{
 
       // Init level manager
       level_manager = new LevelManager(this, new MainMenu(this));
-      //level_manager = new LevelManager(this, new PlayLevel(this, "AI3.json"));
+      //level_manager = new LevelManager(this, new PlayLevel(this, "test.json"));
    }
 
 
@@ -171,7 +171,7 @@ public class GameEngine extends PApplet{
       Y_TRANSLATE = (y_usage >= SCREEN_HEIGHT) ? 0 : (SCREEN_HEIGHT - y_usage) / 2f;
 
       // Clear any chase object
-      chase_object = null;
+      chase_position = null;
 
       // reset grid sizes
       clearGameObjects();
@@ -246,18 +246,17 @@ public class GameEngine extends PApplet{
       mouse_ui_y = (1 - (float) mouseY / SCREEN_HEIGHT);
 
       // Chase object if set
-      if(chase_object == null)
+      if(chase_position == null)
          return;
 
       // Get the offset based of the chase object
-      PVector chase_pos = chase_object.pos;
-      float translate_x = (WORLD_WIDTH  / 2f - chase_pos.x * chase_zoom);
-      float translate_y = (WORLD_HEIGHT / 2f - chase_pos.y * chase_zoom);
+      float translate_x = (WORLD_WIDTH  / 2f - chase_position.x * chase_zoom);
+      float translate_y = (WORLD_HEIGHT / 2f - chase_position.y * chase_zoom);
       translate(translate_x, translate_y);
 
       // Update mouses position to represent this translation Todo: could make this more efficient
-      mouse_x = chase_pos.x - WORLD_WIDTH / (chase_zoom * 2) + ((mouseX - X_TRANSLATE) / (WORLD_WIDTH * PIXEL_TO_METER)) * (WORLD_WIDTH / chase_zoom);
-      mouse_y = chase_pos.y - WORLD_HEIGHT / (chase_zoom * 2) + (1 - ((mouseY - Y_TRANSLATE) / (WORLD_HEIGHT * PIXEL_TO_METER))) * (WORLD_HEIGHT / chase_zoom);
+      mouse_x = chase_position.x - WORLD_WIDTH / (chase_zoom * 2) + ((mouseX - X_TRANSLATE) / (WORLD_WIDTH * PIXEL_TO_METER)) * (WORLD_WIDTH / chase_zoom);
+      mouse_y = chase_position.y - WORLD_HEIGHT / (chase_zoom * 2) + (1 - ((mouseY - Y_TRANSLATE) / (WORLD_HEIGHT * PIXEL_TO_METER))) * (WORLD_HEIGHT / chase_zoom);
 
       // Scale according to chase settings
       scale(chase_zoom);

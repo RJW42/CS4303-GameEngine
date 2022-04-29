@@ -1,14 +1,11 @@
 package GameEngine.Levels;
 
 import GameEngine.Components.TerrianComponents.LoadedTerrainGenerator;
-import GameEngine.Components.TerrianComponents.TerrainGenerator;
 import GameEngine.GameObjects.Core.Director;
-import GameEngine.GameObjects.Core.Monster;
 import GameEngine.GameObjects.Core.Player;
 import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.GameEngine;
 import GameEngine.Utils.Managers.InputManager;
-import processing.core.PVector;
 
 import java.util.Random;
 
@@ -44,8 +41,7 @@ public class PlayLevel extends Level{
 
       // Create objects
       init_terrain();
-      init_managers();
-      init_player();
+      init_objects();
       generator.spawn_monsters();
       generator.spawn_goal();
    }
@@ -65,23 +61,14 @@ public class PlayLevel extends Level{
    }
 
 
-   private void init_managers(){
-      sys.spawn(new Director(sys), 0);
-   }
-
-
-   private void init_player(){
+   private void init_objects(){
       // Create player
       Player player = new Player(sys, generator.player_spawn_loc.copy());
       sys.spawn(player, 2);
 
-      // Set the player as the chase object
-      sys.chase_object = player;
-
-      float desired_x_zoom = GameEngine.SCREEN_WIDTH / (DESIRED_WALLS * GameEngine.PIXEL_TO_METER);
-      float desired_y_zoom = GameEngine.SCREEN_HEIGHT / (DESIRED_WALLS * GameEngine.PIXEL_TO_METER);
-
-      sys.chase_zoom = Math.min(desired_x_zoom, desired_y_zoom);
+      // Create director
+      Director director = new Director(sys, player);
+      sys.spawn(director, 0);
    }
 
 

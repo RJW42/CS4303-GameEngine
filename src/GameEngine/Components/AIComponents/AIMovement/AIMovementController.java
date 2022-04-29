@@ -4,6 +4,7 @@ import GameEngine.Components.Component;
 import GameEngine.Components.ForceManager;
 import GameEngine.GameEngine;
 import GameEngine.GameObjects.Core.Director;
+import GameEngine.GameObjects.Core.Monster;
 import GameEngine.GameObjects.GameObject;
 import processing.core.PVector;
 
@@ -70,6 +71,8 @@ public class AIMovementController extends Component {
 
 
    public void update() {
+      if(!Monster.ACTIVE) return;
+
       // Todo: if lagging add some check to only update every 5 frames
       if(current_path == null || can_update){
          refresh_path();
@@ -116,27 +119,27 @@ public class AIMovementController extends Component {
 
 
    public void draw(){
-      sys.fill(0, 0, 255);
-      sys.circle(parent.pos.x + pos_offset.x, parent.pos.y + pos_offset.y, 0.1f);
-
-      if(current_path == null)
-         return;
-
-      for(int i = 0; i < current_path.points.size(); i++) {
-         var point = current_path.points.get(i);
-         if(point.is_jump)
-            if(point.is_bottom)  sys.fill(255, 0, 0);
-            else sys.fill(0, 255, 0);
-         else sys.fill(0);
-         sys.circle(point.pos.x, point.pos.y, 0.1f);
-         if(point.upper_pos != null) {
-            sys.stroke(255);
-            sys.line(
-                    point.pos.x, point.pos.y,
-                    point.upper_pos.x, point.upper_pos.y
-            );
-         }
-      }
+//      sys.fill(0, 0, 255);
+//      sys.circle(parent.pos.x + pos_offset.x, parent.pos.y + pos_offset.y, 0.1f);
+//
+//      if(current_path == null)
+//         return;
+//
+//      for(int i = 0; i < current_path.points.size(); i++) {
+//         var point = current_path.points.get(i);
+//         if(point.is_jump)
+//            if(point.is_bottom)  sys.fill(255, 0, 0);
+//            else sys.fill(0, 255, 0);
+//         else sys.fill(0);
+//         sys.circle(point.pos.x, point.pos.y, 0.1f);
+//         if(point.upper_pos != null) {
+//            sys.stroke(255);
+//            sys.line(
+//                    point.pos.x, point.pos.y,
+//                    point.upper_pos.x, point.upper_pos.y
+//            );
+//         }
+//      }
    }
 
 
