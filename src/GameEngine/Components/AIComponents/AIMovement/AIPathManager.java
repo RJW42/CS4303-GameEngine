@@ -74,8 +74,14 @@ public class AIPathManager extends Component {
    private void update_player_ground_tile() {
       // Get the ground position of the player
       float x = player.pos.x + Player.COLLISION_WIDTH / 2f;
-      float y = player.pos.y;
+      float y = player.pos.y - (1f - Player.COLLISION_HEIGHT);
       int index;
+
+      if(player.force_manager.grounded){
+         player_ground_tile.x = x;
+         player_ground_tile.y = y;
+         return;
+      }
 
       do {
          index = generator.getIndexFromWorldPos(x, y--);
@@ -85,8 +91,8 @@ public class AIPathManager extends Component {
          return; // An error occorued the player is out of the player area
 
       Node node = index_to_nodes.get(index);
-      player_ground_tile.x = node.pos.x;
-      player_ground_tile.y = node.pos.y;
+      player_ground_tile.x = x;
+      player_ground_tile.y = node.pos.y + 0.5f;
    }
 
 
@@ -200,11 +206,16 @@ public class AIPathManager extends Component {
       Node start_node = index_to_nodes.get(generator.getIndexFromWorldPos(start.x, start.y));
       Node end_node = index_to_nodes.get(generator.getIndexFromWorldPos(end.x, end.y));
 
+      if(start_node == null){
+         System.out.println("NULL node");
+         start_node = get_closest(start.x, start.y);
+      }
+
       if(start_node == end_node){
          Path p = new Path();
-         p.points.add(new Path.Point(start.copy()));
+//         p.points.add(new Path.Point(start.copy()));
          p.points.add(new Path.Point(end.copy()));
-         System.out.println("Same");
+         //System.out.println("Same");
          return p;
       }
 
@@ -213,6 +224,20 @@ public class AIPathManager extends Component {
 
       // Get the result of the search as a path
       return search_to_path(start, end, start_node, end_node);
+   }
+
+   private Node get_closest(float x, float y){
+      Node n;
+
+      n = index_to_nodes.get(generator.getIndexFromWorldPos(x + 0.5f, y));
+      if(n != null) return n;
+
+      n = index_to_nodes.get(generator.getIndexFromWorldPos(x - 0.5f, y));
+      if(n != null) return n;
+
+      System.err.println("Error could not find closest node");
+      System.exit(0);
+      return null;
    }
 
 
@@ -256,7 +281,7 @@ public class AIPathManager extends Component {
          } else if(last_was_jump) {
             path.addFirst(new Path.Point(n.centre_pos, upper_pos, true, !last_was_upper));
          } else {
-            path.addFirst(new Path.Point(start.copy())); // Todo: deal with start being a jedge
+            path.addFirst(new Path.Point(start.copy()));
          }
       }
 

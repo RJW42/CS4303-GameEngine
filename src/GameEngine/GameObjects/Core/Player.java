@@ -30,8 +30,8 @@ public class Player extends GameObject implements Collideable {
    public static final PVector COLOUR        = new PVector(0, 32, 128);
    public static final int HEALTH            = 100;
 
+   public final ForceManager force_manager;
    private final ArrayList<BaseCollisionComponent> collision_components;
-   private final ForceManager force_manager;
    private final Damagable damagable;
 
    public boolean is_dead = false;

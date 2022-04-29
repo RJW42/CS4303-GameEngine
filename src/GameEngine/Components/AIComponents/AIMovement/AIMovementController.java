@@ -69,8 +69,8 @@ public class AIMovementController extends Component {
 
 
    public void update() {
-//      // Todo: need to change this as there is an issue when the AI is not fully on a node //&&  || (can_update && force_manager.grounded )
-      if(current_path == null || (!in_jump /*sys.frameCount % 15 == refresh_frame*/)){
+      // Todo: if lagging add some check to only update every 5 frames
+      if(current_path == null || (can_update)){
          refresh_path();
       }
 
@@ -78,13 +78,27 @@ public class AIMovementController extends Component {
    }
 
    private void refresh_path(){
-      current_path = path_manager.astar_search(new PVector(get_x(), get_y()), path_manager.player_ground_tile);
-      current_point = null;
-      current_path.current_index = -1;
+      // Get refreshed path
+      Path path = path_manager.astar_search(new PVector(get_x(), get_y()), path_manager.player_ground_tile);
+      Path.Point next_current_point = path.getCurrentPoint();
+      Path.Point point_after_next = path.peekNextPoint();
+      float x = get_x();
 
+      if(point_after_next != null && !next_current_point.is_jump &&
+         ((x >= next_current_point.pos.x && x < point_after_next.pos.x && force_manager.velocity.x > 0) ||
+          (x <= next_current_point.pos.x && x > point_after_next.pos.x && force_manager.velocity.x < 0))
+          ){
+         path.getNextPoint();
+      }
+
+      // Update path
+      current_path = path;
+      current_point = null;
+
+      // Reset attributes
       in_jump = false;
       in_drop = false;
-      can_update = false;
+      can_update = true;
 
       reached_drop_point = false;
       dropped = false;
@@ -95,27 +109,27 @@ public class AIMovementController extends Component {
 
 
    public void draw(){
-//      sys.fill(0, 0, 255);
-//      sys.circle(parent.pos.x + pos_offset.x, parent.pos.y + pos_offset.y, 0.1f);
-//
-//      if(current_path == null)
-//         return;
-//
-//      for(int i = current_path.current_index; i < current_path.points.size(); i++) {
-//         var point = current_path.points.get(i);
-//         if(point.is_jump)
-//            if(point.is_bottom)  sys.fill(255, 0, 0);
-//            else sys.fill(0, 255, 0);
-//         else sys.fill(0);
-//         sys.circle(point.pos.x, point.pos.y, 0.1f);
-//         if(point.upper_pos != null) {
-//            sys.stroke(255);
-//            sys.line(
-//                    point.pos.x, point.pos.y,
-//                    point.upper_pos.x, point.upper_pos.y
-//            );
-//         }
-//      }
+      sys.fill(0, 0, 255);
+      sys.circle(parent.pos.x + pos_offset.x, parent.pos.y + pos_offset.y, 0.1f);
+
+      if(current_path == null)
+         return;
+
+      for(int i = 0; i < current_path.points.size(); i++) {
+         var point = current_path.points.get(i);
+         if(point.is_jump)
+            if(point.is_bottom)  sys.fill(255, 0, 0);
+            else sys.fill(0, 255, 0);
+         else sys.fill(0);
+         sys.circle(point.pos.x, point.pos.y, 0.1f);
+         if(point.upper_pos != null) {
+            sys.stroke(255);
+            sys.line(
+                    point.pos.x, point.pos.y,
+                    point.upper_pos.x, point.upper_pos.y
+            );
+         }
+      }
    }
 
 
@@ -125,7 +139,7 @@ public class AIMovementController extends Component {
          return;
 
       // Check if point reached
-      if((current_point == null || reached_point(current_point.pos) && !in_drop && !in_jump)){ // Todo: use centre of parent
+      if(current_point == null || (reached_point(current_point.pos) && !in_drop && !in_jump)){ // Todo: use centre of parent
          // Reached point
          advance_current_point();
 
@@ -140,10 +154,12 @@ public class AIMovementController extends Component {
    }
 
    private void advance_current_point(){
-      current_point = current_path.getNextPoint();
+      if(current_point == null) current_point = current_path.getCurrentPoint();
+      else current_point = current_path.getNextPoint();
 
       // Check if end of path
       if(current_point == null) {
+         System.out.println("Reached end");
          current_path = null;
          return;
       }
@@ -172,6 +188,9 @@ public class AIMovementController extends Component {
          return;
       }
 
+      // Get next point
+      PVector next_pos = current_path.peekNextPoint().pos;
+
       // Jump to top
       if(!jumped){
          jumped = true;
@@ -180,7 +199,7 @@ public class AIMovementController extends Component {
          float y_vel = (float)Math.sqrt(2.0 * sys.GRAVITY * dist);
          float time = (float) Math.sqrt((2 * dist) / sys.GRAVITY + (y_vel * y_vel) / (sys.GRAVITY * sys.GRAVITY));
          jump_time = sys.TOTAL_TIME + time * 2f;
-         jump_vel = (0.75f / time) * ((force_manager.velocity.x < 0) ? -1 : 1);
+         jump_vel = (0.75f / time) * ((next_pos.x < current_point.pos.x) ? -1 : 1);
 
          force_manager.velocity.y = y_vel;
          return;
@@ -188,9 +207,9 @@ public class AIMovementController extends Component {
 
       // Reached top move to next point
       force_manager.velocity.x = jump_vel;
-      perform_walk(current_path.peekNextPoint().pos);
+      perform_walk(next_pos);
 
-      if(reached_point(current_path.peekNextPoint().pos)){
+      if(reached_point(next_pos)){
          reached_jump_point = false;
          jumped = false;
          can_update = true;
@@ -202,6 +221,7 @@ public class AIMovementController extends Component {
          refresh_path();
       }
    }
+
 
    private void perform_drop(){
       // Check what section of drop to perform
@@ -237,6 +257,7 @@ public class AIMovementController extends Component {
          advance_current_point();
       }
    }
+
 
    private float get_x(){
       return parent.pos.x + pos_offset.x;
