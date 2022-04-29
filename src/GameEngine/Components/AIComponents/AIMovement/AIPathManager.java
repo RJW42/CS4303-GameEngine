@@ -206,16 +206,12 @@ public class AIPathManager extends Component {
       Node start_node = index_to_nodes.get(generator.getIndexFromWorldPos(start.x, start.y));
       Node end_node = index_to_nodes.get(generator.getIndexFromWorldPos(end.x, end.y));
 
-      if(start_node == null){
-         System.out.println("NULL node");
-         start_node = get_closest(start.x, start.y);
-      }
+      if(start_node == null) start_node = get_closest(start.x, start.y);
+      if(start_node == null || end_node == null) return  null;
 
       if(start_node == end_node){
          Path p = new Path();
-//         p.points.add(new Path.Point(start.copy()));
          p.points.add(new Path.Point(end.copy()));
-         //System.out.println("Same");
          return p;
       }
 
@@ -235,8 +231,6 @@ public class AIPathManager extends Component {
       n = index_to_nodes.get(generator.getIndexFromWorldPos(x - 0.5f, y));
       if(n != null) return n;
 
-      System.err.println("Error could not find closest node");
-      System.exit(0);
       return null;
    }
 
@@ -244,12 +238,24 @@ public class AIPathManager extends Component {
    private Path search_to_path(PVector start, PVector end, Node start_node, Node end_node){
       // Found path to parent convert this to a usable search path
       LinkedList<Path.Point> path = new LinkedList<>();
-      path.addFirst(new Path.Point(end.copy()));
+
+      // path.addFirst(new Path.Point(end.copy()));
 
       Node n = end_node.parent;
       boolean last_was_jump = false;
       boolean last_was_upper = false;
       PVector upper_pos = null;
+
+//      if(n.connection_edge instanceof VerticalEdge){
+//         VerticalEdge edge = (VerticalEdge)n.connection_edge;
+//
+//         path.addFirst(new Path.Point(n.centre_pos));
+//         last_was_jump = true;
+//         last_was_upper = edge.is_upper;
+//         upper_pos = edge.upper_pos;
+//      } else {
+         path.addFirst(new Path.Point(end.copy()));
+//      }
 
       while(n != start_node && n != null){
          // Todo: may want to change this to be a bit better but works for now

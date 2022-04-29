@@ -7,6 +7,7 @@ import GameEngine.Components.CollisionComponents.Collideable;
 import GameEngine.Components.Damagable;
 import GameEngine.Components.ForceManager;
 import GameEngine.Components.Weapons.ExplosionManager;
+import GameEngine.GameObjects.Core.Monster;
 import GameEngine.GameObjects.Core.Player;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.GameEngine;
@@ -64,7 +65,7 @@ public class Explosion extends GameObject implements Collideable {
       }
 
       // Check if the other object has a force manager
-      if(other.parent instanceof Player){
+      if(other.parent instanceof Player || other.parent instanceof Monster){
          ForceManager force_manager = other.parent.getComponent(ForceManager.class);
          force_manager
                  .applyForce(PVector

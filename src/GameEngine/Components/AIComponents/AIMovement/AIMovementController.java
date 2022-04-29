@@ -37,6 +37,7 @@ public class AIMovementController extends Component {
    private float jump_vel;
    private float jump_time;
 
+   private int updated = 0;
 
 
    // Constructor
@@ -70,7 +71,7 @@ public class AIMovementController extends Component {
 
    public void update() {
       // Todo: if lagging add some check to only update every 5 frames
-      if(current_path == null || (can_update)){
+      if(current_path == null || can_update){
          refresh_path();
       }
 
@@ -80,16 +81,22 @@ public class AIMovementController extends Component {
    private void refresh_path(){
       // Get refreshed path
       Path path = path_manager.astar_search(new PVector(get_x(), get_y()), path_manager.player_ground_tile);
+
+      if(path == null) return; // No path could be found
+
       Path.Point next_current_point = path.getCurrentPoint();
       Path.Point point_after_next = path.peekNextPoint();
       float x = get_x();
 
-      if(point_after_next != null && !next_current_point.is_jump &&
-         ((x >= next_current_point.pos.x && x < point_after_next.pos.x && force_manager.velocity.x > 0) ||
-          (x <= next_current_point.pos.x && x > point_after_next.pos.x && force_manager.velocity.x < 0))
+      if(current_path != null && point_after_next != null && !next_current_point.is_jump &&
+         ((x >= next_current_point.pos.x && x < point_after_next.pos.x && force_manager.velocity.x >= 0) ||
+          (x <= next_current_point.pos.x && x > point_after_next.pos.x && force_manager.velocity.x <= 0))
           ){
          path.getNextPoint();
       }
+
+      if(current_path == null)
+         path.getNextPoint(); // Todo: Not sure if this is correct, there is also a bug where the end node is up an edge
 
       // Update path
       current_path = path;
