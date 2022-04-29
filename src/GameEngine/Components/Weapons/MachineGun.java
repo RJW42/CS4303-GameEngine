@@ -1,5 +1,6 @@
 package GameEngine.Components.Weapons;
 
+import GameEngine.Components.Renderers.GifRenderer;
 import GameEngine.GameObjects.Bullets.Bullet;
 import GameEngine.GameObjects.GameObject;
 import processing.core.PVector;
@@ -22,11 +23,18 @@ public class MachineGun {
    public static Gun create(GameObject parent, PVector location) {
       // Create renderer component
       GunRenderer renderer = new RectGunRenderer(parent, location, BARREL_LENGTH, BARREL_HEIGHT);
+      GifRenderer muzzle_renderer = new GifRenderer(
+         parent, "muzzle_flash", 24, 0.5f, 0.375f, new PVector(location.x, BARREL_LENGTH + location.y + 0.375f)
+      );
+
+      muzzle_renderer.start_finished = true;
+      muzzle_renderer.loop = false;
 
       // Create gun
       return new Gun(
               parent,
               renderer,
+              muzzle_renderer,
               new BulletFactory() {
                  @Override
                  public Bullet newBullet(PVector spawn_location, PVector spawn_velocity) {

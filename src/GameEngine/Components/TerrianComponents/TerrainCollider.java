@@ -74,7 +74,6 @@ public class TerrainCollider extends Component {
                continue;
             }
 
-
             RectCollisionComponent comp = new RectCollisionComponent(lava, lava::on_collision, Terrain.CELL_SIZE);
             comp.stationary = true;
             comp.offset.x = x * Terrain.CELL_SIZE;

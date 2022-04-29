@@ -3,6 +3,7 @@ package GameEngine.Components.Weapons;
 
 import GameEngine.Components.Component;
 import GameEngine.Components.ForceManager;
+import GameEngine.Components.Renderers.GifRenderer;
 import GameEngine.GameObjects.GameObject;
 import processing.core.PConstants;
 import processing.core.PVector;
@@ -23,15 +24,17 @@ public class Gun extends Component {
    public float barrel_length;
    public float barrel_height;
    public PVector target_pos;
+   public GifRenderer muzzle_flash;
 
    private PVector gun_pos;
    private ForceManager force_manager;
 
    // Constructor
-   public Gun(GameObject parent, GunRenderer renderer, BulletFactory bullet_factory, PVector offset, float spread_angle, int num_barrels, int fire_rate, int muzzle_speed, float barrel_length, float barrel_height) {
+   public Gun(GameObject parent, GunRenderer renderer, GifRenderer muzzle_flash, BulletFactory bullet_factory, PVector offset, float spread_angle, int num_barrels, int fire_rate, int muzzle_speed, float barrel_length, float barrel_height) {
       super(parent);
 
       // Init attributes
+      this.muzzle_flash = muzzle_flash;
       this.active = true;
       this.renderer = renderer;
       this.barrel_length = barrel_length;
@@ -58,11 +61,13 @@ public class Gun extends Component {
    public void start() {
       renderer.start();
       force_manager = parent.getComponent(ForceManager.class);
+      if(muzzle_flash != null) muzzle_flash.start();
    }
 
 
    public void update() {
       renderer.update();
+      if(muzzle_flash != null) muzzle_flash.update();
 
       // Update prev fire time
       prev_fire_time += sys.DELTA_TIME;
@@ -77,15 +82,25 @@ public class Gun extends Component {
       float det = v1.x * v2.y - v1.y * v2.x;
 
       rotation_angle = (float) Math.atan2(det, dot);
+
+      if(muzzle_flash != null) {
+         PVector muzzle_offset = PVector.fromAngle(rotation_angle).mult(barrel_length + muzzle_flash.width / 2f);
+         muzzle_flash.rotation_angle = PConstants.TWO_PI - rotation_angle;
+         muzzle_flash.offset = muzzle_offset.add(offset);
+      }
    }
 
    public void draw(){
-      if(active) renderer.draw();
+      if(active) {
+         renderer.draw();
+         if(muzzle_flash != null) muzzle_flash.draw();
+      }
    }
 
 
    public void fire(){
       if(prev_fire_time >= fire_time){
+         muzzle_flash.gif.restart();
          for(int i = 0; i < num_barrels; i++) {
             spawn_bullet();
             renderer.fire();
@@ -100,7 +115,7 @@ public class Gun extends Component {
 
       // Create bullet velocity
       PVector bullet_offset = PVector.fromAngle(rotation_angle).mult(barrel_length);
-      PVector bullet_spawn_location = PVector.add(gun_pos, bullet_offset);
+      PVector bullet_spawn_location = bullet_offset.add(gun_pos);
       PVector vel_norm = PVector.sub(bullet_spawn_location, target_pos).normalize().mult(-1);
 
       // Add spread if needed
@@ -111,7 +126,6 @@ public class Gun extends Component {
 
 //      if(force_manager != null)
 //         bullet_vel.add(force_manager.velocity);
-
 
       // Create new bullet
       sys.spawn(bullet_factory.newBullet(bullet_spawn_location.copy(), bullet_vel), 2);

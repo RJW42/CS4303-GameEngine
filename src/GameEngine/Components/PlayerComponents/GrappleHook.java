@@ -47,13 +47,13 @@ public class GrappleHook extends Component {
    }
 
    public void update() {
-      if(!Player.ACTIVE) return;
-      player_point = parent.pos;
+      if(!Player.ACTIVE)
+         return;
 
-      if(!fired)
-         handle_firing();
-      else
-         handle_swing();
+      player_point = new PVector(Player.COLLISION_WIDTH / 2f, 0).add(parent.pos);
+
+      if(!fired) handle_firing();
+      else handle_swing();
    }
 
    public void draw() {

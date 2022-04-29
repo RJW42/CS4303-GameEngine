@@ -28,6 +28,7 @@ public class RPG {
       return new Gun(
               parent,
               renderer,
+              null,
               new BulletFactory() {
                  @Override
                  public Bullet newBullet(PVector spawn_location, PVector spawn_velocity) {
