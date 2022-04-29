@@ -23,8 +23,6 @@ public class MainMenu extends Level {
       sys.initWorld(1, 1);
 
       // Todo: add selection for:
-      //       play_level
-      //       create_level
       //       controls
       //       maybe settings like sound
       sys.spawn(new MenuSelector(sys), 1);

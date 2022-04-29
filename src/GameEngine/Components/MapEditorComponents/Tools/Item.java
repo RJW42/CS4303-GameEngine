@@ -11,6 +11,7 @@ public enum Item {
    // Values
    WALL(Item::place_wall, "Wall"),
    AIR(Item::place_air, "Air"),
+   LAVA(Item::place_lava, "Lava"),
    NON_GRAPPLE_WALL(Item::place_non_grapple, "Non grapple wall"),
    MONSTER(Item::place_monster, "Monster"),
    PLAYER(Item::place_player, "Player"),
@@ -61,6 +62,14 @@ public enum Item {
 
       world[world_index] = Terrain.AIR;
       tile_attributes[world_index] = Terrain.EMPTY;
+   }
+
+   public static void place_lava(int world_index, float prev_x, float prev_y) {
+      // Remove door if there is one
+      check_door(world_index, (int) prev_x, (int) prev_y);
+
+      world[world_index] = Terrain.AIR;
+      tile_attributes[world_index] = Terrain.LAVA;
    }
 
 

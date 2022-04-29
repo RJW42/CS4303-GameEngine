@@ -83,8 +83,12 @@ public class AIPathManager extends Component {
          return;
       }
 
+      int[] world = generator.getWorld();
+
       do {
          index = generator.getIndexFromWorldPos(x, y--);
+
+         if(world[index] == Terrain.WALL) return;
       }while(!index_to_nodes.containsKey(index) && y >= 0);
 
       if(y <= 0)
@@ -183,7 +187,7 @@ public class AIPathManager extends Component {
 
 
    private boolean is_walkable(int[] world, int x, int y, int index){
-      return world[index] == Terrain.AIR && y > 0 && world[generator.getIndex(x, y - 1)] == Terrain.WALL;
+      return world[index] == Terrain.AIR && y > 0 && world[generator.getIndex(x, y - 1)] == Terrain.WALL && generator.getSpecialTiles()[index] != Terrain.LAVA;
    }
 
    private boolean valid_index(int x, int y){

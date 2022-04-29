@@ -18,6 +18,7 @@ public class Terrain extends GameObject implements Collideable {
    public static final int BASIC_DOOR_START  = 2;
    public static final int DOOR_BODY         = 3;
    public static final int KILL_DOOR_START   = 4;
+   public static final int LAVA              = 5;
 
    // Tile Values
    public static final int WALL  = 1;

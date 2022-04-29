@@ -37,4 +37,8 @@ public class Damagable extends Component {
    public void blast(Explosion explosion){
       System.out.println(explosion.explosion_size);
    }
+
+   public void lava(){
+      System.out.println("burn");
+   }
 }

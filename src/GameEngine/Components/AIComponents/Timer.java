@@ -125,8 +125,6 @@ public class Timer extends Component {
 
       // Increase zoom and position
       float percentage = ((ZOOM_TIME - time_remaining) / ZOOM_TIME);
-      System.out.println(final_zoom);
-
       sys.chase_zoom = 1f + (final_zoom - 1f) * percentage;
       sys.chase_position = PVector.add(start_loc, PVector.mult(direction, total_distance * percentage));
    }

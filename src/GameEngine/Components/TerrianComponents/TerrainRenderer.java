@@ -35,6 +35,7 @@ public class TerrainRenderer extends Component {
    private TerrainGenerator generator;
 
    private final ArrayList<Air> air_blocks;
+   private final ArrayList<Lava> lava_blocks;
    private final ArrayList<Wall> wall_blocks;
    private final ArrayList<RectMask> rect_masks;
    private final ArrayList<EdgeMask> edge_masks;
@@ -48,6 +49,7 @@ public class TerrainRenderer extends Component {
       super(parent);
 
       // Init attributes
+      lava_blocks = new ArrayList<>();
       air_blocks = new ArrayList<>();
       wall_blocks = new ArrayList<>();
       rect_masks = new ArrayList<>();
@@ -75,6 +77,7 @@ public class TerrainRenderer extends Component {
    @Override
    public void draw() {
       draw_air();
+      draw_lava();
       draw_walls();
       draw_masks();
    }
@@ -82,6 +85,7 @@ public class TerrainRenderer extends Component {
 
    public void reset(){
       air_blocks.clear();
+      lava_blocks.clear();
       wall_blocks.clear();
       edge_masks.clear();
       rect_masks.clear();
@@ -100,12 +104,23 @@ public class TerrainRenderer extends Component {
       }
    }
 
+
    private void draw_air(){
       sys.fill(air_colour.x, air_colour.y, air_colour.z);
       sys.noStroke();
 
       for(Air air : air_blocks) {
          sys.square(air.x, air.y, air.width);
+      }
+   }
+
+
+   private void draw_lava(){
+      sys.fill(255, 0, 0);
+      sys.noStroke();
+
+      for(Lava lava : lava_blocks) {
+         sys.square(lava.x, lava.y, lava.width);
       }
    }
 
@@ -140,8 +155,10 @@ public class TerrainRenderer extends Component {
       for(int x = 0; x < Terrain.WIDTH; x++){
          for(int y = 0; y < Terrain.HEIGHT; y++){
             // Get index for this position then draw
-            if(is_air(x, y) || is_door(x, y)) air_blocks.add(create_air(x, y));
-            else wall_blocks.add(create_wall(x, y));
+            if(is_air(x, y) || is_door(x, y)) {
+               if(is_lava(x, y)) lava_blocks.add(create_lava(x, y));
+               else air_blocks.add(create_air(x, y));
+            }else wall_blocks.add(create_wall(x, y));
          }
       }
 
@@ -179,6 +196,15 @@ public class TerrainRenderer extends Component {
 
    private Air create_air(float x, float y){
       return new Air(
+              (x / Terrain.WIDTH) * GameEngine.WORLD_WIDTH - OVERLAP_AMOUNT,
+              (y / Terrain.HEIGHT) * GameEngine.WORLD_HEIGHT - OVERLAP_AMOUNT,
+              (float)GameEngine.WORLD_WIDTH / Terrain.WIDTH + OVERLAP_AMOUNT * 2f
+      );
+   }
+
+
+   private Lava create_lava(float x, float y){
+      return new Lava(
               (x / Terrain.WIDTH) * GameEngine.WORLD_WIDTH - OVERLAP_AMOUNT,
               (y / Terrain.HEIGHT) * GameEngine.WORLD_HEIGHT - OVERLAP_AMOUNT,
               (float)GameEngine.WORLD_WIDTH / Terrain.WIDTH + OVERLAP_AMOUNT * 2f
@@ -266,6 +292,10 @@ public class TerrainRenderer extends Component {
       return (generator.validWalkCord(x, y) && world[generator.getIndex(x, y)] == Terrain.AIR);
    }
 
+   private boolean is_lava(int x, int y){
+      return (generator.validWalkCord(x, y) && tile_attributes[generator.getIndex(x, y)] == Terrain.LAVA);
+   }
+
 
    private boolean is_door(int x, int y){
       return (generator.validWalkCord(x, y) && (
@@ -329,6 +359,18 @@ public class TerrainRenderer extends Component {
       public float width;
 
       public Air(float x, float y, float width) {
+         this.x = x;
+         this.y = y;
+         this.width = width;
+      }
+   }
+
+   private static class Lava {
+      public float x;
+      public float y;
+      public float width;
+
+      public Lava(float x, float y, float width) {
          this.x = x;
          this.y = y;
          this.width = width;

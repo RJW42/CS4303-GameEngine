@@ -3,6 +3,7 @@ package GameEngine.Components.TerrianComponents;
 import GameEngine.Components.CollisionComponents.RectCollisionComponent;
 import GameEngine.Components.Component;
 import GameEngine.GameObjects.Core.Door;
+import GameEngine.GameObjects.Core.Lava;
 import GameEngine.GameObjects.Core.Terrain;
 
 public class TerrainCollider extends Component {
@@ -50,8 +51,41 @@ public class TerrainCollider extends Component {
          }
       }
 
+      // Create all laval colliders
+      spawn_lava_colliders();
+
       // Created all collision components can now spawn doors
       spawn_doors();
+   }
+
+
+   public void spawn_lava_colliders(){
+      // Create lava object and add all colliders
+      Lava lava = new Lava(sys, (Terrain) this.parent);
+      int[] world = generator.getWorld();
+      int[] tile_atts = generator.getSpecialTiles();
+
+      for(int x = 0; x < Terrain.WIDTH; x++){
+         for(int y = 0; y < Terrain.HEIGHT; y++){
+            // Check if this is an edge object
+            int index = generator.getIndex(x, y);
+
+            if(!(world[index] == Terrain.AIR && tile_atts[index] == Terrain.LAVA && is_lava_edge(x, y, world, tile_atts))) {
+               continue;
+            }
+
+
+            RectCollisionComponent comp = new RectCollisionComponent(lava, lava::on_collision, Terrain.CELL_SIZE);
+            comp.stationary = true;
+            comp.offset.x = x * Terrain.CELL_SIZE;
+            comp.offset.y = ((y + 1) * Terrain.CELL_SIZE);
+            comp.start();
+
+            lava.collision_components.add(comp);
+         }
+      }
+
+      sys.spawn(lava, 0);
    }
 
 
@@ -124,5 +158,27 @@ public class TerrainCollider extends Component {
               world[generator.getIndex(x, y + 1)] == Terrain.AIR ||
               generator.getSpecialTiles()[generator.getIndex(x, y + 1)] == Terrain.BASIC_DOOR_START ||
               generator.getSpecialTiles()[generator.getIndex(x, y + 1)] == Terrain.KILL_DOOR_START);
+   }
+
+
+   private boolean is_lava_edge(int x, int y, int[] world, int[] tile_atts){
+      if(is_non_lava_air(x + 1, y, world, tile_atts))
+         return true;
+      if(is_non_lava_air(x - 1, y, world, tile_atts))
+         return true;
+      if(is_non_lava_air(x, y - 1, world, tile_atts))
+         return true;
+
+      int index = generator.getIndex(x, y + 1);
+
+      return is_non_lava_air(x, y + 1, world, tile_atts) || (position_valid(x, y + 1) && (
+         tile_atts[index] == Terrain.BASIC_DOOR_START || tile_atts[index] == Terrain.KILL_DOOR_START
+      ));
+   }
+
+
+   private boolean is_non_lava_air(int x, int y, int[] world, int[] tile_atts){
+      int index = generator.getIndex(x, y);
+      return position_valid(x, y) && world[index] == Terrain.AIR && tile_atts[index] != Terrain.LAVA;
    }
 }
