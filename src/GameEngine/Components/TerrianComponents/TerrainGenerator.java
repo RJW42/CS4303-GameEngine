@@ -3,6 +3,7 @@ package GameEngine.Components.TerrianComponents;
 import GameEngine.Components.Component;
 import GameEngine.Components.Renderers.RectRenderer;
 import GameEngine.GameObjects.Core.Door;
+import GameEngine.GameObjects.Core.Goal;
 import GameEngine.GameObjects.Core.Monster;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.GameObjects.Core.Terrain;
@@ -17,6 +18,7 @@ public abstract class TerrainGenerator extends Component {
    protected int width, height, seed;
 
    public PVector player_spawn_loc;
+   public PVector goal_spawn_loc;
    public ArrayList<PVector> monster_spawn_locs;
    public ArrayList<Room> rooms;
 
@@ -26,6 +28,7 @@ public abstract class TerrainGenerator extends Component {
       this.seed = seed;
 
       this.player_spawn_loc = new PVector(0,0);
+      this.goal_spawn_loc = new PVector(0, 0);
       this.monster_spawn_locs = new ArrayList<>();
    }
 
@@ -68,6 +71,12 @@ public abstract class TerrainGenerator extends Component {
    }
 
 
+   /* ***** Goal and other entities ***** */
+   public void spawn_goal(){
+      sys.spawn(new Goal(sys, goal_spawn_loc), 2);
+   }
+
+
    /* ***** Spawning / Monster functions ***** */
    public void spawn_monsters(){
       // Spawn all monsters whilst keeping track of what room they belong to
@@ -107,6 +116,7 @@ public abstract class TerrainGenerator extends Component {
    }
 
 
+   /* ******** Room and door functions ********* */
    public void add_kill_door(Door door) {
       if(rooms == null)
          init_rooms();

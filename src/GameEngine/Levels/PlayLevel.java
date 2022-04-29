@@ -46,7 +46,8 @@ public class PlayLevel extends Level{
       init_terrain();
       init_managers();
       init_player();
-      init_monsters();
+      generator.spawn_monsters();
+      generator.spawn_goal();
    }
 
 
@@ -75,20 +76,12 @@ public class PlayLevel extends Level{
       sys.spawn(player, 2);
 
       // Set the player as the chase object
-      // sys.chase_object = player;
+      sys.chase_object = player;
 
       float desired_x_zoom = GameEngine.SCREEN_WIDTH / (DESIRED_WALLS * GameEngine.PIXEL_TO_METER);
       float desired_y_zoom = GameEngine.SCREEN_HEIGHT / (DESIRED_WALLS * GameEngine.PIXEL_TO_METER);
 
       sys.chase_zoom = Math.min(desired_x_zoom, desired_y_zoom);
-   }
-
-
-   private void init_monsters(){
-      // Spawn all monsters
-      TerrainGenerator generator = sys.terrain.getComponent(TerrainGenerator.class);
-
-      generator.spawn_monsters();
    }
 
 

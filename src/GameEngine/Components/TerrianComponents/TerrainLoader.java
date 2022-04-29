@@ -12,15 +12,17 @@ public class TerrainLoader {
    public static final String SAVE_LOC      = "./GameEngine/Resources/Levels/";
 
    // Core Properties
-   private static final String WORLD_WIDTH   = "world-width";
-   private static final String WORLD_HEIGHT  = "world-height";
-   private static final String SPAWN_X       = "spawn-x";
-   private static final String SPAWN_Y       = "spawn-y";
+   private static final String WORLD_WIDTH   = "world_width";
+   private static final String WORLD_HEIGHT  = "world_height";
+   private static final String SPAWN_X       = "spawn_x";
+   private static final String SPAWN_Y       = "spawn_y";
    private static final String WORLD_ARR     = "world";
    private static final String MONSTERS_SPAWN= "monsters";
    private static final String AIR_CLR       = "air_colour";
    private static final String BORDER_CLR    = "border_colour";
    private static final String WALL_CLR      = "wall_colour";
+   private static final String GOAL_X        = "goal_x";
+   private static final String GOAL_Y        = "goal_y";
 
    // Monster spawn properties
    private static final String MONSTER_X     = "x";
@@ -71,6 +73,8 @@ public class TerrainLoader {
       generator.setConfig(terrain_data.getInt(WORLD_WIDTH), terrain_data.getInt(WORLD_HEIGHT));
       generator.player_spawn_loc.x = terrain_data.getFloat(SPAWN_X);
       generator.player_spawn_loc.y = terrain_data.getFloat(SPAWN_Y);
+      generator.goal_spawn_loc.x = terrain_data.getFloat(GOAL_X);
+      generator.goal_spawn_loc.y = terrain_data.getFloat(GOAL_Y);
       generator.width = terrain_data.getInt(WORLD_WIDTH);
       generator.height = terrain_data.getInt(WORLD_HEIGHT);
 
@@ -86,7 +90,6 @@ public class TerrainLoader {
 
    public static void saveTerrain(TerrainGenerator generator, TerrainRenderer renderer, String file_name){
       // Todo: Items to save
-      //        - goal loc
       //        - lava / some other bad liquid
       //        - nests/vents maybe
 
@@ -98,6 +101,8 @@ public class TerrainLoader {
       core.put(WORLD_HEIGHT, generator.height);
       core.put(SPAWN_X, generator.player_spawn_loc.x);
       core.put(SPAWN_Y, generator.player_spawn_loc.y);
+      core.put(GOAL_X, generator.goal_spawn_loc.x);
+      core.put(GOAL_Y, generator.goal_spawn_loc.y);
 
       // Add complex elements
       core.put(WORLD_ARR, world_to_JSON(generator));

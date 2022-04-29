@@ -5,6 +5,7 @@ import GameEngine.Components.MapEditorComponents.TileSelector;
 import GameEngine.Components.TerrianComponents.DoorRenderer;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
 import GameEngine.Components.TerrianComponents.TerrainRenderer;
+import GameEngine.GameObjects.Core.Goal;
 import GameEngine.GameObjects.Core.Monster;
 import GameEngine.GameObjects.Core.Player;
 import GameEngine.GameObjects.GameObject;
@@ -45,6 +46,7 @@ public class ItemPlace extends Tool {
       this.renderer = sys.terrain.getComponent(TerrainRenderer.class);
 
       generator.player_spawn_loc = null;
+      generator.goal_spawn_loc = null;
    }
 
    public void update() {
@@ -67,6 +69,7 @@ public class ItemPlace extends Tool {
       display_player();
       display_monsters();
       display_doors();
+      display_goal();
    }
 
 
@@ -84,6 +87,20 @@ public class ItemPlace extends Tool {
    }
 
 
+   private void display_goal(){
+      // Check if goal location set
+      if(generator.goal_spawn_loc == null)
+         return;
+
+      // Renderer goal
+      // Todo: change this when proper goal model drawn
+      sys.noStroke();
+      sys.fill(Goal.COLOUR.x, Goal.COLOUR.y, Goal.COLOUR.z);
+      sys.rectMode(PConstants.CORNER);
+      sys.rect(generator.goal_spawn_loc.x, generator.goal_spawn_loc.y, 1, -1);
+   }
+
+
    private void display_monsters(){
       // Draw each monster
       generator.monster_spawn_locs.forEach(monster -> {
@@ -95,6 +112,7 @@ public class ItemPlace extends Tool {
          sys.rect(monster.x, monster.y, Monster.COLLISION_WIDTH, -Monster.COLLISION_HEIGHT);
       });
    }
+
 
    private void display_doors(){
       // Draw each door
@@ -117,138 +135,22 @@ public class ItemPlace extends Tool {
    }
 
 
-   private void place_tile(){
+   private void place_tile() {
+      // Set statics
+      Item.generator = generator;
+      Item.sys = sys;
+      Item.world = generator.getWorld();
+      Item.tile_attributes = generator.getSpecialTiles();
+
       // Get location to place
       prev_x = tile_selector.current_x;
       prev_y = tile_selector.current_y;
       int world_index = generator.getIndex(prev_x, prev_y);
 
-      int[] world = generator.getWorld();
-      int[] tile_attributes = generator.getSpecialTiles();
+      // Place item
+      item_select.current_item.placer.place(world_index, prev_x, prev_y);
 
-      switch (item_select.current_item){
-         case WALL:
-            place_wall(world, tile_attributes, world_index);
-            break;
-         case AIR:
-            place_air(world, tile_attributes, world_index);
-            break;
-         case NON_GRAPPLE_WALL:
-            place_non_grapple(world, tile_attributes, world_index);
-            break;
-         case PLAYER:
-            place_player(world, world_index);
-            break;
-         case MONSTER:
-            place_monster(world, world_index);
-            break;
-         case BASIC_DOOR:
-            place_door(world, tile_attributes, world_index, Terrain.BASIC_DOOR_START);
-            break;
-         case KILL_DOOR:
-            place_door(world, tile_attributes, world_index, Terrain.KILL_DOOR_START);
-            break;
-         default:
-            System.err.println("Unreachable point reached error in ItemPlace.java");
-            System.exit(0);
-      }
-
+      // Refresh world
       renderer.reset();
-   }
-
-
-   private void place_player(int[] world, int world_index){
-      // Check if the position is valid
-      if(prev_x <= 0  || prev_x >= Terrain.WIDTH - 1 || prev_y <= 0 || prev_y >= Terrain.HEIGHT - 1){
-         sys.warning_display.display_warning("Cannot place player outside of the world");
-         return;
-      }
-
-      if(world[world_index] != Terrain.AIR){
-         sys.warning_display.display_warning("Must place player in air");
-         return;
-      }
-
-      if(generator.player_spawn_loc == null)
-         generator.player_spawn_loc = new PVector();
-
-      generator.player_spawn_loc.x = prev_x + Terrain.CELL_SIZE / 2f - Player.COLLISION_WIDTH / 2f;
-      generator.player_spawn_loc.y = prev_y + Player.COLLISION_HEIGHT + 0.01f;
-   }
-
-
-   private void place_monster(int[] world, int world_index){
-      // Check if the position is valid
-      if(prev_x <= 0  || prev_x >= Terrain.WIDTH - 1 || prev_y <= 0 || prev_y >= Terrain.HEIGHT - 1){
-         sys.warning_display.display_warning("Cannot place monster outside of the world");
-         return;
-      }
-
-      if(world[world_index] != Terrain.AIR){
-         sys.warning_display.display_warning("Must place monster in air");
-         return;
-      }
-
-
-      PVector loc = new PVector(
-              prev_x + Terrain.CELL_SIZE / 2f - Monster.COLLISION_WIDTH / 2f,
-              prev_y + Monster.COLLISION_HEIGHT + 0.01f
-      );
-
-      generator.monster_spawn_locs.add(loc);
-   }
-
-
-   private void place_wall(int[] world, int[] tile_attributes, int world_index){
-      check_door(world, tile_attributes, world_index);
-
-      world[world_index] = Terrain.WALL;
-      tile_attributes[world_index] = Terrain.EMPTY;
-   }
-
-
-   private void place_air(int[] world, int[] tile_attributes, int world_index){
-      check_door(world, tile_attributes, world_index);
-
-      world[world_index] = Terrain.AIR;
-      tile_attributes[world_index] = Terrain.EMPTY;
-   }
-
-
-   private void place_non_grapple(int[] world, int[] tile_attributes, int world_index){
-      check_door(world, tile_attributes, world_index);
-
-      world[world_index] = Terrain.WALL;
-      tile_attributes[world_index] = Terrain.NON_GRAPPLE;
-   }
-
-
-   private void place_door(int[] world, int[] tile_attributes, int world_index, int type) {
-      // Check space above
-      if(prev_x <= 0 || prev_x >= Terrain.WIDTH - 1 || prev_y <= 0 || prev_y >= Terrain.WIDTH - 4){
-         sys.warning_display.display_warning("Door must be placed inside world");
-         return;
-      }
-
-      // Is space place door
-      for(int i = 0; i < 3; i++){
-         int index = generator.getIndex(prev_x, prev_y + i);
-         world[index] = Terrain.WALL;
-         tile_attributes[index] = Terrain.DOOR_BODY;
-      }
-      tile_attributes[world_index] = type;
-   }
-
-
-   private void check_door(int[] world, int[] tile_attributes, int world_index){
-      if(tile_attributes[world_index] != Terrain.DOOR_BODY && tile_attributes[world_index] != Terrain.BASIC_DOOR_START && tile_attributes[world_index] != Terrain.KILL_DOOR_START)
-         return;
-
-      // Does contain door remove it
-      world[world_index] = Terrain.AIR;
-      tile_attributes[world_index] = Terrain.AIR;
-
-      check_door(world, tile_attributes, generator.getIndex(prev_x, prev_y + 1));
-      check_door(world, tile_attributes, generator.getIndex(prev_x, prev_y - 1));
    }
 }
