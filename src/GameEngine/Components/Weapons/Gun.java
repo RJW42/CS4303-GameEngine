@@ -100,7 +100,7 @@ public class Gun extends Component {
 
    public void fire(){
       if(prev_fire_time >= fire_time){
-         muzzle_flash.gif.restart();
+         if(muzzle_flash != null)  muzzle_flash.gif.restart();
          for(int i = 0; i < num_barrels; i++) {
             spawn_bullet();
             renderer.fire();

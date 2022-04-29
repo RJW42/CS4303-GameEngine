@@ -2,6 +2,7 @@ package GameEngine.Components.MapEditorComponents.Tools;
 
 
 import GameEngine.Components.MapEditorComponents.TileSelector;
+import GameEngine.Components.Renderers.GifRenderer;
 import GameEngine.Components.TerrianComponents.DoorRenderer;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
 import GameEngine.Components.TerrianComponents.TerrainRenderer;
@@ -24,6 +25,8 @@ public class ItemPlace extends Tool {
    private TerrainGenerator generator;
    private TerrainRenderer renderer;
 
+   private GifRenderer goal_renderer;
+
    private int prev_x;
    private int prev_y;
 
@@ -45,11 +48,17 @@ public class ItemPlace extends Tool {
       this.generator = sys.terrain.getComponent(TerrainGenerator.class);
       this.renderer = sys.terrain.getComponent(TerrainRenderer.class);
 
+      this.goal_renderer = new GifRenderer(parent, Goal.GIF_SPRITE, Goal.GIF_FPS, Terrain.CELL_SIZE, Terrain.CELL_SIZE, new PVector(Terrain.CELL_SIZE / 2f, Terrain.CELL_SIZE / -2f), PConstants.PI * 2);
+      this.goal_renderer.start();
+
       generator.player_spawn_loc = null;
       generator.goal_spawn_loc = null;
    }
 
    public void update() {
+      // Update any renderers
+      goal_renderer.update();
+
       // Check if should place tile
       if(!active){
          prev_x = -1;
@@ -93,11 +102,10 @@ public class ItemPlace extends Tool {
          return;
 
       // Renderer goal
-      // Todo: change this when proper goal model drawn
-      sys.noStroke();
-      sys.fill(Goal.COLOUR.x, Goal.COLOUR.y, Goal.COLOUR.z);
-      sys.rectMode(PConstants.CORNER);
-      sys.rect(generator.goal_spawn_loc.x, generator.goal_spawn_loc.y, 1, -1);
+      // Terrain.CELL_SIZE / 2f, Terrain.CELL_SIZE / -2f
+      goal_renderer.offset.x = Terrain.CELL_SIZE / 2f - parent.pos.x + generator.goal_spawn_loc.x;
+      goal_renderer.offset.y = Terrain.CELL_SIZE / -2f - parent.pos.y + generator.goal_spawn_loc.y;
+      goal_renderer.draw();
    }
 
 

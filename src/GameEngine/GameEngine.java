@@ -12,6 +12,7 @@ import GameEngine.Utils.Managers.InputManager;
 import GameEngine.Utils.Managers.ImageManager;
 import ddf.minim.Minim;
 import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PImage;
 import processing.core.PVector;
 import processing.event.KeyEvent;
@@ -76,6 +77,8 @@ public class GameEngine extends PApplet{
    private long pause_time;
    private long prev;
    private boolean restart;
+
+   private PImage test;
 
    private ArrayList<GameObject>[] objects;
    private ArrayList<GameObject>[] objects_to_add;
@@ -295,13 +298,7 @@ public class GameEngine extends PApplet{
 
    @Override
    public void image(PImage img, float x, float y){
-      pushMatrix();
-      translate(0, WORLD_HEIGHT);
-      scale(1f, -1f);
-      scale(1f / PIXEL_TO_METER, 1f / PIXEL_TO_METER);
-      translate(x * PIXEL_TO_METER, GameEngine.SCREEN_HEIGHT - (y * PIXEL_TO_METER));
-      super.image(img, -img.width/2, -img.height/2);
-      popMatrix();
+      image(img, x, y, 0f);
    }
 
 
@@ -310,9 +307,9 @@ public class GameEngine extends PApplet{
       translate(0, WORLD_HEIGHT);
       scale(1f, -1f);
       scale(1f / PIXEL_TO_METER, 1f / PIXEL_TO_METER);
-      translate(x * PIXEL_TO_METER, GameEngine.SCREEN_HEIGHT - (y * PIXEL_TO_METER));
+      translate(x * PIXEL_TO_METER, GameEngine.SCREEN_HEIGHT - (y * PIXEL_TO_METER + Y_TRANSLATE * 2f));
       rotate(angle);
-      super.image(img, -img.width/2, -img.height/2);
+      super.image(img, -img.width/2f, -img.height/2f);
       popMatrix();
    }
 

@@ -4,9 +4,11 @@ package GameEngine.GameObjects.Core;
 import GameEngine.Components.CollisionComponents.BaseCollisionComponent;
 import GameEngine.Components.CollisionComponents.Collideable;
 import GameEngine.Components.CollisionComponents.RectCollisionComponent;
+import GameEngine.Components.Renderers.GifRenderer;
 import GameEngine.Components.Renderers.RectRenderer;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.GameEngine;
+import processing.core.PConstants;
 import processing.core.PVector;
 
 import java.util.ArrayList;
@@ -15,7 +17,8 @@ import java.util.List;
 
 public class Goal extends GameObject implements Collideable {
    // Attributes
-   public static final PVector COLOUR = new PVector(0, 255, 0);
+   public static final String GIF_SPRITE  = "goal";
+   public static final int GIF_FPS        = 8;
 
    public boolean is_dead = false;
 
@@ -33,8 +36,8 @@ public class Goal extends GameObject implements Collideable {
       this.collision_components = new ArrayList<>();
       this.collision_components.add(new RectCollisionComponent(this, this::on_collision, new PVector(), Terrain.CELL_SIZE, Terrain.CELL_SIZE));
 
-      // Add regular components 
-      this.components.add(new RectRenderer(this, COLOUR, Terrain.CELL_SIZE, Terrain.CELL_SIZE));
+      // Add regular components
+      this.components.add(new GifRenderer(this, GIF_SPRITE, GIF_FPS, Terrain.CELL_SIZE, Terrain.CELL_SIZE, new PVector(Terrain.CELL_SIZE / 2f, Terrain.CELL_SIZE / -2f), PConstants.PI * 2));
 
 
       // Add collision components to regular

@@ -73,7 +73,7 @@ public abstract class TerrainGenerator extends Component {
 
    /* ***** Goal and other entities ***** */
    public void spawn_goal(){
-      sys.spawn(new Goal(sys, goal_spawn_loc), 2);
+      sys.spawn(new Goal(sys, goal_spawn_loc), 1);
    }
 
 

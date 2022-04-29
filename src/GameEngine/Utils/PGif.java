@@ -90,7 +90,7 @@ public class PGif {
       }
 
       // Display frame
-      sys.image(frames[frame_number], pos.x, pos.y, rotation_angle);
+      sys.image(frames[frame_number], pos.x, pos.y);
 
       // Update time
       time_since_start += sys.DELTA_TIME;

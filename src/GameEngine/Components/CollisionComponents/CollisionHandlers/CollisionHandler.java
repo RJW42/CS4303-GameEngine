@@ -108,11 +108,6 @@ public class CollisionHandler {
 
             force_manager.velocity.x += collision_info.contact_normal.x * Math.abs(force_manager.velocity.x);
             force_manager.velocity.y += collision_info.contact_normal.y * Math.abs(force_manager.velocity.y);
-
-//         if(collision_info.contact_normal.y == 1){
-//            force_manager.grounded = true;
-//            // Todo: Works but not easy to get the non grounded. Could set to grounded each frame, will test
-//         }
          }
       }
    }
