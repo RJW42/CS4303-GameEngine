@@ -21,8 +21,6 @@ public class CollisionHandler {
 
 
    public static void handle_collision(BaseCollisionComponent obj1, BaseCollisionComponent obj2){
-      // Todo: implement. This could be done way more efficent maybe use hashmap
-
       if(obj2.parent instanceof Terrain){
          if(obj1.parent instanceof Player){
             player_wall_collision((RectCollisionComponent) obj1, (RectCollisionComponent) obj2);

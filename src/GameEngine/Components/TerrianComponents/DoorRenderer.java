@@ -5,42 +5,45 @@ import GameEngine.Components.Component;
 import GameEngine.GameEngine;
 import GameEngine.GameObjects.Core.Door;
 import GameEngine.GameObjects.Core.Terrain;
-import GameEngine.GameObjects.GameObject;
-import processing.core.PVector;
+import processing.core.PImage;
 
 
 public class DoorRenderer extends Component {
    // Attributes
-   public static final PVector COLOUR = new PVector();
-   private final float width;
-   private final float height;
-
    private final Door door;
+   private final float half_height;
+   private final float half_width;
+   private final PImage open;
+   private final PImage close;
 
 
    // Constructor
-   public DoorRenderer(Door parent) {
+   public DoorRenderer(Door parent, String opened, String closed) {
       super(parent);
 
       // init attributes
+      this.half_height = Terrain.CELL_SIZE * 3f / 2f;
+      this.half_width = Terrain.CELL_SIZE / 2f;
+
       this.door = parent;
-      this.width = Terrain.CELL_SIZE;
-      this.height = Terrain.CELL_SIZE * 3;
+      int width = (int) (Terrain.CELL_SIZE * GameEngine.PIXEL_TO_METER);
+      int height = (int)(Terrain.CELL_SIZE * 3 * GameEngine.PIXEL_TO_METER);
+      this.open = sys.sprite_manager.get_sprite(opened, width, height);
+      this.close = sys.sprite_manager.get_sprite(closed, width, height);
    }
 
 
    // Methods 
-   public void start() {}
+   public void start() {
+
+   }
    public void update() {}
 
    public void draw() {
-      sys.stroke(COLOUR.x, COLOUR.y, COLOUR.z);
-      sys.strokeWeight(0.1f);
-      sys.noFill();
+      float x = parent.pos.x + half_width;
+      float y = parent.pos.y - half_height;
 
-      if(door.is_open) sys.rect(parent.pos.x, parent.pos.y, width, -width);
-      else sys.rect(parent.pos.x, parent.pos.y, width, -height);
-
-      sys.strokeWeight(1 / GameEngine.PIXEL_TO_METER);
+      if (door.is_open) sys.image(open, x, y);
+      else sys.image(close, x, y);
    }
 }

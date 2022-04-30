@@ -290,8 +290,6 @@ public class AIPathManager extends Component {
             else path.addFirst(new Path.Point(n.centre_pos, upper_pos, true, !last_was_upper));
          } else if(last_was_jump) {
             path.addFirst(new Path.Point(n.centre_pos, upper_pos, true, !last_was_upper));
-         } else {
-            path.addFirst(new Path.Point(start.copy()));
          }
       }
 

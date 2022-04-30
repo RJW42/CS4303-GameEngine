@@ -98,9 +98,6 @@ public class AIMovementController extends Component {
          path.getNextPoint();
       }
 
-      if(current_path == null)
-         path.getNextPoint(); // Todo: Not sure if this is correct, there is also a bug where the end node is up an edge
-
       // Update path
       current_path = path;
       current_point = null;
@@ -119,27 +116,27 @@ public class AIMovementController extends Component {
 
 
    public void draw(){
-//      sys.fill(0, 0, 255);
-//      sys.circle(parent.pos.x + pos_offset.x, parent.pos.y + pos_offset.y, 0.1f);
-//
-//      if(current_path == null)
-//         return;
-//
-//      for(int i = 0; i < current_path.points.size(); i++) {
-//         var point = current_path.points.get(i);
-//         if(point.is_jump)
-//            if(point.is_bottom)  sys.fill(255, 0, 0);
-//            else sys.fill(0, 255, 0);
-//         else sys.fill(0);
-//         sys.circle(point.pos.x, point.pos.y, 0.1f);
-//         if(point.upper_pos != null) {
-//            sys.stroke(255);
-//            sys.line(
-//                    point.pos.x, point.pos.y,
-//                    point.upper_pos.x, point.upper_pos.y
-//            );
-//         }
-//      }
+      sys.fill(0, 0, 255);
+      sys.circle(parent.pos.x + pos_offset.x, parent.pos.y + pos_offset.y, 0.1f);
+
+      if(current_path == null)
+         return;
+
+      for(int i = 0; i < current_path.points.size(); i++) {
+         var point = current_path.points.get(i);
+         if(point.is_jump)
+            if(point.is_bottom)  sys.fill(255, 0, 0);
+            else sys.fill(0, 255, 0);
+         else sys.fill(0);
+         sys.circle(point.pos.x, point.pos.y, 0.1f);
+         if(point.upper_pos != null) {
+            sys.stroke(255);
+            sys.line(
+                    point.pos.x, point.pos.y,
+                    point.upper_pos.x, point.upper_pos.y
+            );
+         }
+      }
    }
 
 
@@ -156,7 +153,7 @@ public class AIMovementController extends Component {
          if(current_path == null)
             return;
       }
-
+      System.out.println(current_point.pos);
       // Walk to point
       if(in_jump) perform_jump();
       else if(in_drop) perform_drop();

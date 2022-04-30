@@ -134,7 +134,7 @@ public class ItemPlace extends Tool {
                continue;
             // Todo: render both types of doors
             // Render door
-            sys.stroke(DoorRenderer.COLOUR.x, DoorRenderer.COLOUR.y, DoorRenderer.COLOUR.z);
+            //sys.stroke(DoorRenderer.COLOUR.x, DoorRenderer.COLOUR.y, DoorRenderer.COLOUR.z);
             sys.strokeWeight(0.1f);
             sys.noFill();
             sys.rect(x, y, Terrain.CELL_SIZE, Terrain.CELL_SIZE * 3);
