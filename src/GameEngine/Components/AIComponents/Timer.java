@@ -19,6 +19,7 @@ public class Timer extends Component {
    // Attributes
    public static final int FULL_SCREEN_TIME = 1;
    public static final int ZOOM_TIME = 3;
+   public static boolean ACTIVE = true;
 
    private final float final_zoom;
    private final float total_distance;
@@ -60,6 +61,7 @@ public class Timer extends Component {
       Player.ACTIVE = false;
       Monster.ACTIVE = false;
       ForceManager.ACTIVE = false;
+      sys.chase_zoom = 1f;
    }
 
 
@@ -70,7 +72,7 @@ public class Timer extends Component {
          return;
       }
 
-      game_time = Math.round((System.nanoTime() - game_start_time) / 100000000f) / 10f;
+      if(ACTIVE) game_time = Math.round((System.nanoTime() - game_start_time) / 100000000f) / 10f;
    }
 
 

@@ -6,13 +6,12 @@ import GameEngine.Components.Renderers.GifRenderer;
 import GameEngine.Components.TerrianComponents.DoorRenderer;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
 import GameEngine.Components.TerrianComponents.TerrainRenderer;
-import GameEngine.GameObjects.Core.Goal;
-import GameEngine.GameObjects.Core.Monster;
-import GameEngine.GameObjects.Core.Player;
+import GameEngine.GameEngine;
+import GameEngine.GameObjects.Core.*;
 import GameEngine.GameObjects.GameObject;
-import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.Utils.Managers.InputManager;
 import processing.core.PConstants;
+import processing.core.PImage;
 import processing.core.PVector;
 
 
@@ -26,6 +25,9 @@ public class ItemPlace extends Tool {
    private TerrainRenderer renderer;
 
    private GifRenderer goal_renderer;
+
+   private PImage kill_door_closed;
+   private PImage basic_door_closed;
 
    private int prev_x;
    private int prev_y;
@@ -48,11 +50,15 @@ public class ItemPlace extends Tool {
       this.generator = sys.terrain.getComponent(TerrainGenerator.class);
       this.renderer = sys.terrain.getComponent(TerrainRenderer.class);
 
-      this.goal_renderer = new GifRenderer(parent, Goal.GIF_SPRITE, Goal.GIF_FPS, Terrain.CELL_SIZE, Terrain.CELL_SIZE, new PVector(Terrain.CELL_SIZE / 2f, Terrain.CELL_SIZE / -2f), PConstants.PI * 2);
-      this.goal_renderer.start();
-
       generator.player_spawn_loc = null;
       generator.goal_spawn_loc = null;
+
+      // Load sprites
+      goal_renderer = new GifRenderer(parent, Goal.GIF_SPRITE, Goal.GIF_FPS, Terrain.CELL_SIZE, Terrain.CELL_SIZE, new PVector(Terrain.CELL_SIZE / 2f, Terrain.CELL_SIZE / -2f), PConstants.PI * 2);
+      goal_renderer.start();
+
+      basic_door_closed = sys.sprite_manager.get_sprite(Door.BASIC_CLOSE_SPRITE, (int)(Terrain.CELL_SIZE * GameEngine.PIXEL_TO_METER), (int)(Terrain.CELL_SIZE * 3 * GameEngine.PIXEL_TO_METER));
+      kill_door_closed = sys.sprite_manager.get_sprite(Door.KILL_CLOSE_SPRITE, (int)(Terrain.CELL_SIZE * GameEngine.PIXEL_TO_METER), (int)(Terrain.CELL_SIZE * 3 * GameEngine.PIXEL_TO_METER));
    }
 
    public void update() {
@@ -125,19 +131,15 @@ public class ItemPlace extends Tool {
    private void display_doors(){
       // Draw each door
       int[] world = generator.getSpecialTiles();
+      //sys.image(basic_door_closed, 1.5f, 1 + 1.5f);
 
-      // Todo: change this when proper door model drawn
       for(int x = 0; x < Terrain.WIDTH; x++){
          for(int y = 0; y < Terrain.HEIGHT; y++){
             // Check if door
-            if(world[generator.getIndex(x, y)] != Terrain.BASIC_DOOR_START && world[generator.getIndex(x, y)] != Terrain.KILL_DOOR_START)
-               continue;
-            // Todo: render both types of doors
-            // Render door
-            //sys.stroke(DoorRenderer.COLOUR.x, DoorRenderer.COLOUR.y, DoorRenderer.COLOUR.z);
-            sys.strokeWeight(0.1f);
-            sys.noFill();
-            sys.rect(x, y, Terrain.CELL_SIZE, Terrain.CELL_SIZE * 3);
+            if(world[generator.getIndex(x, y)] == Terrain.BASIC_DOOR_START)
+               sys.image(basic_door_closed, x + 0.5f, y + 1.5f);
+            else if(world[generator.getIndex(x, y)] == Terrain.KILL_DOOR_START)
+               sys.image(kill_door_closed, x + 0.5f, y + 1.5f);
          }
       }
    }

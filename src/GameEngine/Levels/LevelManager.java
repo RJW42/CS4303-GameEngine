@@ -16,6 +16,10 @@ public class LevelManager{
    }
 
    // Methods
+   public Level getCurrentLevel() {
+      return current;
+   }
+
    public void update(){
       // Check if we can change level
       if(this.current.updateAndCanAdvance()){

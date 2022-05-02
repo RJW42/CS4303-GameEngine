@@ -21,8 +21,8 @@ public class Door extends GameObject implements Collideable {
    // Attributes
    public static final String BASIC_OPEN_SPRITE    = "basic_door_opened";
    public static final String BASIC_CLOSE_SPRITE   = "basic_door_closed";
-   public static final String KILL_OPEN_SPRITE     = "basic_door_opened";
-   public static final String KILL_CLOSE_SPRITE    = "basic_door_closed";
+   public static final String KILL_OPEN_SPRITE     = "kill_door_opened";
+   public static final String KILL_CLOSE_SPRITE    = "kill_door_closed";
    public static float TIME_TO_CLOSE   = 5f;
    public static float COLLISION_BONUS = 0.05f;
 

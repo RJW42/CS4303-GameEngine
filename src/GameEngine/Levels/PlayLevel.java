@@ -1,7 +1,10 @@
 package GameEngine.Levels;
 
+import GameEngine.Components.AIComponents.Timer;
+import GameEngine.Components.ForceManager;
 import GameEngine.Components.TerrianComponents.LoadedTerrainGenerator;
 import GameEngine.GameObjects.Core.Director;
+import GameEngine.GameObjects.Core.Monster;
 import GameEngine.GameObjects.Core.Player;
 import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.GameEngine;
@@ -19,6 +22,7 @@ public class PlayLevel extends Level{
    private InputManager.Key menu;
    private Level advance;
    private LoadedTerrainGenerator generator;
+   private Timer timer;
 
    // Constructor
    public PlayLevel(GameEngine sys, String file_name) {
@@ -47,6 +51,35 @@ public class PlayLevel extends Level{
    }
 
 
+   public void player_dead(){
+      Player.ACTIVE = false;
+      Timer.ACTIVE = false;
+      Monster.ACTIVE = false;
+      ForceManager.ACTIVE = false;
+      System.out.println("dead");
+   }
+
+
+   public void player_reached_goal(){
+      advance = new GameOver(sys, file_name, timer.game_time);
+   }
+
+
+   public boolean updateAndCanAdvance() {
+      if(restart.pressed){
+         advance = new PlayLevel(sys, file_name);
+      } else if(menu.pressed) {
+         advance = new MainMenu(sys);
+      }
+
+      return advance != null;
+   }
+
+   public Level advance() {
+      return advance;
+   }
+
+
    private void init_terrain(){
       int seed = new Random().nextInt();
       System.out.println(seed);
@@ -68,21 +101,7 @@ public class PlayLevel extends Level{
 
       // Create director
       Director director = new Director(sys, player);
+      timer = director.getComponent(Timer.class);
       sys.spawn(director, 0);
-   }
-
-
-   public boolean updateAndCanAdvance() {
-      if(restart.pressed){
-         advance = new PlayLevel(sys, file_name);
-      } else if(menu.pressed) {
-         advance = new MainMenu(sys);
-      }
-
-      return advance != null;
-   }
-
-   public Level advance() {
-      return advance;
    }
 }

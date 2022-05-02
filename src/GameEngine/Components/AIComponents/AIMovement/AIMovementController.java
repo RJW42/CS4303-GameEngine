@@ -7,6 +7,7 @@ import GameEngine.GameObjects.Core.Director;
 import GameEngine.GameObjects.Core.Monster;
 import GameEngine.GameObjects.GameObject;
 import processing.core.PVector;
+import processing.opengl.PGraphicsOpenGL;
 
 public class AIMovementController extends Component {
    // Attributes
@@ -37,8 +38,6 @@ public class AIMovementController extends Component {
    private boolean jumped;
    private float jump_vel;
    private float jump_time;
-
-   private int updated = 0;
 
 
    // Constructor
@@ -116,27 +115,27 @@ public class AIMovementController extends Component {
 
 
    public void draw(){
-      sys.fill(0, 0, 255);
-      sys.circle(parent.pos.x + pos_offset.x, parent.pos.y + pos_offset.y, 0.1f);
-
-      if(current_path == null)
-         return;
-
-      for(int i = 0; i < current_path.points.size(); i++) {
-         var point = current_path.points.get(i);
-         if(point.is_jump)
-            if(point.is_bottom)  sys.fill(255, 0, 0);
-            else sys.fill(0, 255, 0);
-         else sys.fill(0);
-         sys.circle(point.pos.x, point.pos.y, 0.1f);
-         if(point.upper_pos != null) {
-            sys.stroke(255);
-            sys.line(
-                    point.pos.x, point.pos.y,
-                    point.upper_pos.x, point.upper_pos.y
-            );
-         }
-      }
+//      sys.fill(0, 0, 255);
+//      sys.circle(parent.pos.x + pos_offset.x, parent.pos.y + pos_offset.y, 0.1f);
+//
+//      if(current_path == null)
+//         return;
+//
+//      for(int i = 0; i < current_path.points.size(); i++) {
+//         var point = current_path.points.get(i);
+//         if(point.is_jump)
+//            if(point.is_bottom)  sys.fill(255, 0, 0);
+//            else sys.fill(0, 255, 0);
+//         else sys.fill(0);
+//         sys.circle(point.pos.x, point.pos.y, 0.1f);
+//         if(point.upper_pos != null) {
+//            sys.stroke(255);
+//            sys.line(
+//                    point.pos.x, point.pos.y,
+//                    point.upper_pos.x, point.upper_pos.y
+//            );
+//         }
+//      }
    }
 
 
@@ -153,7 +152,7 @@ public class AIMovementController extends Component {
          if(current_path == null)
             return;
       }
-      System.out.println(current_point.pos);
+
       // Walk to point
       if(in_jump) perform_jump();
       else if(in_drop) perform_drop();

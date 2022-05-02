@@ -8,6 +8,7 @@ import GameEngine.Components.Renderers.GifRenderer;
 import GameEngine.Components.Renderers.RectRenderer;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.GameEngine;
+import GameEngine.Levels.PlayLevel;
 import processing.core.PConstants;
 import processing.core.PVector;
 
@@ -56,7 +57,7 @@ public class Goal extends GameObject implements Collideable {
          return false;
 
       // Player reached goal
-      System.out.println("Finished");
+      ((PlayLevel)sys.level_manager.getCurrentLevel()).player_reached_goal();
       return true;
    }
 
