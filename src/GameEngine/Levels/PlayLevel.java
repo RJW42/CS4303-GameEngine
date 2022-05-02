@@ -3,6 +3,8 @@ package GameEngine.Levels;
 import GameEngine.Components.AIComponents.Timer;
 import GameEngine.Components.ForceManager;
 import GameEngine.Components.TerrianComponents.LoadedTerrainGenerator;
+import GameEngine.Components.TerrianComponents.TerrainLoader;
+import GameEngine.Components.TerrianComponents.TerrainRenderer;
 import GameEngine.GameObjects.Core.Director;
 import GameEngine.GameObjects.Core.Monster;
 import GameEngine.GameObjects.Core.Player;
@@ -61,6 +63,8 @@ public class PlayLevel extends Level{
 
 
    public void player_reached_goal(){
+      TerrainLoader.saveTerrain(generator, sys.terrain.getComponent(TerrainRenderer.class), file_name);
+
       advance = new GameOver(sys, file_name, timer.game_time);
    }
 

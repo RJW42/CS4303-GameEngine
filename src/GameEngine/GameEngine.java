@@ -143,8 +143,8 @@ public class GameEngine extends PApplet{
       warning_display = new WarningDisplay(this);
 
       // Init level manager
-      level_manager = new LevelManager(this, new MainMenu(this));
-      //level_manager = new LevelManager(this, new MapBuilder(this, 20, 20, "test5.json"));
+      //level_manager = new LevelManager(this, new MainMenu(this));
+      level_manager = new LevelManager(this, new GameOver(this, "test.json", 10f));
    }
 
 
@@ -304,6 +304,7 @@ public class GameEngine extends PApplet{
 
    public void image(PImage img, float x, float y, float angle){
       pushMatrix();
+      // resetMatrix(); Todo: <- maybe use this
       translate(0, WORLD_HEIGHT);
       scale(1f, -1f);
       scale(1f / PIXEL_TO_METER, 1f / PIXEL_TO_METER);

@@ -21,6 +21,7 @@ public abstract class TerrainGenerator extends Component {
    public PVector goal_spawn_loc;
    public ArrayList<PVector> monster_spawn_locs;
    public ArrayList<Room> rooms;
+   public ArrayList<Time> times;
 
    // Constructor
    public TerrainGenerator(GameObject parent, int seed){
@@ -68,6 +69,15 @@ public abstract class TerrainGenerator extends Component {
 
    public PVector getPosFromIndex(int index) {
       return new PVector(index % width + (float)Terrain.CELL_SIZE/2f, index / width + (float)Terrain.CELL_SIZE/2f);
+   }
+
+   /* ***** Leaderboard ***** */
+   public void add_time(String username, float time){
+      times.add(new Time(time, username));
+   }
+
+   public ArrayList<Time> get_times(){
+      return times;
    }
 
 
@@ -178,6 +188,22 @@ public abstract class TerrainGenerator extends Component {
          points = new HashSet<>();
          monsters = new ArrayList<>();
          doors = new ArrayList<>();
+      }
+   }
+
+
+   public static class Time implements Comparable<Time> {
+      public final String username;
+      public float time;
+
+      public Time(float time, String username) {
+         this.time = time;
+         this.username = username;
+      }
+
+      @Override
+      public int compareTo(Time o) {
+         return Float.compare(time, o.time);
       }
    }
 }

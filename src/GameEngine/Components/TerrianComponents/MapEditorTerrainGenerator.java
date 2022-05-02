@@ -4,6 +4,7 @@ package GameEngine.Components.TerrianComponents;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.GameObjects.Core.Terrain;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 
@@ -24,6 +25,7 @@ public class MapEditorTerrainGenerator extends TerrainGenerator{
       // Init world
       world = new int[width * height];
       special_tiles = new int[width * height];
+      times = new ArrayList<>();
       Arrays.fill(world, Terrain.AIR);
       Arrays.fill(special_tiles, Terrain.EMPTY);
 

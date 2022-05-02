@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import processing.core.PVector;
 
 import java.io.*;
+import java.util.ArrayList;
 
 public class TerrainLoader {
    private TerrainLoader(){} // Util class for writing and loading maps from file
@@ -23,6 +24,7 @@ public class TerrainLoader {
    private static final String WALL_CLR      = "wall_colour";
    private static final String GOAL_X        = "goal_x";
    private static final String GOAL_Y        = "goal_y";
+   private static final String LEADERBOARD   = "leaderboard";
 
    // Monster spawn properties
    private static final String MONSTER_X     = "x";
@@ -36,6 +38,10 @@ public class TerrainLoader {
    private static final String COLOUR_R      = "r";
    private static final String COLOUR_G      = "g";
    private static final String COLOUR_B      = "b";
+
+   // leaderboard properties
+   private static final String USERNAME      = "username";
+   private static final String TIME          = "time";
 
 
    /* ***** JSON Layout *****
@@ -60,6 +66,12 @@ public class TerrainLoader {
     * wall_colour: {r: int, g: int, b: int}
     * air_colour: {r: int, g: int, b: int}
     * border_colour: {r: int, g: int, b: int}
+    * scoreboard: [
+    *    {
+    *       username: str,
+    *       time: float
+    *    }
+    * ]
     */
 
    public static void loadTerrain(LoadedTerrainGenerator generator, TerrainRenderer renderer, String file_name){
@@ -85,6 +97,7 @@ public class TerrainLoader {
       // Add complex elements
       world_from_json(generator, terrain_data.getJSONArray(WORLD_ARR));
       monsters_from_JSON(generator, terrain_data.getJSONArray(MONSTERS_SPAWN));
+      leaderboard_from_JSON(generator, terrain_data.getJSONArray(LEADERBOARD));
    }
 
 
@@ -110,6 +123,7 @@ public class TerrainLoader {
       core.put(WALL_CLR, rgb_to_JSON(renderer.wall_colour));
       core.put(AIR_CLR, rgb_to_JSON(renderer.air_colour));
       core.put(BORDER_CLR, rgb_to_JSON(renderer.border_colour));
+      core.put(LEADERBOARD, leaderboard_to_json(generator));
 
       // Write to disk
       write_file(core, file_name);
@@ -182,6 +196,37 @@ public class TerrainLoader {
 
          generator.monster_spawn_locs.add(pos);
       }
+   }
+
+   // ******** Leaderboard ********* //
+   private static JSONArray leaderboard_to_json(TerrainGenerator generator){
+      JSONArray leaderboard = new JSONArray();
+
+      for(TerrainGenerator.Time time : generator.get_times()){
+         JSONObject object = new JSONObject();
+
+         object.put(USERNAME, time.username);
+         object.put(TIME, time.time);
+
+         leaderboard.put(object);
+      }
+
+      return leaderboard;
+   }
+
+   private static void leaderboard_from_JSON(TerrainGenerator generator, JSONArray times_json){
+      ArrayList<TerrainGenerator.Time> times = new ArrayList<>();
+
+      for(int i = 0; i < times_json.length(); i++){
+         JSONObject time = times_json.getJSONObject(i);
+
+         times.add(new TerrainGenerator.Time(
+                 time.getFloat(TIME),
+                 time.getString(USERNAME)
+         ));
+      }
+
+      generator.times = times;
    }
 
    // ******** RGB ********* //
