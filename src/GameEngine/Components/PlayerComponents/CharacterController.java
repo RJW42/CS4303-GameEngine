@@ -63,7 +63,7 @@ public class CharacterController extends Component {
       // Grapple hook
       if(grapple_hook.fired && reel_in.pressed){
          float distance = reel_distance * sys.DELTA_TIME;
-         if(force_manager.grapple_length > distance) {
+         if(force_manager.grapple_length >= 0.25f) {
             force_manager.grapple_length -= distance;
             force_manager.applyForce(PVector.sub(force_manager.grapple_base, parent.pos).normalize().mult(reel_distance));
          }

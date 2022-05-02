@@ -84,7 +84,9 @@ public class AIMovementController extends Component {
       // Get refreshed path
       Path path = path_manager.astar_search(new PVector(get_x(), get_y()), path_manager.player_ground_tile);
 
-      if(path == null) return; // No path could be found
+      if(path == null || path.points.size() == 0) {
+         return; // No path could be found
+      }
 
       Path.Point next_current_point = path.getCurrentPoint();
       Path.Point point_after_next = path.peekNextPoint();
