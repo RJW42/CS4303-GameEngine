@@ -106,6 +106,7 @@ public class TerrainRenderer extends Component {
 
 
    private void draw_air(){
+      // Todo: could make this one big rectangle
       sys.fill(air_colour.x, air_colour.y, air_colour.z);
       sys.noStroke();
 
