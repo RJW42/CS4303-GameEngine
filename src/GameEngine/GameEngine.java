@@ -147,11 +147,6 @@ public class GameEngine extends PApplet{
    }
 
 
-   public void initWorld(){
-      initWorld(WORLD_WIDTH, WORLD_HEIGHT);
-   }
-
-
    public void initWorld(int world_width, int world_height){
       // Init World Sizes
       WORLD_HEIGHT = world_height;

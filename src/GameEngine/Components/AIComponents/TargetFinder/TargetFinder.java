@@ -59,7 +59,6 @@ public class TargetFinder extends Component {
 
    @Override
    public void draw() {
-//      // Todo: this is for debugging remove at some point
 //      if(targets.size() == 0)
 //         return;
 //

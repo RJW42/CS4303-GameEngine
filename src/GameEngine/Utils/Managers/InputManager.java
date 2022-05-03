@@ -15,7 +15,9 @@ import java.util.Optional;
 public class InputManager {
    // Attributes
    public static final String[] REQUIRED_CONTROLS = new String[]{
-      "UP", "DOWN", "LEFT", "RIGHT"
+      "UP", "DOWN", "LEFT", "RIGHT", "JUMP", "GRAPPLE", "FIRE", "SWITCH_WEAPON",
+      "RESTART_LEVEL", "EXIT_TO_MENU", "MB-UP", "MB-DOWN", "MB-LEFT", "MB-RIGHT",
+      "MB-ZOOM-IN", "MB-ZOOM-OUT"
    };
    public static final int KEYS_SIZE = 512;
    public static final int MOUSE_SIZE = 128;
