@@ -143,8 +143,7 @@ public class GameEngine extends PApplet{
       warning_display = new WarningDisplay(this);
 
       // Init level manager
-      //level_manager = new LevelManager(this, new MainMenu(this));
-      level_manager = new LevelManager(this, new GameOver(this, "test.json", 10f));
+      level_manager = new LevelManager(this, new MainMenu(this));
    }
 
 

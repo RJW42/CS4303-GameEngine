@@ -58,6 +58,7 @@ public class LeaderBoard extends GameObject {
       this.load_leaderboard();
    }
 
+
    private void menu_pressed(){
       ((GameOver)(sys.level_manager.getCurrentLevel())).menu_pressed();
    }
@@ -84,7 +85,7 @@ public class LeaderBoard extends GameObject {
       times.sort(TerrainGenerator.Time::compareTo);
 
       for(int i = 0; i < LIST_SIZE; i++){
-         var name = (i < times.size()) ? times.get(i) : " - ";
+         var name = (i < times.size()) ? times.get(i).time + " - " + times.get(i).username : " - ";
          UITextRenderer renderer = create_renderer((i + 1) + ": " + name, item_height);
          renderer.text_pos.y  = y - (renderer.max_height + ITEM_PADDING);
          this.components.add(renderer);

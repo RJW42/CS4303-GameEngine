@@ -5,6 +5,7 @@ import GameEngine.GameEngine;
 import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.GameObjects.LeaderBoard;
 import GameEngine.GameObjects.MainMenu.LevelSelector;
+import GameEngine.GameObjects.TimeSaver;
 import GameEngine.Utils.Managers.InputManager;
 
 
@@ -42,7 +43,7 @@ public class GameOver extends Level{
       sys.initWorld(1, 1);
 
       // Spawn objects
-      sys.spawn(new LeaderBoard(sys, file_name, generator), 1);
+      sys.spawn(new TimeSaver(sys, generator, file_name, time), 2);
    }
 
    public void menu_pressed(){
