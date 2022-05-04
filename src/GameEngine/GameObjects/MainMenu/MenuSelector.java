@@ -48,25 +48,25 @@ public class MenuSelector extends GameObject {
    public void levels_clicked(){
       // Switch to level selector
       is_dead = true;
-      sys.spawn(new LevelSelector(sys), 1);
+      sys.spawn(new LevelSelector(sys), 3);
    }
 
    public void editor_clicked(){
       // Switch to editor selector
       is_dead = true;
-      sys.spawn(new MapEditorSelector(sys), 1);
+      sys.spawn(new MapEditorSelector(sys), 3);
    }
 
    public void controls_clicked(){
       // Switch to controls menu
       is_dead = true;
-      sys.spawn(new ControlsMenu(sys), 1);
+      sys.spawn(new ControlsMenu(sys), 3);
    }
 
    public void settings_clicked(){
       // Switch to settings menu
       is_dead = true;
-      sys.spawn(new SettingsMenu(sys), 1);
+      sys.spawn(new SettingsMenu(sys), 3);
    }
 
    @Override

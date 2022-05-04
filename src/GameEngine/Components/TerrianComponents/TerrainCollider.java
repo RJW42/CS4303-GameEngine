@@ -113,7 +113,7 @@ public class TerrainCollider extends Component {
                // the door to know when all monsters have been killed
                generator.add_kill_door(door);
 
-               sys.spawn(door, 2);
+               sys.spawn(door, 1);
             }
          }
       }

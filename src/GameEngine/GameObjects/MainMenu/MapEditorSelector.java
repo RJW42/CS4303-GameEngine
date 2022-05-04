@@ -104,7 +104,7 @@ public class MapEditorSelector extends GameObject {
       // Switch back to main menu
       sys.input_manager.cancelInput();
       is_dead = true;
-      sys.spawn(new MenuSelector(sys), 1);
+      sys.spawn(new MenuSelector(sys), 3);
    }
 
    public void create_clicked(){

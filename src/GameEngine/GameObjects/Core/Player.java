@@ -44,7 +44,11 @@ public class Player extends GameObject implements Collideable {
 
 
    // Constructor
-   public Player(GameEngine sys, PVector spawn_location) {
+   public Player(GameEngine sys, PVector spawn_location){
+      this(sys, spawn_location, true);
+   }
+
+   public Player(GameEngine sys, PVector spawn_location, boolean has_healthbar) {
       super(sys);
 
       // Set position
@@ -68,16 +72,18 @@ public class Player extends GameObject implements Collideable {
 
       this.components.add(new CharacterController(this, ACCELERATION, MAX_SPEED));
       this.components.add(new GrappleHook(this));
-      this.components.add(new HealthBar(this, new PVector(20f, 20f), 75f, 10f));
+      if(has_healthbar)
+         this.components.add(new HealthBar(this, new PVector(20f, 20f), 75f, 10f));
       this.components.add(new MovingSpriteManager(this, new PVector(COLLISION_WIDTH / 2f, COLLISION_HEIGHT / -2f), "player_left", "player_right", RENDER_WIDTH, RENDER_HEIGHT));
 
       this.components.add(force_manager);
       this.components.add(damagable);
 
-
-      this.components.add(new GunController(this));
-      this.components.add(RPG.create(this, new PVector(COLLISION_WIDTH / 2f, -COLLISION_HEIGHT / 2f)));
-      this.components.add(MachineGun.create(this, new PVector(COLLISION_WIDTH / 2f, -COLLISION_HEIGHT / 2f)));
+      if(has_healthbar) {
+         this.components.add(new GunController(this));
+         this.components.add(RPG.create(this, new PVector(COLLISION_WIDTH / 2f, -COLLISION_HEIGHT / 2f)));
+         this.components.add(MachineGun.create(this, new PVector(COLLISION_WIDTH / 2f, -COLLISION_HEIGHT / 2f)));
+      }
 
       // Add collision components to regular
       this.components.addAll(this.collision_components);

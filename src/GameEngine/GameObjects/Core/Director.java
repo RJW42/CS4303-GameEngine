@@ -16,7 +16,11 @@ public class Director extends GameObject {
 
 
    // Constructor
-   public Director(GameEngine sys, Player player) {
+   public Director(GameEngine sys, Player player){
+      this(sys, player, true);
+   }
+
+   public Director(GameEngine sys, Player player, boolean has_timer) {
       super(sys);
 
       // Init attributes
@@ -26,7 +30,9 @@ public class Director extends GameObject {
       // Add regular components 
       this.components.add(new AIPathManager(this));
       this.components.add(new KillDoorManager(this));
-      this.components.add(timer);
+
+      if(has_timer)
+         this.components.add(timer);
    }
 
 
