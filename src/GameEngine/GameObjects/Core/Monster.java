@@ -98,7 +98,7 @@ public class Monster extends GameObject implements Collideable {
 
 
    private boolean player_collision(BaseCollisionComponent comp){
-      if(!(comp.parent instanceof Player))
+      if(!(comp.parent instanceof Player) || !ACTIVE)
          return false;
 
       controller.stop = true;

@@ -6,6 +6,7 @@ import GameEngine.Components.CollisionComponents.Collideable;
 import GameEngine.Components.CollisionComponents.RectCollisionComponent;
 import GameEngine.Components.Damagable;
 import GameEngine.Components.ForceManager;
+import GameEngine.Components.MovingSpriteManager;
 import GameEngine.Components.PlayerComponents.*;
 import GameEngine.Components.Renderers.CircleRenderer;
 import GameEngine.Components.Renderers.ImageRenderer;
@@ -15,6 +16,7 @@ import GameEngine.Components.Weapons.RPG;
 import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
 import processing.core.PApplet;
+import processing.core.PImage;
 import processing.core.PVector;
 
 import java.util.ArrayList;
@@ -26,6 +28,8 @@ public class Player extends GameObject implements Collideable {
 
    public static final float COLLISION_HEIGHT= 0.75f;
    public static final float COLLISION_WIDTH = 0.5f;
+   public static final float RENDER_WIDTH    = 0.6f;
+   public static final float RENDER_HEIGHT   = 0.8f;
    public static final float ACCELERATION    = 12f;
    public static final float MAX_SPEED       = 4f;
    public static final float FRICTION        = 0.06f;
@@ -62,10 +66,10 @@ public class Player extends GameObject implements Collideable {
 
       this.damagable = new Damagable(this, HEALTH);
 
-      this.components.add(new RectRenderer(this, COLOUR, COLLISION_WIDTH, COLLISION_HEIGHT));
       this.components.add(new CharacterController(this, ACCELERATION, MAX_SPEED));
       this.components.add(new GrappleHook(this));
       this.components.add(new HealthBar(this, new PVector(20f, 20f), 75f, 10f));
+      this.components.add(new MovingSpriteManager(this, new PVector(COLLISION_WIDTH / 2f, COLLISION_HEIGHT / -2f), "player_left", "player_right", RENDER_WIDTH, RENDER_HEIGHT));
 
       this.components.add(force_manager);
       this.components.add(damagable);

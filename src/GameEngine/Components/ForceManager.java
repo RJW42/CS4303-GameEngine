@@ -1,7 +1,9 @@
 package GameEngine.Components;
 
 
+import GameEngine.Components.Renderers.ImageRenderer;
 import GameEngine.GameObjects.GameObject;
+import processing.core.PImage;
 import processing.core.PVector;
 
 
