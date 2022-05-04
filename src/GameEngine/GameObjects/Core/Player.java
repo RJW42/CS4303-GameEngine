@@ -65,6 +65,7 @@ public class Player extends GameObject implements Collideable {
       this.components.add(new RectRenderer(this, COLOUR, COLLISION_WIDTH, COLLISION_HEIGHT));
       this.components.add(new CharacterController(this, ACCELERATION, MAX_SPEED));
       this.components.add(new GrappleHook(this));
+      this.components.add(new HealthBar(this, new PVector(20f, 20f), 75f, 10f));
 
       this.components.add(force_manager);
       this.components.add(damagable);

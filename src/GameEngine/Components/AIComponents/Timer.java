@@ -5,6 +5,7 @@ import GameEngine.Components.Component;
 import GameEngine.Components.ForceManager;
 import GameEngine.Components.PlayerComponents.GunController;
 import GameEngine.GameEngine;
+import GameEngine.GameObjects.Core.GameLost;
 import GameEngine.GameObjects.Core.Monster;
 import GameEngine.GameObjects.Core.Player;
 import GameEngine.GameObjects.Core.Terrain;
@@ -64,12 +65,25 @@ public class Timer extends Component {
       sys.chase_zoom = 1f;
    }
 
+   public void game_lost(){
+      Player.ACTIVE = false;
+      Monster.ACTIVE = false;
+      ForceManager.ACTIVE = false;
+      ACTIVE = false;
+
+      sys.spawn(new GameLost(sys, player), 2);
+   }
+
 
    public void update() {
       // Check what state in
       if(!game_started) {
          handle_game_start();
          return;
+      }
+
+      if(ACTIVE && player.isDestroyed()){
+         game_lost();
       }
 
       if(ACTIVE) game_time = Math.round((System.nanoTime() - game_start_time) / 100000000f) / 10f;

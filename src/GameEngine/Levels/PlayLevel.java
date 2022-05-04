@@ -1,12 +1,10 @@
 package GameEngine.Levels;
 
 import GameEngine.Components.AIComponents.Timer;
-import GameEngine.Components.ForceManager;
 import GameEngine.Components.TerrianComponents.LoadedTerrainGenerator;
 import GameEngine.Components.TerrianComponents.TerrainLoader;
 import GameEngine.Components.TerrianComponents.TerrainRenderer;
 import GameEngine.GameObjects.Core.Director;
-import GameEngine.GameObjects.Core.Monster;
 import GameEngine.GameObjects.Core.Player;
 import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.GameEngine;
@@ -53,12 +51,12 @@ public class PlayLevel extends Level{
    }
 
 
-   public void player_dead(){
-      Player.ACTIVE = false;
-      Timer.ACTIVE = false;
-      Monster.ACTIVE = false;
-      ForceManager.ACTIVE = false;
-      System.out.println("dead");
+   public void restart(){
+      advance = new PlayLevel(sys, file_name);
+   }
+
+   public void menu(){
+      advance = new MainMenu(sys);
    }
 
 
@@ -71,9 +69,9 @@ public class PlayLevel extends Level{
 
    public boolean updateAndCanAdvance() {
       if(restart.pressed){
-         advance = new PlayLevel(sys, file_name);
+         restart();
       } else if(menu.pressed) {
-         advance = new MainMenu(sys);
+         menu();
       }
 
       return advance != null;

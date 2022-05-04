@@ -12,6 +12,8 @@ import processing.opengl.PGraphicsOpenGL;
 public class AIMovementController extends Component {
    // Attributes
    public static final float OFFSET_DIST = 0.2f;
+   public boolean stop;
+
    private final PVector pos_offset;
 
    private ForceManager force_manager;
@@ -71,6 +73,12 @@ public class AIMovementController extends Component {
 
    public void update() {
       if(!Monster.ACTIVE) return;
+
+      if(stop){
+         force_manager.velocity.x = 0;
+         stop = false;
+         return;
+      }
 
       // Todo: if lagging add some check to only update every 5 frames
       if(current_path == null || can_update){

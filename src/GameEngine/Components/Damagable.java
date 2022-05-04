@@ -33,12 +33,15 @@ public class Damagable extends Component {
    public void shot(float momentum) {
       health -= momentum;
    }
+   public void punch(float damage){ health -= damage; }
+
 
    public void blast(Explosion explosion){
       System.out.println(explosion.explosion_size);
    }
 
    public void lava(){
-      System.out.println("burn");
+      // todo: could draw a fire animation or some thing
+      health = 0;
    }
 }
