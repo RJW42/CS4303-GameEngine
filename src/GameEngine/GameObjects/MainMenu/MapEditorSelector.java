@@ -5,6 +5,7 @@ import GameEngine.Components.UIComponents.UIButton;
 import GameEngine.Components.UIComponents.UIInput;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.GameEngine;
+import GameEngine.Levels.MainMenu;
 import GameEngine.Levels.MapBuilder;
 import processing.core.PVector;
 
@@ -120,7 +121,7 @@ public class MapEditorSelector extends GameObject {
       }
 
       // All valid enter level editor
-      sys.level_manager.startLevel(new MapBuilder(sys, width, height, name));
+      ((MainMenu)sys.level_manager.getCurrentLevel()).advance = (new MapBuilder(sys, width, height, name));
    }
 
    public void name_provided(String name){

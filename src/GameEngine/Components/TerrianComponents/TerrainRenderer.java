@@ -65,7 +65,7 @@ public class TerrainRenderer extends Component {
    @Override
    public void start() {
       // Get lava asset
-      lava = sys.sprite_manager.get_gif("lava", (int)GameEngine.PIXEL_TO_METER, (int)GameEngine.PIXEL_TO_METER);
+      lava = sys.sprite_manager.get_gif("lava", (int)GameEngine.PIXEL_TO_METER + 2, (int)GameEngine.PIXEL_TO_METER + 2);
 
       lava.setLooping(true);
       lava.setFPS(4);

@@ -9,14 +9,18 @@ import GameEngine.GameObjects.Core.Monster;
 import GameEngine.GameObjects.Core.Player;
 import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.GameObjects.MainMenu.MenuSelector;
+import GameEngine.GameObjects.RandomMove;
 import GameEngine.Levels.Level;
 
 import java.util.Random;
+
+import static GameEngine.Levels.PlayLevel.DESIRED_WALLS;
 
 
 public class MainMenu extends Level {
    // Attributes
    public static final String BACKGROUND_LEVEL = "menu_map.json";
+   public Level advance = null;
 
    // Constructor
    public MainMenu(GameEngine sys) {
@@ -32,17 +36,26 @@ public class MainMenu extends Level {
       // Init world
       init_terrain();
 
-      // Todo: add selection for:
-      //       controls
       sys.spawn(new MenuSelector(sys), 3);
+
+      RandomMove random_move = new RandomMove(sys);
+
+      sys.chase_position = random_move.pos;
+
+      float desired_x_zoom = GameEngine.SCREEN_WIDTH / (DESIRED_WALLS * GameEngine.PIXEL_TO_METER);
+      float desired_y_zoom = GameEngine.SCREEN_HEIGHT / (DESIRED_WALLS * GameEngine.PIXEL_TO_METER);
+
+      sys.chase_zoom = Math.min(desired_x_zoom, desired_y_zoom);
+
+      sys.spawn(random_move, 0);
    }
 
    public boolean updateAndCanAdvance() {
-      return false;
+      return advance != null;
    }
 
    public Level advance() {
-      return null;
+      return advance;
    }
 
    private void init_terrain(){
