@@ -63,13 +63,9 @@ public class LevelList extends Component {
 
 
    // Methods 
-   public void start() {
-
-   }
-   public void update() {
-   }
-   public void draw() {
-   }
+   public void start() {}
+   public void update() {}
+   public void draw() {}
 
 
    private void clicked(int id){

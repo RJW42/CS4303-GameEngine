@@ -1,6 +1,7 @@
 package GameEngine.GameObjects.MainMenu;
 
 
+import GameEngine.Components.UIComponents.ControlsList;
 import GameEngine.Components.UIComponents.UIButton;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.GameEngine;
@@ -26,7 +27,13 @@ public class ControlsMenu extends GameObject {
               PADDING, BORDER_WIDTH, WIDTH, HEIGHT, true
       );
 
+      ControlsList controls_list = new ControlsList(this, new PVector(
+              GameEngine.SCREEN_WIDTH / 2f, GameEngine.SCREEN_HEIGHT / 2f)
+      );
+
+
       // Add components
+      this.components.add(controls_list);
       this.components.add(back_button);
    }
 
