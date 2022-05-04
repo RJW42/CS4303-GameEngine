@@ -4,6 +4,7 @@ import GameEngine.Components.Component;
 import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.GameObjects.Core.Terrain;
+import GameEngine.Utils.PGif;
 import processing.core.*;
 
 import java.util.ArrayList;
@@ -11,6 +12,8 @@ import java.util.Random;
 
 public class TerrainRenderer extends Component {
    // Attributes
+   public static final PVector LAVA_COLOUR   = new PVector(221, 64, 15);
+
    private static final int TOP_MASK         = 1;
    private static final int LEFT_MASK        = 2;
    private static final int RIGHT_MASK       = 4;
@@ -32,7 +35,9 @@ public class TerrainRenderer extends Component {
    public PVector air_colour       = new PVector(146, 153, 156);
    public PVector border_colour    = new PVector(151, 186, 201);
    public PVector wall_colour      = new PVector(17, 25, 28);
+
    private TerrainGenerator generator;
+   private PGif lava;
 
    private final ArrayList<Air> air_blocks;
    private final ArrayList<Lava> lava_blocks;
@@ -59,6 +64,12 @@ public class TerrainRenderer extends Component {
    // Methods
    @Override
    public void start() {
+      // Get lava asset
+      lava = sys.sprite_manager.get_gif("lava", (int)GameEngine.PIXEL_TO_METER, (int)GameEngine.PIXEL_TO_METER);
+
+      lava.setLooping(true);
+      lava.setFPS(4);
+
       // Get the world
       generator = this.parent.getComponent(TerrainGenerator.class);
       world = generator.getWorld();
@@ -70,7 +81,6 @@ public class TerrainRenderer extends Component {
    }
 
    public void update() {
-
    }
 
 
@@ -117,11 +127,15 @@ public class TerrainRenderer extends Component {
 
 
    private void draw_lava(){
-      sys.fill(255, 0, 0);
+      sys.fill(LAVA_COLOUR.x, LAVA_COLOUR.y, LAVA_COLOUR.z);
       sys.noStroke();
 
       for(Lava lava : lava_blocks) {
-         sys.square(lava.x, lava.y, lava.width);
+         if(lava.is_top){
+            lava.gif.play(sys, new PVector(lava.x + Terrain.CELL_SIZE / 2f, lava.y + Terrain.CELL_SIZE / 2f), 0);
+         } else {
+            sys.square(lava.x, lava.y, lava.width);
+         }
       }
    }
 
@@ -205,11 +219,19 @@ public class TerrainRenderer extends Component {
 
 
    private Lava create_lava(float x, float y){
-      return new Lava(
+      Lava lava = new Lava(
               (x / Terrain.WIDTH) * GameEngine.WORLD_WIDTH - OVERLAP_AMOUNT,
               (y / Terrain.HEIGHT) * GameEngine.WORLD_HEIGHT - OVERLAP_AMOUNT,
-              (float)GameEngine.WORLD_WIDTH / Terrain.WIDTH + OVERLAP_AMOUNT * 2f
+              (float)GameEngine.WORLD_WIDTH / Terrain.WIDTH + OVERLAP_AMOUNT * 2f,
+              is_air((int)x, (int)y + 1) && !is_lava((int)x, (int)y + 1),
+              this.lava
       );
+
+      if(lava.is_top){
+         air_blocks.add(create_air(x, y));
+      }
+
+      return lava;
    }
 
 
@@ -370,11 +392,15 @@ public class TerrainRenderer extends Component {
       public float x;
       public float y;
       public float width;
+      public boolean is_top;
+      public PGif gif;
 
-      public Lava(float x, float y, float width) {
+      public Lava(float x, float y, float width, boolean is_top, PGif root) {
          this.x = x;
          this.y = y;
          this.width = width;
+         this.is_top = is_top;
+         this.gif = root.copy();
       }
    }
 

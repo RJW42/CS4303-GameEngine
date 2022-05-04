@@ -117,6 +117,7 @@ public class Timer extends Component {
       Player.ACTIVE = true;
       Monster.ACTIVE = true;
       ForceManager.ACTIVE = true;
+      ACTIVE = true;
       game_started = true;
       game_start_time = System.nanoTime();
    }

@@ -28,7 +28,7 @@ public class Monster extends GameObject implements Collideable {
    public static final int HEALTH            = 50;
 
    public static final float PUNCH_FORCE     = 400f;
-   public static final float PUNCH_DAMAGE    = 100f;
+   public static final float PUNCH_DAMAGE    = 10f;
    public static final int PUNCH_RATE        = 1;
 
    public boolean is_dead = false;
