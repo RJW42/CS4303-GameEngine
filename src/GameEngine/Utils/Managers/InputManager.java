@@ -8,6 +8,8 @@ import processing.event.Event;
 import processing.event.KeyEvent;
 import processing.event.MouseEvent;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Optional;
@@ -64,7 +66,7 @@ public class InputManager {
       }
 
       // Init attributes
-      this.mouse_click = (tracker_mouse_keys[PConstants.LEFT] == null) ? (tracker_mouse_keys[PConstants.LEFT] = new Key()) : tracker_mouse_keys[PConstants.LEFT];
+      this.mouse_click = (tracker_mouse_keys[PConstants.LEFT] == null) ? (tracker_mouse_keys[PConstants.LEFT] = new Key(MOUSE_LEFT, PConstants.LEFT)) : tracker_mouse_keys[PConstants.LEFT];
    }
 
    // Methods
@@ -95,11 +97,6 @@ public class InputManager {
       return null;
    }
 
-
-   public void setMapping(){
-      // Todo: take name change button
-      //       may want to implment this in future
-   }
 
    public boolean getInput(InputComplete callback, int max_length){
       return getInput(callback, max_length, "");
@@ -228,6 +225,50 @@ public class InputManager {
          tracker_mouse_keys[i].pressed = false;
    }
 
+   /* **** Updating mappings **** */
+   public void setMapping(String name, Event event){
+      // Check name is valid
+      if(!key_mappings.containsKey(name)){
+         System.err.println("Cannot re-map an untracked key: " + name);
+         System.exit(0);
+         return;
+      }
+
+      // Update the mapping for this key
+      System.out.println("Updating key mapping for: " + name);
+      String event_string = getEventString(event);
+
+      get_key_code(event_string).ifPresentOrElse(key_code -> {
+         Key key = tracked_keyboard_keys[key_code] != null ? tracked_keyboard_keys[key_code] : new Key(event_string, key_code);
+         key_mappings.put(name, key);
+         tracker_mouse_keys[key_code] = key;
+      }, () -> get_mouse_code(event_string).ifPresentOrElse(mouse_code -> {
+         Key key = tracker_mouse_keys[mouse_code] != null ? tracker_mouse_keys[mouse_code] : new Key(event_string, mouse_code);
+         key_mappings.put(name, key);
+         tracker_mouse_keys[mouse_code] = key;
+      }, () -> {
+         // Failed to find event code for event
+         System.err.println(" - Failed to find event code for event: " + event_string);
+         System.exit(0);
+      }));
+
+      System.out.println(" - Updated key mapping, now saving");
+      save_current_mappings();
+   }
+
+   private void save_current_mappings(){
+      try(PrintWriter pw = new PrintWriter(GameEngine.CONFIG_FOLDER + GameEngine.CONTROLS_FILE)){
+         // save each control
+         for(var control : REQUIRED_CONTROLS){
+            Key key = key_mappings.get(control);
+            pw.println(control + " = " + key.string);
+         }
+      }catch (IOException e){
+         System.err.println(" - Error when saving controls: " + e.getMessage());
+         System.exit(0);
+      }
+   }
+
    /* **** Key Sub Class **** */
 
    /**
@@ -237,7 +278,15 @@ public class InputManager {
     * need for method calls.
     */
    public static class Key {
+      public final String string;
+      public final int code;
+
       public boolean pressed;
+
+      public Key(String string, int code) {
+         this.string = string;
+         this.code = code;
+      }
    }
 
 
@@ -260,12 +309,6 @@ public class InputManager {
       }
       // Failed to reset to default
       System.err.println(" Failed to reset control file to default ");
-   }
-
-
-   public void save(){
-      // Todo: implement this if it is wanted
-      //       it should be called by set mappings
    }
 
 
@@ -324,7 +367,7 @@ public class InputManager {
             return true;
 
          // Create key and continue
-         Key key_ref = tracked_keyboard_keys[key_index] == null ? new Key() : tracked_keyboard_keys[key_index];
+         Key key_ref = tracked_keyboard_keys[key_index] == null ? new Key(value, key_index) : tracked_keyboard_keys[key_index];
          key_ref.pressed = false;
 
          tracked_keyboard_keys[key_index] = key_ref;
@@ -337,7 +380,7 @@ public class InputManager {
             return true;
 
          // Create key and continue
-         Key key_ref = new Key();
+         Key key_ref = new Key(value, mouse_index);
          key_ref.pressed = false;
 
          tracker_mouse_keys[mouse_index] = key_ref;

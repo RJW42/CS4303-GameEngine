@@ -1,4 +1,20 @@
-# Example Values
+# Example ValuesUP      = W
+DOWN    = S
+LEFT    = A
+RIGHT   = D
+JUMP    = SPACE
+GRAPPLE = MOUSE_RIGHT
+FIRE    = MOUSE_LEFT
+SWITCH_WEAPON = Q
+RESTART_LEVEL = R
+EXIT_TO_MENU  = M
+# Map editing controls
+MB-UP       = W
+MB-DOWN     = S
+MB-LEFT     = A
+MB-RIGHT    = D
+MB-ZOOM-IN  = R
+MB-ZOOM-OUT = F
 #   - mouse values: MOUSE_LEFT, MOUSE_RIGHT, MOUSE_MIDDLE
 #   - keyboard values: SPACE, ENTER, A-Z, SHIFT, CNTRL, TAB, 1-9
 #   - all other values: KEY_NUM, e.g. KEY_19
