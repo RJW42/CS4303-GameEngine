@@ -50,7 +50,7 @@ public class GameEngine extends PApplet{
    public boolean DISPLAY_BOUNDS          = false;
    public boolean DISPLAY_COLS            = false;
    public boolean ENABLE_PAUSE            = false;
-   public boolean DISPLAY_FPS             = false;
+   public boolean DISPLAY_FPS             = true;
    public float TIME_FACTOR               = 1f;
    public float DELTA_TIME                = 1f / TARGET_FPS; // 1 / DELTA_TIME == current FPS
    public float TOTAL_TIME                = 0f;
@@ -202,7 +202,7 @@ public class GameEngine extends PApplet{
       // Calculate Delta Time
       calculateDeltaTime();
 
-      // Draw backgorund
+      // Draw background
       level_manager.drawBackground();
 
       // Update Game Objects
@@ -524,9 +524,11 @@ public class GameEngine extends PApplet{
    /* ***** Debug ***** */
    public void debug(){
       if(DISPLAY_FPS){
-         fill(255, 0, 0);
+         pushUI();
+         fill(255);
          textSize(20);
-         text("FPS: " + (int)(1f / DELTA_TIME), WORLD_WIDTH - 2, WORLD_HEIGHT - 1);
+         uiText("FPS: " + (1f / DELTA_TIME), SCREEN_WIDTH - textWidth("FPS: WW"), SCREEN_HEIGHT - textAscent());
+         popUI();
       }
 
       if(DISPLAY_COLS){
