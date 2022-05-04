@@ -113,7 +113,7 @@ public class ImageManager {
 
       // Check if empty
       if(sprite_files == null) {
-         System.out.println(" - Failed to open sprite folder");
+         System.err.println(" - Failed to open sprite folder");
          return;
       }
 

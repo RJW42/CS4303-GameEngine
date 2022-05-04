@@ -27,6 +27,7 @@ public class GameEngine extends PApplet{
    public static final String DEFAULT_CONFIG_FILE     = "default_config.txt";
    public static final String SAVES_LOCATION = "GameEngine/Resources/Saves/scoreboard.csv";
    public static final String SPRITE_FOLDER  = "GameEngine/Resources/Sprites";
+   public static final String SOUNDS_FOLDER  = "GameEngine/Resources/Sounds";
    public static final String GIFS_FOLDER    = "GameEngine/Resources/Gifs";
    public static final String CONFIG_FOLDER  = "GameEngine/Resources/";
    public static final String CONFIG_FILE    = "config.txt";

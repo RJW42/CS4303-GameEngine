@@ -12,6 +12,7 @@ import GameEngine.GameObjects.Core.Monster;
 import GameEngine.GameObjects.Core.Player;
 import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.GameObjects.GameObject;
+import ddf.minim.AudioSample;
 import processing.core.PVector;
 
 import java.util.ArrayList;
@@ -20,6 +21,8 @@ import java.util.List;
 
 public class Bullet extends GameObject implements Collideable {
    // Attributes
+   public static AudioSample HIT_MARKER      = null;
+
    public boolean is_dead = false;
    public GameObject parent;
    public float momentum;
@@ -39,6 +42,12 @@ public class Bullet extends GameObject implements Collideable {
       this.momentum = mass * start_vel.mag();
       this.explosion_size = explosion_size;
       this.explosive = explosion_size > 0;
+
+      // Load sound if needed
+      if(HIT_MARKER == null) {
+         HIT_MARKER = sys.audio_manager.get_sample("hit_marker");
+         HIT_MARKER.setGain(-20f);
+      }
 
       // Add collision components 
       this.collision_components = new ArrayList<>();
@@ -67,6 +76,9 @@ public class Bullet extends GameObject implements Collideable {
 
       if(is_dead) return false;
       is_dead = true;
+
+      if(other.parent instanceof Monster)
+         HIT_MARKER.trigger();
 
       Damagable damagable = other.parent.getComponent(Damagable.class);
       if(damagable != null) damagable.shot(momentum);
