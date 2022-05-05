@@ -34,6 +34,7 @@ public class RectGunRenderer extends GunRenderer {
 
    public void draw() {
         sys.pushMatrix();
+        sys.noStroke();
         sys.translate(parent.pos.x + offset.x, parent.pos.y + offset.y);
         sys.rotate(gun.rotation_angle);
         sys.fill(0);

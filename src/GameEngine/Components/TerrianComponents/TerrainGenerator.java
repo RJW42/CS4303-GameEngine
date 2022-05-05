@@ -93,7 +93,7 @@ public abstract class TerrainGenerator extends Component {
       if(rooms == null) init_rooms();
 
       for(PVector loc : monster_spawn_locs) {
-         Monster monster = new Monster(sys, loc);
+         Monster monster = new Monster(sys, loc.copy());
 
          // Get the room of this monster
          int index = getIndexFromWorldPos(loc.x, loc.y);

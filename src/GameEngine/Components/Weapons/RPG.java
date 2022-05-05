@@ -11,7 +11,7 @@ public class RPG {
    public static final int MUZZLE_SPEED     = 15;
    public static final float BULLET_MASS    = 0.5f;
    public static final float BULLET_RAD     = 0.1f;
-   public static final float BARREL_LENGTH  = 0.75f;
+   public static final float BARREL_LENGTH  = 0.6f;
    public static final float BARREL_HEIGHT  = 0.15f;
    public static final float EXPLOSION_SIZE = 100;
 
