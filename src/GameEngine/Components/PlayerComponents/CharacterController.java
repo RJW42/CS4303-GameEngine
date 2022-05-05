@@ -33,8 +33,8 @@ public class CharacterController extends Component {
       // Init attributes
       this.speed  = speed;
       this.max_speed = max_speed;
-      this.reel_in   = sys.input_manager.getKey("up");
-      this.reel_out   = sys.input_manager.getKey("down");
+      this.reel_in   = sys.input_manager.getKey("grapple_in");
+      this.reel_out   = sys.input_manager.getKey("grapple_out");
       this.jump   = sys.input_manager.getKey("jump");
       this.left   = sys.input_manager.getKey("left");
       this.right  = sys.input_manager.getKey("right");

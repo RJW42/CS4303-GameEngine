@@ -55,7 +55,6 @@ public class UITextRenderer extends Component {
 
    public void reset_text_size(){
       // Get max height of text
-      // Todo: could maybe split text into mul lines if possible
       text_size = 2;
 
       sys.textSize(text_size);

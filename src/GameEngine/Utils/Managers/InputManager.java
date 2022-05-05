@@ -17,7 +17,7 @@ import java.util.Optional;
 public class InputManager {
    // Attributes
    public static final String[] REQUIRED_CONTROLS = new String[]{
-      "UP", "DOWN", "LEFT", "RIGHT", "JUMP", "GRAPPLE", "FIRE", "SWITCH_WEAPON",
+      "GRAPPLE_OUT", "GRAPPLE_IN", "LEFT", "RIGHT", "JUMP", "GRAPPLE", "FIRE", "SWITCH_WEAPON",
       "RESTART_LEVEL", "EXIT_TO_MENU", "MB-UP", "MB-DOWN", "MB-LEFT", "MB-RIGHT",
       "MB-ZOOM-IN", "MB-ZOOM-OUT"
    };
@@ -299,6 +299,12 @@ public class InputManager {
    private static final String SHIFT         = "SHIFT";
    private static final String TAB           = "TAB";
 
+
+   public void reset_and_reload(){
+      reset_to_defaults();
+      init(GameEngine.CONFIG_FOLDER + GameEngine.CONTROLS_FILE);
+      tracker_mouse_keys[PConstants.LEFT] = this.mouse_click;
+   }
 
    public void reset_to_defaults(){
       if(FileUtils.copyAndReplaceFile(

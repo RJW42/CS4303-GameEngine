@@ -4,8 +4,8 @@
 #   - all other values: KEY_NUM, e.g. KEY_19
 # Controls defined below
 # Player Controls
-UP      = W
-DOWN    = S
+GRAPPLE_IN  = W
+GRAPPLE_OUT = S
 LEFT    = A
 RIGHT   = D
 JUMP    = SPACE
