@@ -34,8 +34,8 @@ public class DoorManager extends Component {
       time_to_close -= sys.DELTA_TIME;
 
       if(time_to_close < 0) {
-         // Todo: check that the player is not in the door
-         close();
+         // Todo: to implement this. Need to check both monster and player not in door
+         // close();
       }
    }
 
