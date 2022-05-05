@@ -99,7 +99,6 @@ public class TargetFinder extends Component {
             // Init Starting Conditions.
             //    This Will determine the direction we will walk along the ray
             //    and initialise the starting values for the length of the ray
-            //    Todo: may need to mul current_cell by Terrian.Size if changes in future
             if(ray_direction.x < 0){ // Determine what step size to use on the x-axis
                step.x = -1; // Step Left
                ray_length_1d.x = (ray_start.x - current_cell.x) * ray_unit_step_size.x; // How much left in cell to left

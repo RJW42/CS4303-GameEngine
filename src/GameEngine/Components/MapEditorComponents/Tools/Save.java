@@ -35,7 +35,6 @@ public class Save extends Tool {
          return;
 
       // Save world, and deactivate
-      // Todo: maybe add some cool down
       active = false;
 
       // Check player has been placed

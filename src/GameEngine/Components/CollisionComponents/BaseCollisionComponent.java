@@ -186,7 +186,6 @@ public abstract class BaseCollisionComponent extends Component {
       // Init y
       float y = this.get_y();
       if(y % GameEngine.GRID_SIZE == 0){
-         // Todo: not sure if this is allowed
          y -= GameEngine.GRID_SIZE;
       }
 

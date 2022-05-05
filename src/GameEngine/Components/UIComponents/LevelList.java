@@ -8,6 +8,8 @@ import GameEngine.Levels.PlayLevel;
 import processing.core.PVector;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import static GameEngine.Components.TerrianComponents.TerrainLoader.SAVE_LOC;
 import static GameEngine.GameEngine.UI_SCALE;
@@ -15,7 +17,7 @@ import static processing.core.PApplet.trim;
 
 public class LevelList extends Component {
    // Attributes
-   public static final int MAX_ITEMS_ON_LIST = 3;
+   public static final int MAX_ITEMS_ON_LIST = 4;
    public static final float SPACING         = 1;
 
    public PVector text_colour;
@@ -42,8 +44,6 @@ public class LevelList extends Component {
    // Constructor
    public LevelList(GameObject parent, PVector pos, PVector text_colour, PVector rect_colour, PVector border_colour, PVector hover_text_colour, PVector hover_rect_colour, PVector hover_border_colour, float padding, float border_width, float item_width, float item_height) {
       super(parent);
-
-      // Todo: change icons when no more levels.
 
       // Init attributes
       this.pos = pos;
@@ -106,6 +106,11 @@ public class LevelList extends Component {
       // Open all files
       File folder = new File(SAVE_LOC);
       files = folder.listFiles();
+      Arrays.sort(files, new Comparator<File>() {
+         public int compare(File f1, File f2){
+            return f1.getName().compareTo(f2.getName());
+         }
+      });
 
       // Create buttons
       int num_buttons = Math.min(MAX_ITEMS_ON_LIST, files.length);

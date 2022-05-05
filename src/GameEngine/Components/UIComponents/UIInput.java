@@ -101,7 +101,6 @@ public class UIInput extends Component {
    }
 
    private void wait_for_input() {
-      // Todo: Could do something where if the user clicks out of the input then its stops or something
       input = sys.input_manager.current_string;
 
       time_since_blink += sys.DELTA_TIME;

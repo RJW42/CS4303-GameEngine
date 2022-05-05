@@ -33,7 +33,6 @@ public class RandomColour extends Tool {
          return;
 
       // Pick colour, and deactivate
-      // Todo: maybe add some cool down
       active = false;
       renderer.resetColours();
    }

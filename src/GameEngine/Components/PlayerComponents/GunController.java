@@ -65,7 +65,5 @@ public class GunController extends Component {
       if(!switch_weapon.pressed) can_switch = true;
    }
 
-   public void draw() {
-      // Todo: draw active gun
-   }
+   public void draw() {}
 }

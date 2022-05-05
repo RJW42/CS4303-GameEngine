@@ -33,8 +33,6 @@ public class ForceManager extends Component {
    public ForceManager(GameObject parent, PVector start_velocity, PVector start_acceleration, float friction, boolean has_gravity) {
       super(parent);
 
-      // Todo: could take in attributes such as a speed and a force limit
-
       // Init attributes
       this.velocity = start_velocity;
       this.acceleration = start_acceleration;

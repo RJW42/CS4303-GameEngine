@@ -28,6 +28,7 @@ public class ItemPlace extends Tool {
 
    private PImage kill_door_closed;
    private PImage basic_door_closed;
+   private PImage player;
 
    private int prev_x;
    private int prev_y;
@@ -38,6 +39,10 @@ public class ItemPlace extends Tool {
 
       // Init attributes
       this.icon_text = "Place";
+      this.player = sys.sprite_manager.get_sprite("player_right",
+              Math.round(GameEngine.PIXEL_TO_METER * Player.RENDER_WIDTH),
+               Math.round(GameEngine.PIXEL_TO_METER * Player.RENDER_HEIGHT)
+      );
    }
 
 
@@ -94,11 +99,10 @@ public class ItemPlace extends Tool {
          return;
 
       // Renderer player
-      // Todo: change this when proper player model drawn
-      sys.noStroke();
-      sys.fill(Player.COLOUR.x, Player.COLOUR.y, Player.COLOUR.z);
-      sys.rectMode(PConstants.CORNER);
-      sys.rect(generator.player_spawn_loc.x, generator.player_spawn_loc.y, Player.COLLISION_WIDTH, -Player.COLLISION_HEIGHT);
+      float x = generator.player_spawn_loc.x + Player.COLLISION_WIDTH / 2f;
+      float y = generator.player_spawn_loc.y + Player.COLLISION_HEIGHT / -2f;
+
+      sys.image(player, x, y);
    }
 
 

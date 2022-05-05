@@ -166,7 +166,6 @@ public class TerrainRenderer extends Component {
 
    private void create_graphics() {
       // Loop through each index in the world and create a graphics object for it
-      // Todo: need to change this when adding doors
       for(int x = 0; x < Terrain.WIDTH; x++){
          for(int y = 0; y < Terrain.HEIGHT; y++){
             // Get index for this position then draw

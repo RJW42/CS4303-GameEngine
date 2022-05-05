@@ -15,13 +15,13 @@ import static GameEngine.GameObjects.MainMenu.MenuSelector.*;
 
 public class ControlsList extends Component {
    // Attributes
-   public static final int MAX_ITEMS_ON_LIST = 3;
+   public static final int MAX_ITEMS_ON_LIST = 4;
 
    public float width;
    public float height;
    public PVector pos;
 
-   private UIControlEditor[] control_editors; // Todo: <- change to controls component
+   private UIControlEditor[] control_editors;
    private String[] controls;
    private boolean control_clicked;
 
@@ -32,8 +32,6 @@ public class ControlsList extends Component {
    // Constructor
    public ControlsList(GameObject parent, PVector pos) {
       super(parent);
-
-      // Todo: change icons when no more levels
 
       // Init attributes
       this.pos = pos;

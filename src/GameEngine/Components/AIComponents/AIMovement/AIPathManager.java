@@ -262,7 +262,6 @@ public class AIPathManager extends Component {
 //      }
 
       while(n != start_node && n != null){
-         // Todo: may want to change this to be a bit better but works for now
          if(n.connection_edge instanceof VerticalEdge){
             VerticalEdge edge = (VerticalEdge)n.connection_edge;
 

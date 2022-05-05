@@ -252,7 +252,7 @@ public class GameEngine extends PApplet{
       float translate_y = (WORLD_HEIGHT / 2f - chase_position.y * chase_zoom);
       translate(translate_x, translate_y);
 
-      // Update mouses position to represent this translation Todo: could make this more efficient
+      // Update mouses position to represent this translation
       mouse_x = chase_position.x - WORLD_WIDTH / (chase_zoom * 2) + ((mouseX - X_TRANSLATE) / (WORLD_WIDTH * PIXEL_TO_METER)) * (WORLD_WIDTH / chase_zoom);
       mouse_y = chase_position.y - WORLD_HEIGHT / (chase_zoom * 2) + (1 - ((mouseY - Y_TRANSLATE) / (WORLD_HEIGHT * PIXEL_TO_METER))) * (WORLD_HEIGHT / chase_zoom);
 
@@ -299,7 +299,6 @@ public class GameEngine extends PApplet{
 
    public void image(PImage img, float x, float y, float angle){
       pushMatrix();
-      // resetMatrix(); Todo: <- maybe use this
       translate(0, WORLD_HEIGHT);
       scale(1f, -1f);
       scale(1f / PIXEL_TO_METER, 1f / PIXEL_TO_METER);

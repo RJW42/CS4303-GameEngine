@@ -26,8 +26,7 @@ public class Damagable extends Component {
    public void update() {}
 
    public void draw() {
-      // Todo: draw health bar maybe
-      //       or draw a damage flash
+      // Todo: draw a damage flash
    }
 
    public void shot(float momentum) {

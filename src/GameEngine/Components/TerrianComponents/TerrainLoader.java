@@ -77,8 +77,6 @@ public class TerrainLoader {
    public static void loadTerrain(LoadedTerrainGenerator generator, TerrainRenderer renderer, String file_name){
       // Load file
       String terrain_string = read_file(file_name);
-      // Todo: check if string null then throw error or something
-
       JSONObject terrain_data = new JSONObject(terrain_string);
 
       // Populate the generator data
@@ -102,10 +100,6 @@ public class TerrainLoader {
 
 
    public static void saveTerrain(TerrainGenerator generator, TerrainRenderer renderer, String file_name){
-      // Todo: Items to save
-      //        - lava / some other bad liquid
-      //        - nests/vents maybe
-
       // Create json object to represent terrain
       JSONObject core = new JSONObject();
 
