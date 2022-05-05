@@ -114,7 +114,7 @@ public class Gun extends Component {
       prev_fire_time = 0;
 
       // Create bullet velocity
-      PVector bullet_offset = PVector.fromAngle(rotation_angle).mult(barrel_length);
+      PVector bullet_offset = PVector.fromAngle(rotation_angle).mult(0.5f);
       PVector bullet_spawn_location = bullet_offset.add(gun_pos);
       PVector vel_norm = PVector.sub(bullet_spawn_location, target_pos).normalize().mult(-1);
 

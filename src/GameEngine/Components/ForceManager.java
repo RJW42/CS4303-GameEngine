@@ -69,11 +69,11 @@ public class ForceManager extends Component {
       velocity.add(PVector.mult(acceleration, sys.DELTA_TIME));
       parent.pos.add(PVector.mult(velocity, sys.DELTA_TIME));
 
-      if(grapple_base != null)
-         apply_pendulum(); // Apply grapple physics if needed
-
       // Add frictions and gravity
       update_velocities();
+
+      if(grapple_base != null)
+         apply_pendulum(); // Apply grapple physics if needed
 
       // Update grounded check
       set_grounded = false;
@@ -85,19 +85,35 @@ public class ForceManager extends Component {
       float curr_dist_to_base = PVector.dist(grapple_base, parent.pos);
       float speed_to_base = PVector.dot(velocity, direction_to_base);
 
+      // Todo: this isn't perfect but works better than before.
+      //       issue with this messing with the collision system.
+
       if(speed_to_base >= 0 || curr_dist_to_base <= grapple_length) {
+         if(speed_to_base >= 0){
+            PVector new_pos = PVector.sub(grapple_base, PVector.mult(direction_to_base, grapple_length));
+
+            if(PVector.dist(new_pos, parent.pos) < 0.1f){
+               return; // New position t0o similar to old, so use velocity to update
+            }
+
+            PVector vel_to_target = new_pos.sub(parent.pos);
+            velocity.add(vel_to_target);
+         }
+
          return; // Moving towards base, so do not want to apply grapple physics
       }
 
       velocity.sub(PVector.mult(direction_to_base, speed_to_base));
       PVector new_pos = PVector.sub(grapple_base, PVector.mult(direction_to_base, grapple_length));
 
-      if(new_pos.equals(parent.pos)){
+      if(PVector.dist(new_pos, parent.pos) < 0.1f){
          return; // New position t0o similar to old, so use velocity to update
       }
 
-      parent.pos.x = new_pos.x;
-      parent.pos.y = new_pos.y;
+      PVector vel_to_target = new_pos.sub(parent.pos);
+      velocity.add(vel_to_target);
+//      parent.pos.x = new_pos.x;
+//      parent.pos.y = new_pos.y;
    }
 
 
