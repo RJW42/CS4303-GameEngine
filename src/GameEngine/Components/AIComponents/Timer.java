@@ -18,8 +18,8 @@ import static GameEngine.Levels.PlayLevel.DESIRED_WALLS;
 
 public class Timer extends Component {
    // Attributes
-   public static final int FULL_SCREEN_TIME = 1;
-   public static final int ZOOM_TIME = 3;
+   public static final float FULL_SCREEN_TIME = 1f;
+   public static final float ZOOM_TIME = 3f;
    public static boolean ACTIVE = true;
 
    private final float final_zoom;

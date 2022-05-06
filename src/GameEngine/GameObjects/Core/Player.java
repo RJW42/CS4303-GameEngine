@@ -15,6 +15,7 @@ import GameEngine.Components.Weapons.MachineGun;
 import GameEngine.Components.Weapons.RPG;
 import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
+import GameEngine.Utils.Managers.InputManager;
 import processing.core.PApplet;
 import processing.core.PImage;
 import processing.core.PVector;
@@ -72,11 +73,12 @@ public class Player extends GameObject implements Collideable {
 
       this.components.add(new CharacterController(this, ACCELERATION, MAX_SPEED));
       this.components.add(new GrappleHook(this));
+      this.components.add(force_manager);
+
       if(has_healthbar)
          this.components.add(new HealthBar(this, new PVector(20f, 20f), 75f, 10f));
       this.components.add(new MovingSpriteManager(this, new PVector(COLLISION_WIDTH / 2f, COLLISION_HEIGHT / -2f), "player_left", "player_right", RENDER_WIDTH, RENDER_HEIGHT));
 
-      this.components.add(force_manager);
       this.components.add(damagable);
 
       if(has_healthbar) {

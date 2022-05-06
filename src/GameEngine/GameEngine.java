@@ -48,8 +48,8 @@ public class GameEngine extends PApplet{
    public static int TARGET_FPS              = 60;
    public static int UI_SCALE                = 5;
 
-   public boolean DISPLAY_BOUNDS          = false;
-   public boolean DISPLAY_COLS            = false;
+   public boolean DISPLAY_BOUNDS          = true;
+   public boolean DISPLAY_COLS            = true;
    public boolean ENABLE_PAUSE            = false;
    public boolean DISPLAY_FPS             = true;
    public float TIME_FACTOR               = 1f;
@@ -144,7 +144,9 @@ public class GameEngine extends PApplet{
       warning_display = new WarningDisplay(this);
 
       // Init level manager
-      level_manager = new LevelManager(this, new MainMenu(this));
+      //level_manager = new LevelManager(this, new MainMenu(this));
+      level_manager = new LevelManager(this, new PlayLevel(this, "hard_4.json"));
+      //level_manager = new LevelManager(this, new Test(this));
    }
 
 

@@ -7,16 +7,17 @@ import GameEngine.GameObjects.Core.Monster;
 import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.GameObjects.Core.Player;
 import GameEngine.GameObjects.GameObject;
+import GameEngine.GameObjects.Test.Pointer;
+import GameEngine.GameObjects.Test.TestTerrian;
 import processing.core.PVector;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.TreeSet;
+import java.awt.*;
+import java.util.*;
 
 public class CollisionHandler {
    // Track possible collisions
    private static final TreeSet<PossibleCollision> player_terrain_collisions = new TreeSet<>();
+   private static final TreeSet<PossibleCollision> test_terrain_collisions = new TreeSet<>();
    private static final HashMap<GameObject, TreeSet<PossibleCollision>> monster_terrain_collisions = new HashMap<>();
 
 
@@ -27,24 +28,39 @@ public class CollisionHandler {
          } else if(obj1.parent instanceof Monster){
             monster_wall_collision((RectCollisionComponent) obj1, (RectCollisionComponent) obj2);
          }
-      } else if(obj1.parent instanceof Terrain){
-         if(obj2.parent instanceof Player){
+      } else if(obj1.parent instanceof Terrain) {
+         if (obj2.parent instanceof Player) {
             player_wall_collision((RectCollisionComponent) obj2, (RectCollisionComponent) obj1);
-         } else if(obj2.parent instanceof Monster) {
+         } else if (obj2.parent instanceof Monster) {
             monster_wall_collision((RectCollisionComponent) obj2, (RectCollisionComponent) obj1);
          }
       }
+//       else if(obj2.parent instanceof TestTerrian){
+//         if(obj1.parent instanceof Pointer) {
+//            test_wall_collision((RectCollisionComponent) obj1, (RectCollisionComponent) obj2);
+//         } else if(obj1.parent instanceof Player){
+//            player_wall_collision((RectCollisionComponent) obj1, (RectCollisionComponent) obj2);
+//         }
+//      } else if(obj1.parent instanceof TestTerrian) {
+//         if(obj2.parent instanceof Pointer) {
+//            test_wall_collision((RectCollisionComponent) obj2, (RectCollisionComponent) obj1);
+//         } else if(obj2.parent instanceof Player){
+//            player_wall_collision((RectCollisionComponent) obj2, (RectCollisionComponent) obj1);
+//         }
+//      }
    }
 
 
    public static void start_collisions(){
       player_terrain_collisions.clear();
       monster_terrain_collisions.clear();
+//      test_terrain_collisions.clear();
    }
 
 
    public static void end_collisions(){
       wall_collision_end(player_terrain_collisions);
+//      wall_collision_end(test_terrain_collisions);
 
       for(var entry : monster_terrain_collisions.entrySet())
          wall_collision_end(entry.getValue());
@@ -55,6 +71,13 @@ public class CollisionHandler {
       // Don't track players triggers, these are not used for physics collisions
       PossibleCollision pc = wall_collision(player_col, terrain);
       if(pc != null) player_terrain_collisions.add(pc);
+   }
+
+
+   private static void test_wall_collision(RectCollisionComponent test_col, RectCollisionComponent terrain){
+      // Don't track players triggers, these are not used for physics collisions
+      PossibleCollision pc = wall_collision(test_col, terrain);
+      if(pc != null) test_terrain_collisions.add(pc);
    }
 
 
@@ -102,10 +125,10 @@ public class CollisionHandler {
             object_obj.pos.x = collision_info.contact_normal.x != 0 ?
                     collision_info.contact_point.x - object_col.width / 2f : object_obj.pos.x;
             object_obj.pos.y = collision_info.contact_normal.y != 0 ?
-                    collision_info.contact_point.y + object_col.height - object_col.height / 2f : object_obj.pos.y;
+                    collision_info.contact_point.y + object_col.height / 2f : object_obj.pos.y;
 
-            force_manager.velocity.x += collision_info.contact_normal.x * Math.abs(force_manager.velocity.x);
-            force_manager.velocity.y += collision_info.contact_normal.y * Math.abs(force_manager.velocity.y);
+            force_manager.velocity.x = collision_info.contact_normal.x != 0 ? 0 : force_manager.velocity.x;
+            force_manager.velocity.y = collision_info.contact_normal.y != 0 ? 0 : force_manager.velocity.y;
          }
       }
    }
@@ -141,6 +164,9 @@ public class CollisionHandler {
 
       vector_div(t_near, ray_direction);
       vector_div(t_far, ray_direction);
+
+      if(Float.isNaN(t_far.y) || Float.isNaN(t_far.x)) return Optional.empty();
+      if(Float.isNaN(t_near.y) || Float.isNaN(t_near.x)) return Optional.empty();
 
       if(t_near.x > t_far.x) {
          float tmp = t_far.x;

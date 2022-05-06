@@ -47,6 +47,7 @@ public class Monster extends GameObject implements Collideable {
 
       // Init attributes
       this.pos = spawn_location;
+      this.is_dead = true;
 
       this.force_manager = new ForceManager(
               this, new PVector(0, 0), new PVector(0, 0), FRICTION
