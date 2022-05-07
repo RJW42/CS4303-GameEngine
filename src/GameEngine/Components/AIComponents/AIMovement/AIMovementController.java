@@ -38,6 +38,7 @@ public class AIMovementController extends Component {
    // Jump attributes
    private boolean reached_jump_point;
    private boolean jumped;
+   public boolean could_see;
    private float jump_vel;
    private float jump_time;
 
@@ -53,6 +54,7 @@ public class AIMovementController extends Component {
       this.in_jump = false;
       this.in_drop = false;
       this.can_update = false;
+      this.could_see = false;
 
       this.reached_drop_point = false;
       this.dropped = false;
@@ -93,7 +95,12 @@ public class AIMovementController extends Component {
       Path path = path_manager.astar_search(new PVector(get_x(), get_y()), path_manager.player_ground_tile);
 
       if(path == null || path.points.size() == 0) {
+         if(could_see) sys.audio_manager.monsters_which_can_see -= 1;
+         could_see = false;
          return; // No path could be found
+      } else {
+         if(!could_see) sys.audio_manager.monsters_which_can_see += 1;
+         could_see = true;
       }
 
       Path.Point next_current_point = path.getCurrentPoint();

@@ -14,12 +14,16 @@ public class AudioManager {
    // Attributes
    public final GameEngine sys;
    public final Minim minim;
+   public int monsters_which_can_see = 0;
+   public int monsters_which_could_see = 0;
 
    private HashMap<String, String> sound_files;
    private HashMap<String, AudioSample> sound_samples;
    private HashMap<String, AudioPlayer> sound_players;
 
    private ArrayList<AudioPlayer> background_musics;
+   private ArrayList<AudioPlayer> combat_musics;
+   private int current_combat_index;
    private int current_background_index;
 
 
@@ -31,6 +35,7 @@ public class AudioManager {
       this.sound_samples = new HashMap<>();
       this.sound_players = new HashMap<>();
       this.background_musics = new ArrayList<>();
+      this.combat_musics = new ArrayList<>();
 
       load_sounds();
    }
@@ -71,7 +76,7 @@ public class AudioManager {
          return null;
       }
 
-      if(sound_samples.containsKey(name))
+      if(sound_players.containsKey(name))
          return sound_players.get(name);
 
       AudioPlayer player = minim.loadFile(sound_files.get(name));
@@ -87,7 +92,13 @@ public class AudioManager {
             ap.pause();
          }
       }
+      for(var ap : combat_musics){
+         if(ap.isPlaying()){
+            ap.pause();
+         }
+      }
       background_musics.clear();
+      combat_musics.clear();
    }
 
 
@@ -103,7 +114,23 @@ public class AudioManager {
       }
 
       current_background_index = new Random().nextInt(background_musics.size());
+      monsters_which_can_see = 0;
       background_musics.get(current_background_index).play();
+   }
+
+
+   public void add_combat_music(String[] files){
+      if(sys.config.music_level == 0)
+         return;
+
+      for(var f : files){
+         AudioPlayer ap = get_player(f);
+         ap.setGain(- (10 - sys.config.music_level) * 5);
+         ap.pause();
+         combat_musics.add(ap);
+      }
+
+      current_combat_index = new Random().nextInt(combat_musics.size());
    }
 
 
@@ -111,13 +138,43 @@ public class AudioManager {
       if(sys.config.music_level == 0)
          return;
 
-      if(background_musics.get(current_background_index).isPlaying()){
+      if(combat_musics.size() == 0){
+         monsters_which_can_see = 0;
+         monsters_which_could_see = 0;
+      }
+
+      if(monsters_which_could_see == 0 && monsters_which_can_see > 0){
+         // Start playing combat music
+         background_musics.get(current_background_index).pause();
+         combat_musics.get(current_combat_index).play();
+         monsters_which_could_see = monsters_which_can_see;
+         return;
+      } else if(monsters_which_can_see == 0 && monsters_which_could_see > 0){
+         // Stop playing combat music
+         combat_musics.get(current_combat_index).pause();
+         background_musics.get(current_background_index).play();
+         monsters_which_could_see = monsters_which_can_see;
          return;
       }
 
-      // Update to the next audo file
-      current_background_index = (current_background_index + 1) % background_musics.size();
-      background_musics.get(current_background_index).play();
+      if(monsters_which_can_see == 0) {
+         if (background_musics.get(current_background_index).isPlaying()) {
+            return;
+         }
+
+         // Update to the next audo file
+         current_background_index = (current_background_index + 1) % background_musics.size();
+         background_musics.get(current_background_index).play();
+      } else {
+         if (combat_musics.get(current_combat_index).isPlaying()) {
+            return;
+         }
+
+         // Update to the next audo file
+         current_combat_index = (current_combat_index + 1) % combat_musics.size();
+         combat_musics.get(current_combat_index).play();
+      }
+      monsters_which_could_see = monsters_which_can_see;
    }
 
 

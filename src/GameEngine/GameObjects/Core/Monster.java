@@ -17,6 +17,7 @@ import processing.core.PVector;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 
 public class Monster extends GameObject implements Collideable {
@@ -29,7 +30,7 @@ public class Monster extends GameObject implements Collideable {
    public static final float COLLISION_WIDTH = 0.5f;
    public static final float FRICTION        = 0.015f;
    public static final PVector COLOUR        = new PVector(255, 32, 32);
-   public static final int HEALTH            = 50;
+   public static final int HEALTH            = 40;
 
    public static final float PUNCH_FORCE     = 500f;
    public static final float PUNCH_DAMAGE    = 25f;
@@ -57,7 +58,7 @@ public class Monster extends GameObject implements Collideable {
       this.components.add(new MovingSpriteManager(this, new PVector(COLLISION_WIDTH / 2f, COLLISION_HEIGHT / -2f), "monster_left", "monster_right", RENDER_WIDTH, RENDER_HEIGHT));
       this.damagable = new Damagable(this, RENDER_WIDTH, RENDER_HEIGHT, HEALTH);
       this.attacker = new Attacker(this, new PVector(COLLISION_WIDTH / 2f, COLLISION_HEIGHT / -2f), PUNCH_RATE, PUNCH_FORCE, PUNCH_DAMAGE);
-      this.controller = new AIMovementController(this, new PVector(COLLISION_WIDTH / 2f, -(1 - COLLISION_HEIGHT)), 10);
+      this.controller = new AIMovementController(this, new PVector(COLLISION_WIDTH / 2f, -(1 - COLLISION_HEIGHT)), 8f + 3f * (new Random().nextFloat()));
 
       // Add regular components
       //this.components.add(new RectRenderer(this, COLOUR, COLLISION_WIDTH, COLLISION_HEIGHT));
@@ -88,6 +89,8 @@ public class Monster extends GameObject implements Collideable {
    public boolean isDestroyed() {
       if(damagable.health <= 0)
          is_dead = true;
+      if(is_dead && controller.could_see)
+         sys.audio_manager.monsters_which_can_see -= 1;
       return is_dead;
    }
 

@@ -15,6 +15,8 @@ import java.util.Random;
 
 public class PlayLevel extends Level{
    // Attributes
+   public static final String[] BACKGROUND_MUSIC = new String[]{"play_1"};
+   public static final String[] COMBAT_MUSIC = new String[]{"play_intense_1", "play_intense_2"};
    public static final int DESIRED_WALLS = 20;
 
    private final String file_name;
@@ -46,6 +48,8 @@ public class PlayLevel extends Level{
       // Create objects
       init_terrain();
       init_objects();
+      sys.audio_manager.start_background_music(BACKGROUND_MUSIC);
+      sys.audio_manager.add_combat_music(COMBAT_MUSIC);
       generator.spawn_monsters();
       generator.spawn_goal();
    }
@@ -68,6 +72,7 @@ public class PlayLevel extends Level{
 
 
    public boolean updateAndCanAdvance() {
+      sys.audio_manager.update_background_music();
       if(restart.pressed){
          restart();
       } else if(menu.pressed) {
@@ -78,6 +83,7 @@ public class PlayLevel extends Level{
    }
 
    public Level advance() {
+      sys.audio_manager.cancel_background_music();
       return advance;
    }
 

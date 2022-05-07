@@ -29,6 +29,7 @@ public abstract class TerrainGenerator extends Component {
    public TerrainGenerator(GameObject parent, int seed){
       super(parent);
       this.seed = seed;
+      this.tips = Optional.empty();
 
       this.player_spawn_loc = new PVector(0,0);
       this.goal_spawn_loc = new PVector(0, 0);

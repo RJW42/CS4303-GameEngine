@@ -19,6 +19,7 @@ import static GameEngine.Levels.PlayLevel.DESIRED_WALLS;
 
 public class MainMenu extends Level {
    // Attributes
+   public static final String[] BACKGROUND_MUSIC = new String[] {"menu_1", "menu_2", "menu_3"};
    public static final String BACKGROUND_LEVEL = "menu_map.json";
    public Level advance = null;
 
@@ -34,6 +35,8 @@ public class MainMenu extends Level {
 
    public void start() {
       // Init world
+      sys.audio_manager.start_background_music(BACKGROUND_MUSIC);
+
       init_terrain();
 
       sys.spawn(new MenuSelector(sys), 3);
@@ -51,10 +54,12 @@ public class MainMenu extends Level {
    }
 
    public boolean updateAndCanAdvance() {
+      sys.audio_manager.update_background_music();
       return advance != null;
    }
 
    public Level advance() {
+      sys.audio_manager.cancel_background_music();
       return advance;
    }
 
