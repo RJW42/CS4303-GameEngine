@@ -3,16 +3,12 @@ package GameEngine.GameObjects;
 
 import GameEngine.Components.TerrianComponents.LoadedTerrainGenerator;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
-import GameEngine.Components.TerrianComponents.TerrainLoader;
 import GameEngine.Components.UIComponents.UIButton;
 import GameEngine.Components.UIComponents.UITextRenderer;
 import GameEngine.GameEngine;
-import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.Levels.GameOver;
 import processing.core.PConstants;
 import processing.core.PVector;
-
-import java.util.ArrayList;
 
 import static GameEngine.GameObjects.MainMenu.MenuSelector.*;
 
@@ -30,6 +26,8 @@ public class LeaderBoard extends GameObject {
    private final UITextRenderer title;
    private final UIButton back_button;
    private final LoadedTerrainGenerator generator;
+   private final UIButton next_level;
+   private final boolean has_next;
 
 
    // Constructor
@@ -39,6 +37,7 @@ public class LeaderBoard extends GameObject {
       String level_name = file_name.split("\\.")[0];
 
       this.generator = generator;
+      this.has_next = ((GameOver)sys.level_manager.getCurrentLevel()).next_level != null;
 
       // Add regular components 
       title = new UITextRenderer(this,
@@ -55,6 +54,22 @@ public class LeaderBoard extends GameObject {
       back_button.rect_alpha_colour = BUTTON_ALPHA;
       back_button.hover_rect_alpha_colour = BUTTON_HOVER_ALPHA;
 
+      if(has_next){
+         next_level = new UIButton(this, this::next_pressed, "Next Level",
+                 new PVector(GameEngine.SCREEN_WIDTH / 2f, GameEngine.SCREEN_HEIGHT / 2f),
+                 TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, TEXT_HOVER_COLOUR, BUTTON_HOVER_COLOUR, BORDER_HOVER_COLOUR,
+                 1f, BORDER_WIDTH, WIDTH, HEIGHT, true
+         );
+
+         next_level.rect_alpha_colour = BUTTON_ALPHA;
+         next_level.hover_rect_alpha_colour = BUTTON_HOVER_ALPHA;
+
+         this.components.add(next_level);
+      } else {
+         next_level = null;
+      }
+
+
       this.components.add(title);
       this.components.add(back_button);
 
@@ -65,6 +80,7 @@ public class LeaderBoard extends GameObject {
    private void menu_pressed(){
       ((GameOver)(sys.level_manager.getCurrentLevel())).menu_pressed();
    }
+   private void next_pressed() { ((GameOver)(sys.level_manager.getCurrentLevel())).next_level(); }
 
 
    private void load_leaderboard(){
@@ -82,6 +98,13 @@ public class LeaderBoard extends GameObject {
 
       title.text_pos.x -= title.max_width / 2f + PADDING;
       back_button.pos.x += back_button.width / 2f + PADDING;
+
+      if(next_level != null){
+         title.text_pos.x -= next_level.width / 2f;
+         back_button.pos.x -= next_level.width / 2f;
+         next_level.pos.x = back_button.pos.x + next_level.width + PADDING;
+         next_level.pos.y = back_button.pos.y;
+      }
 
       float y = title.text_pos.y - ITEM_PADDING;
       var times = generator.get_times();

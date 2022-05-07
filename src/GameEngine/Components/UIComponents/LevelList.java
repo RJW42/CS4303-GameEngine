@@ -79,7 +79,8 @@ public class LevelList extends Component {
          return;
 
       // Start playing the given level
-      ((MainMenu)sys.level_manager.getCurrentLevel()).advance = (new PlayLevel(sys, files[(r + root_position) * 2 + c].getName()));
+      String level = files[(r + root_position) * 2 + c].getName();
+      ((MainMenu)sys.level_manager.getCurrentLevel()).advance = (new PlayLevel(sys, level));
    }
 
 

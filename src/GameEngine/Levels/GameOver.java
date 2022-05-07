@@ -8,6 +8,12 @@ import GameEngine.GameObjects.MainMenu.LevelSelector;
 import GameEngine.GameObjects.TimeSaver;
 import GameEngine.Utils.Managers.InputManager;
 
+import java.io.File;
+import java.util.Arrays;
+import java.util.Comparator;
+
+import static GameEngine.Components.TerrianComponents.TerrainLoader.SAVE_LOC;
+
 
 public class GameOver extends Level{
    // Attributes
@@ -15,6 +21,7 @@ public class GameOver extends Level{
    private Level advance;
 
    private final String file_name;
+   public final String next_level;
    private final LoadedTerrainGenerator generator;
    private final float time;
 
@@ -22,7 +29,28 @@ public class GameOver extends Level{
    public GameOver(GameEngine sys, String file_name, float time) {
       super(sys);
 
+      File folder = new File(SAVE_LOC);
+      File[] files = folder.listFiles();
+      Arrays.sort(files, new Comparator<File>() {
+         public int compare(File f1, File f2){
+            return f1.getName().compareTo(f2.getName());
+         }
+      });
+
+      String next_level = null;
+      boolean is_next = false;
+
+      for(var f : files){
+         if(f.getName().equals(file_name)){
+            is_next = true;
+         }else if(is_next){
+            next_level = f.getName();
+            break;
+         }
+      }
+
       // Init attributes
+      this.next_level = next_level;
       this.file_name = file_name;
       this.time = time;
 
@@ -50,6 +78,9 @@ public class GameOver extends Level{
       advance = new MainMenu(sys);
    }
 
+   public void next_level(){
+      advance = new PlayLevel(sys, next_level);
+   }
 
    public boolean updateAndCanAdvance() {
       if(menu.pressed) {
