@@ -29,7 +29,7 @@ public class MainMenu extends Level {
 
    // Methods
    public void drawBackground(){
-      sys.background(0);
+      sys.background(127, 159, 159);
    }
 
    public void start() {

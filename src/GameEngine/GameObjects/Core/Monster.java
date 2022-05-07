@@ -8,6 +8,7 @@ import GameEngine.Components.CollisionComponents.Collideable;
 import GameEngine.Components.CollisionComponents.RectCollisionComponent;
 import GameEngine.Components.Damagable;
 import GameEngine.Components.ForceManager;
+import GameEngine.Components.MovingSpriteManager;
 import GameEngine.Components.Renderers.RectRenderer;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.GameEngine;
@@ -22,15 +23,17 @@ public class Monster extends GameObject implements Collideable {
    // Attributes
    public static boolean ACTIVE = true;
 
+   public static final float RENDER_WIDTH    = 0.6f;
+   public static final float RENDER_HEIGHT   = 0.8f;
    public static final float COLLISION_HEIGHT= 0.75f;
    public static final float COLLISION_WIDTH = 0.5f;
-   public static final float FRICTION        = 0.06f;
+   public static final float FRICTION        = 0.015f;
    public static final PVector COLOUR        = new PVector(255, 32, 32);
    public static final int HEALTH            = 50;
 
-   public static final float PUNCH_FORCE     = 400f;
-   public static final float PUNCH_DAMAGE    = 10f;
-   public static final int PUNCH_RATE        = 1;
+   public static final float PUNCH_FORCE     = 500f;
+   public static final float PUNCH_DAMAGE    = 25f;
+   public static final int PUNCH_RATE        = 2;
 
    public boolean is_dead = false;
 
@@ -51,12 +54,13 @@ public class Monster extends GameObject implements Collideable {
       this.force_manager = new ForceManager(
               this, new PVector(0, 0), new PVector(0, 0), FRICTION
       );
-      this.damagable = new Damagable(this, HEALTH);
+      this.components.add(new MovingSpriteManager(this, new PVector(COLLISION_WIDTH / 2f, COLLISION_HEIGHT / -2f), "monster_left", "monster_right", RENDER_WIDTH, RENDER_HEIGHT));
+      this.damagable = new Damagable(this, RENDER_WIDTH, RENDER_HEIGHT, HEALTH);
       this.attacker = new Attacker(this, new PVector(COLLISION_WIDTH / 2f, COLLISION_HEIGHT / -2f), PUNCH_RATE, PUNCH_FORCE, PUNCH_DAMAGE);
       this.controller = new AIMovementController(this, new PVector(COLLISION_WIDTH / 2f, -(1 - COLLISION_HEIGHT)), 10);
 
       // Add regular components
-      this.components.add(new RectRenderer(this, COLOUR, COLLISION_WIDTH, COLLISION_HEIGHT));
+      //this.components.add(new RectRenderer(this, COLOUR, COLLISION_WIDTH, COLLISION_HEIGHT));
 
       this.components.add(controller);
       this.components.add(force_manager);

@@ -30,7 +30,7 @@ public class GameLost extends GameObject {
       // Add regular components
       UITextRenderer renderer = new UITextRenderer(this,
               new PVector(GameEngine.SCREEN_WIDTH /2f, GameEngine.SCREEN_HEIGHT / 2f),
-              MESSAGE_TEXT_COLOUR, "Game Over!", PConstants.CENTER, 100, 20
+              MESSAGE_TEXT_COLOUR, "You Died!", PConstants.CENTER, 100, 20
       );
 
       UIButton restart_button = new UIButton(this,
@@ -38,10 +38,16 @@ public class GameLost extends GameObject {
          TEXT_HOVER_COLOUR, BUTTON_HOVER_COLOUR, BORDER_HOVER_COLOUR, 5f, 1f, 50f, 20f, true
       );
 
+      restart_button.rect_alpha_colour = BUTTON_ALPHA;
+      restart_button.hover_rect_alpha_colour = BUTTON_HOVER_ALPHA;
+
       UIButton menu_button = new UIButton(this,
               this::menu, "Menu", new PVector(), TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR,
               TEXT_HOVER_COLOUR, BUTTON_HOVER_COLOUR, BORDER_HOVER_COLOUR, 5f, 1f, 50f, 20f, true
       );
+
+      menu_button.rect_alpha_colour = BUTTON_ALPHA;
+      menu_button.hover_rect_alpha_colour = BUTTON_HOVER_ALPHA;
 
       restart_button.pos.y = renderer.text_pos.y - renderer.max_height;
       menu_button.pos.y = renderer.text_pos.y - renderer.max_height;

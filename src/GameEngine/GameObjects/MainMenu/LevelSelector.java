@@ -23,14 +23,14 @@ public class LevelSelector extends GameObject {
       UIButton back_button = new UIButton(this, this::back_clicked, "Back",
               new PVector(GameEngine.SCREEN_WIDTH / 2f, GameEngine.SCREEN_HEIGHT / 2f + 400),
               TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, TEXT_HOVER_COLOUR, BUTTON_HOVER_COLOUR, BORDER_HOVER_COLOUR,
-              PADDING, BORDER_WIDTH, WIDTH, HEIGHT, true
+              PADDING, BORDER_WIDTH, WIDTH * 2, HEIGHT, true
       );
 
       back_button.rect_alpha_colour = BUTTON_ALPHA;
       back_button.hover_rect_alpha_colour = BUTTON_HOVER_ALPHA;
 
       LevelList levels_list = new LevelList(this,
-              new PVector(GameEngine.SCREEN_WIDTH / 2f, GameEngine.SCREEN_HEIGHT / 2f + ((LevelList.MAX_ITEMS_ON_LIST + 1) * HEIGHT * GameEngine.UI_SCALE) / 2f -
+              new PVector(GameEngine.SCREEN_WIDTH / 2f, GameEngine.SCREEN_HEIGHT / 2f + ((LevelList.MAX_NUM_ROWS + 1) * HEIGHT * GameEngine.UI_SCALE) / 2f -
                       (SPACING * GameEngine.UI_SCALE + HEIGHT * GameEngine.UI_SCALE) / 2f),
               TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, TEXT_HOVER_COLOUR, BUTTON_HOVER_COLOUR, BORDER_HOVER_COLOUR,
               PADDING, BORDER_WIDTH, WIDTH, HEIGHT, BUTTON_ALPHA, BUTTON_HOVER_ALPHA

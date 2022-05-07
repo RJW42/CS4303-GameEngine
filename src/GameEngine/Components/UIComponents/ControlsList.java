@@ -81,7 +81,17 @@ public class ControlsList extends Component {
       if(root_position == 0)
          return; // Can't do that as already at top
 
+      if(root_position == controls.length - control_editors.length){
+         down_button.text_colour = TEXT_COLOUR;
+         down_button.hover_text_colour = TEXT_HOVER_COLOUR;
+      }
+
       root_position -= 1;
+
+      if(root_position == 0){
+         up_button.text_colour = new PVector(127, 127, 127);
+         up_button.hover_text_colour = new PVector(127, 127, 127);
+      }
 
       for(int i = 0; i < control_editors.length; i++){
          control_editors[i].set_control(controls[i + root_position]);
@@ -96,7 +106,17 @@ public class ControlsList extends Component {
       if(root_position == controls.length - control_editors.length)
          return; // Can't do that as already at bottom
 
+      if(root_position == 0){
+         up_button.text_colour = TEXT_COLOUR;
+         up_button.hover_text_colour = TEXT_HOVER_COLOUR;
+      }
+
       root_position += 1;
+
+      if(root_position == controls.length - control_editors.length){
+         down_button.text_colour = new PVector(127, 127, 127);
+         down_button.hover_text_colour = new PVector(127, 127, 127);
+      }
 
       for(int i = 0; i < control_editors.length; i++){
          control_editors[i].set_control(controls[i + root_position]);

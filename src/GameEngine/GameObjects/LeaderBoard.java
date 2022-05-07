@@ -52,6 +52,9 @@ public class LeaderBoard extends GameObject {
               1f, BORDER_WIDTH, WIDTH, HEIGHT, true
       );
 
+      back_button.rect_alpha_colour = BUTTON_ALPHA;
+      back_button.hover_rect_alpha_colour = BUTTON_HOVER_ALPHA;
+
       this.components.add(title);
       this.components.add(back_button);
 

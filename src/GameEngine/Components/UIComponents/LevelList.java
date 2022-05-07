@@ -2,6 +2,7 @@ package GameEngine.Components.UIComponents;
 
 
 import GameEngine.Components.Component;
+import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.Levels.MainMenu;
 import GameEngine.Levels.PlayLevel;
@@ -17,8 +18,8 @@ import static processing.core.PApplet.trim;
 
 public class LevelList extends Component {
    // Attributes
-   public static final int MAX_ITEMS_ON_LIST = 4;
-   public static final float SPACING         = 1;
+   public static final int MAX_NUM_ROWS = 3;
+   public static final float SPACING    = 1;
 
    public PVector text_colour;
    public PVector rect_colour;
@@ -38,7 +39,7 @@ public class LevelList extends Component {
    private final float border_width;
 
    private File[] files;
-   private UIButton[] buttons;
+   private UIButton[][] buttons;
    private UIButton up_button;
    private UIButton down_button;
    private int root_position;
@@ -72,9 +73,13 @@ public class LevelList extends Component {
    public void draw() {}
 
 
-   private void clicked(int id){
+   private void clicked(int r, int c){
+      // Check if valid
+      if((r + root_position) * 2 + c >= files.length)
+         return;
+
       // Start playing the given level
-      ((MainMenu)sys.level_manager.getCurrentLevel()).advance = (new PlayLevel(sys, files[id + root_position].getName()));
+      ((MainMenu)sys.level_manager.getCurrentLevel()).advance = (new PlayLevel(sys, files[(r + root_position) * 2 + c].getName()));
    }
 
 
@@ -83,25 +88,49 @@ public class LevelList extends Component {
       if(root_position == 0)
          return; // Can't do that as already at top
 
+      if(root_position == (Math.ceil(files.length / 2f) - buttons.length)){
+         down_button.text_colour = text_colour;
+         down_button.hover_text_colour = hover_text_colour;
+      }
+
       root_position -= 1;
 
-      for(int i = 0; i < buttons.length; i++){
-         buttons[i].text = get_level_name( i + root_position);
-         buttons[i].reset_text_size();
+      for(int r = 0; r < buttons.length; r++){
+         for(int c = 0; c < 2; c++) {
+            buttons[r][c].text = get_level_name(r + root_position, c);
+            buttons[r][c].reset_text_size();
+         }
+      }
+
+      if(root_position == 0){
+         up_button.text_colour = new PVector(127, 127, 127);
+         up_button.hover_text_colour = new PVector(127, 127, 127);
       }
    }
 
 
    private void down_pressed(){
       // Move all files down by one
-      if(root_position == files.length - buttons.length)
+      if(root_position == (Math.ceil(files.length / 2f) - buttons.length))
          return; // Can't do that as already at bottom
+
+      if (root_position == 0) {
+         up_button.text_colour = text_colour;
+         up_button.hover_text_colour = hover_text_colour;
+      }
 
       root_position += 1;
 
-      for(int i = 0; i < buttons.length; i++){
-         buttons[i].text = get_level_name( i + root_position);
-         buttons[i].reset_text_size();
+      for(int r = 0; r < buttons.length; r++){
+         for(int c = 0; c < 2; c++) {
+            buttons[r][c].text = get_level_name(r + root_position, c);
+            buttons[r][c].reset_text_size();
+         }
+      }
+
+      if(root_position == (Math.ceil(files.length / 2f) - buttons.length)){
+         down_button.text_colour = new PVector(127, 127, 127);
+         down_button.hover_text_colour = new PVector(127, 127, 127);
       }
    }
 
@@ -117,46 +146,56 @@ public class LevelList extends Component {
       });
 
       // Create buttons
-      int num_buttons = Math.min(MAX_ITEMS_ON_LIST, files.length);
+      int num_rows = Math.min(MAX_NUM_ROWS, (int)Math.ceil(files.length / 2f));
+      int num_buttons = num_rows * 2;
 
-      buttons = new UIButton[num_buttons];
+      buttons = new UIButton[num_rows][2];
 
       float button_y = pos.y;
       if(num_buttons != files.length)
          button_y = add_up_and_down_buttons(button_y);
       root_position = 0;
 
-      for(int i = 0; i < buttons.length; i++){
-         // Create button
-         int id = i;
-         UIButton button = new UIButton(
-                 parent, new UIButton.CallBack() { public void onClick() {clicked(id); }},
-                 get_level_name(i),
-                 new PVector(pos.x, button_y),
-                 text_colour, rect_colour, border_colour, hover_text_colour, hover_rect_colour,
-                 hover_border_colour, padding, border_width, item_width, item_height, true
-         );
+      for(int r = 0; r < buttons.length; r++){
+         float x = pos.x - item_width * UI_SCALE / 2f - 0.5f * UI_SCALE;
+         for(int c = 0; c < 2; c++) {
+            // Create button
+            int rf = r;
+            int cf = c;
+            UIButton button = new UIButton(
+                    parent, new UIButton.CallBack() {
+               public void onClick() {
+                  clicked(rf, cf);
+               }
+            },
+                    get_level_name(r, c),
+                    new PVector(x, button_y),
+                    text_colour, rect_colour, border_colour, hover_text_colour, hover_rect_colour,
+                    hover_border_colour, padding, border_width, item_width, item_height, true
+            );
 
-         button.rect_alpha_colour = rect_alpha_colour;
-         button.hover_rect_alpha_colour = hover_rect_alpha_colour;
+            button.rect_alpha_colour = rect_alpha_colour;
+            button.hover_rect_alpha_colour = hover_rect_alpha_colour;
 
-         button_y -= button.height + SPACING * UI_SCALE;
+            // Add to list
+            buttons[r][c] = button;
+            parent.addComponent(button);
+            x += item_width * UI_SCALE + 0.5f * UI_SCALE * 2;
+         }
 
-         // Add to list
-         buttons[i] = button;
-         parent.addComponent(button);
+         button_y -= buttons[0][0].height + SPACING * UI_SCALE;
       }
 
       // Use calculate the total width and height of the list
-      width = buttons[0].width;
-      height = ((up_button != null ? up_button.pos.y : buttons[0].pos.y)
-                  - buttons[buttons.length - 1].pos.y) +
+      width = buttons[0][0].width;
+      height = ((up_button != null ? up_button.pos.y : buttons[0][0].pos.y)
+                  - buttons[buttons.length - 1][0].pos.y) +
                ((up_button != null) ?
-                       (up_button.height / 2f + buttons[buttons.length - 1].height / 2f) :
-                       buttons[0].height);
+                       (up_button.height / 2f + buttons[buttons.length - 1][0].height / 2f) :
+                       buttons[0][0].height);
 
       // update position based off this height
-      pos.y -= height / 2f - buttons[0].height;
+      pos.y -= height / 2f - buttons[0][0].height;
    }
 
 
@@ -166,7 +205,7 @@ public class LevelList extends Component {
               parent, this::up_pressed, "↑",
               new PVector(pos.x, button_y),
               text_colour, rect_colour, border_colour, hover_text_colour, hover_rect_colour,
-              hover_border_colour, padding, border_width, item_width / 2 - 0.5f, item_height, true
+              hover_border_colour, padding, border_width, item_width, item_height, true
       );
 
       up_button.rect_alpha_colour = rect_alpha_colour;
@@ -176,7 +215,7 @@ public class LevelList extends Component {
               parent, this::down_pressed, "↓",
               new PVector(pos.x, button_y),
               text_colour, rect_colour, border_colour, hover_text_colour, hover_rect_colour,
-              hover_border_colour, padding, border_width, item_width / 2 - 0.5f, item_height, true
+              hover_border_colour, padding, border_width, item_width, item_height, true
       );
 
       down_button.rect_alpha_colour = rect_alpha_colour;
@@ -192,7 +231,9 @@ public class LevelList extends Component {
    }
 
 
-   private String get_level_name(int i){
-      return files[i].getName().split("\\.")[0];
+   private String get_level_name(int r, int c){
+      if(r * 2 + c >= files.length)
+         return "";
+      return files[r * 2 + c].getName().split("\\.")[0];
    }
 }
