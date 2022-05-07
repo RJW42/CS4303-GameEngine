@@ -27,6 +27,8 @@ public class LevelList extends Component {
    public PVector hover_rect_colour;
    public PVector hover_border_colour;
    public PVector pos;
+   public float rect_alpha_colour;
+   public float hover_rect_alpha_colour;
    public float item_width;
    public float item_height;
    public float width;
@@ -42,7 +44,7 @@ public class LevelList extends Component {
    private int root_position;
 
    // Constructor
-   public LevelList(GameObject parent, PVector pos, PVector text_colour, PVector rect_colour, PVector border_colour, PVector hover_text_colour, PVector hover_rect_colour, PVector hover_border_colour, float padding, float border_width, float item_width, float item_height) {
+   public LevelList(GameObject parent, PVector pos, PVector text_colour, PVector rect_colour, PVector border_colour, PVector hover_text_colour, PVector hover_rect_colour, PVector hover_border_colour, float padding, float border_width, float item_width, float item_height, float rect_alpha_colour, float hover_rect_alpha_colour) {
       super(parent);
 
       // Init attributes
@@ -57,6 +59,8 @@ public class LevelList extends Component {
       this.hover_border_colour = hover_border_colour;
       this.hover_rect_colour = hover_rect_colour;
       this.hover_text_colour = hover_text_colour;
+      this.rect_alpha_colour = rect_alpha_colour;
+      this.hover_rect_alpha_colour = hover_rect_alpha_colour;
 
       load_levels();
    }
@@ -133,6 +137,9 @@ public class LevelList extends Component {
                  hover_border_colour, padding, border_width, item_width, item_height, true
          );
 
+         button.rect_alpha_colour = rect_alpha_colour;
+         button.hover_rect_alpha_colour = hover_rect_alpha_colour;
+
          button_y -= button.height + SPACING * UI_SCALE;
 
          // Add to list
@@ -162,12 +169,18 @@ public class LevelList extends Component {
               hover_border_colour, padding, border_width, item_width / 2 - 0.5f, item_height, true
       );
 
+      up_button.rect_alpha_colour = rect_alpha_colour;
+      up_button.hover_rect_alpha_colour = hover_rect_alpha_colour;
+
       down_button = new UIButton(
               parent, this::down_pressed, "↓",
               new PVector(pos.x, button_y),
               text_colour, rect_colour, border_colour, hover_text_colour, hover_rect_colour,
               hover_border_colour, padding, border_width, item_width / 2 - 0.5f, item_height, true
       );
+
+      down_button.rect_alpha_colour = rect_alpha_colour;
+      down_button.hover_rect_alpha_colour = hover_rect_alpha_colour;
 
       up_button.pos.x -= up_button.width / 2 + 0.5f * UI_SCALE;
       down_button.pos.x += down_button.width / 2 + 0.5f * UI_SCALE;

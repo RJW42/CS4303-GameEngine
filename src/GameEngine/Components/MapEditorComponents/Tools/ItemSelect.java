@@ -79,7 +79,7 @@ public class ItemSelect extends Tool {
    private UIButton create_button(Item item){
       UIButton button = new UIButton(
               parent,null, item.item_name, new PVector(),
-              TEXT_C, BACKGROUND_C, BORDER_C, TEXT_C, BACKGROUND_H_C, BORDER_H_C,
+              TEXT_C, BACKGROUND_C, BORDER_C, TEXT_H_C, BACKGROUND_H_C, BORDER_H_C,
               ITEM_PADDING, ITEM_BORDER_WIDTH, BUTTON_WIDTH, BUTTON_HEIGHT, true
       );
 

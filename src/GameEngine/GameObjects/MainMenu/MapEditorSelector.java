@@ -49,28 +49,34 @@ public class MapEditorSelector extends GameObject {
               PADDING, BORDER_WIDTH, WIDTH - INPUT_SPACING, HEIGHT, true
       );
 
+      back_button.rect_alpha_colour = BUTTON_ALPHA;
+      back_button.hover_rect_alpha_colour = BUTTON_HOVER_ALPHA;
+
       create_button = new UIButton(this, this::create_clicked, "Create",
               new PVector(GameEngine.SCREEN_WIDTH / 2f, GameEngine.SCREEN_HEIGHT / 2f),
               TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, TEXT_HOVER_COLOUR, BUTTON_HOVER_COLOUR, BORDER_HOVER_COLOUR,
               PADDING, BORDER_WIDTH, WIDTH - INPUT_SPACING, HEIGHT, true
       );
 
+      create_button.rect_alpha_colour = BUTTON_ALPHA;
+      create_button.hover_rect_alpha_colour = BUTTON_HOVER_ALPHA;
+
       name_input = new UIInput(this, this::name_provided, "Name: ", null,
               new PVector(GameEngine.SCREEN_WIDTH / 2f, GameEngine.SCREEN_HEIGHT / 2f),
               TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, PADDING, BORDER_WIDTH,
-              WIDTH * 2f, HEIGHT, MAX_NAME_LENGTH
+              WIDTH * 2f, HEIGHT, MAX_NAME_LENGTH, BUTTON_ALPHA
       );
 
       width_input =  new UIInput(this, this::width_provided, "Width: ", null,
               new PVector(GameEngine.SCREEN_WIDTH / 2f, GameEngine.SCREEN_HEIGHT / 2f),
               TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, PADDING, BORDER_WIDTH,
-              WIDTH - INPUT_SPACING, HEIGHT, MAX_SIZE_LENGTH
+              WIDTH - INPUT_SPACING, HEIGHT, MAX_SIZE_LENGTH, BUTTON_ALPHA
       );
 
       height_input =  new UIInput(this, this::height_provided, "Height: ", null,
               new PVector(GameEngine.SCREEN_WIDTH / 2f, GameEngine.SCREEN_HEIGHT / 2f),
               TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, PADDING, BORDER_WIDTH,
-              WIDTH - INPUT_SPACING, HEIGHT, MAX_SIZE_LENGTH
+              WIDTH - INPUT_SPACING, HEIGHT, MAX_SIZE_LENGTH, BUTTON_ALPHA
       );
 
       // Set button positions

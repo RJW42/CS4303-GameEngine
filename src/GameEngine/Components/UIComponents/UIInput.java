@@ -39,8 +39,10 @@ public class UIInput extends Component {
    private boolean show_underscore = false;
    private boolean not_read_input = true;
 
+   public float rect_alpha_colour;
+
    // Constructor
-   public UIInput(GameObject parent, CallBack callback, String prompt, String placeholder, PVector pos, PVector text_colour, PVector rect_colour, PVector border_colour, float padding, float border_width, float width, float height, int max_input_length) {
+   public UIInput(GameObject parent, CallBack callback, String prompt, String placeholder, PVector pos, PVector text_colour, PVector rect_colour, PVector border_colour, float padding, float border_width, float width, float height, int max_input_length, float rect_alpha_colour) {
       super(parent);
 
       // Init Attributes
@@ -57,6 +59,7 @@ public class UIInput extends Component {
       this.callback = callback;
       this.input = "";
       this.max_input_length = max_input_length;
+      this.rect_alpha_colour = rect_alpha_colour;
 
       this.mouse_click = sys.input_manager.mouse_click;
       this.was_clicked = mouse_click.pressed;
@@ -122,7 +125,7 @@ public class UIInput extends Component {
       sys.pushUI();
 
       // Draw background
-      sys.fill(rect_colour.x, rect_colour.y, rect_colour.z);
+      sys.fill(rect_colour.x, rect_colour.y, rect_colour.z, rect_alpha_colour);
       sys.rectMode(PConstants.CENTER);
       sys.stroke(border_colour.x, border_colour.y, border_colour.z);
       sys.strokeWeight(border_width);

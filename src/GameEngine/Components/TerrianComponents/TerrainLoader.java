@@ -235,7 +235,7 @@ public class TerrainLoader {
    // ******** Tips ******** //
    private static JSONArray tips_to_json(TerrainGenerator generator){
       // Check if generator is has tips
-      if(generator.tips.isPresent())
+      if(generator.tips.isEmpty())
          return new JSONArray();
 
       // Contains tips

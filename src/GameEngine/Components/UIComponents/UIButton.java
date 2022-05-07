@@ -13,9 +13,11 @@ public class UIButton extends Component {
    // Attributes
    public PVector text_colour;
    public PVector rect_colour;
+   public float rect_alpha_colour;
    public PVector border_colour;
    public PVector hover_text_colour;
    public PVector hover_rect_colour;
+   public float hover_rect_alpha_colour;
    public PVector hover_border_colour;
    public boolean rect_fill;
    public PVector pos;
@@ -46,10 +48,16 @@ public class UIButton extends Component {
       this(parent, callback, "12345", draw, pos, text_colour, rect_colour, border_colour, hover_text_colour, hover_rect_colour, hover_border_colour, padding, border_width, width, height, rect_fill);
    }
 
-   public UIButton(GameObject parent, CallBack callback, String text, Icon draw, PVector pos, PVector text_colour, PVector rect_colour, PVector border_colour, PVector hover_text_colour, PVector hover_rect_colour, PVector hover_border_colour, float padding, float border_width, float width, float height, boolean rect_fill) {
+   public UIButton(GameObject parent, CallBack callback, String text, Icon draw, PVector pos, PVector text_colour, PVector rect_colour, PVector border_colour, PVector hover_text_colour, PVector hover_rect_colour, PVector hover_border_colour, float padding, float border_width, float width, float height, boolean rect_fill){
+      this(parent, callback, text, draw, pos, text_colour, rect_colour, border_colour, hover_text_colour, hover_rect_colour, hover_border_colour, padding, border_width, width, height, rect_fill, 255f, 255f);
+   }
+
+   public UIButton(GameObject parent, CallBack callback, String text, Icon draw, PVector pos, PVector text_colour, PVector rect_colour, PVector border_colour, PVector hover_text_colour, PVector hover_rect_colour, PVector hover_border_colour, float padding, float border_width, float width, float height, boolean rect_fill, float rect_alpha_colour, float hover_rect_alpha_colour) {
       super(parent);
 
       // Init attributes
+      this.rect_alpha_colour = rect_alpha_colour;
+      this.hover_rect_alpha_colour = hover_rect_alpha_colour;
       this.pos = pos;
       this.width = width;
       this.height = height;
@@ -105,8 +113,8 @@ public class UIButton extends Component {
 
       // Draw background
       if(rect_fill)
-         if(mouse_over) sys.fill(hover_rect_colour.x, hover_rect_colour.y, hover_rect_colour.z);
-         else sys.fill(rect_colour.x, rect_colour.y, rect_colour.z);
+         if(mouse_over) sys.fill(hover_rect_colour.x, hover_rect_colour.y, hover_rect_colour.z, hover_rect_alpha_colour);
+         else sys.fill(rect_colour.x, rect_colour.y, rect_colour.z, rect_alpha_colour);
       else sys.noFill();
 
       sys.rectMode(PConstants.CENTER);

@@ -33,7 +33,7 @@ public class GameOver extends Level{
 
    // Methods
    public void drawBackground(){
-      sys.background(127);
+      sys.background(127, 159, 159);
    }
 
 

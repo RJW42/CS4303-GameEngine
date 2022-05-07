@@ -170,15 +170,24 @@ public class SettingsMenu extends GameObject {
               PADDING, BORDER_WIDTH, TOTAL_WIDTH / 3, HEIGHT, true
       );
 
+      back_button.rect_alpha_colour = BUTTON_ALPHA;
+      back_button.hover_rect_alpha_colour = BUTTON_HOVER_ALPHA;
+
       apply_button = new UIButton(this, this::apply_clicked, "Apply", new PVector(button_x, button_y),
               TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, TEXT_HOVER_COLOUR, BUTTON_HOVER_COLOUR, BORDER_HOVER_COLOUR,
               PADDING, BORDER_WIDTH, TOTAL_WIDTH / 3, HEIGHT, true
       );
 
+      apply_button.rect_alpha_colour = BUTTON_ALPHA;
+      apply_button.hover_rect_alpha_colour = BUTTON_HOVER_ALPHA;
+
       reset_button = new UIButton(this, this::reset_clicked, "Reset", new PVector(button_x, button_y),
               TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, TEXT_HOVER_COLOUR, BUTTON_HOVER_COLOUR, BORDER_HOVER_COLOUR,
               PADDING, BORDER_WIDTH, TOTAL_WIDTH / 3, HEIGHT, true
       );
+
+      reset_button.rect_alpha_colour = BUTTON_ALPHA;
+      reset_button.hover_rect_alpha_colour = BUTTON_HOVER_ALPHA;
 
       back_button.pos.x -= back_button.width + SPACING;
       reset_button.pos.x += reset_button.width + SPACING;
@@ -192,6 +201,7 @@ public class SettingsMenu extends GameObject {
               BUTTON_COLOUR, BORDER_COLOUR, BORDER_WIDTH, TOTAL_WIDTH, HEIGHT, true
       );
 
+      elements_background.alpha = BUTTON_ALPHA;
       elements_background.width += SPACING * 2;
       elements_background.height = back_button.height * 5 + SPACING * 6;
       elements_background.pos.y += back_button.height / 2f + SPACING / 2f;
@@ -278,6 +288,9 @@ public class SettingsMenu extends GameObject {
               ELEMENT_PAD, BORDER_WIDTH, TOTAL_WIDTH * (1 - NAME_RATIO) - INTERNAL_PAD, HEIGHT - INTERNAL_PAD, true
       );
 
+      fullscreen_toggle_button.rect_alpha_colour = 0;
+      fullscreen_toggle_button.hover_rect_alpha_colour = BUTTON_HOVER_ALPHA;
+
       fullscreen_toggle_button.pos.x = renderer.text_pos.x + elements_background.width * (1 - NAME_RATIO) + fullscreen_toggle_button.width / 2f + (INTERNAL_PAD * GameEngine.UI_SCALE) / 2f;
       fullscreen_toggle_button.pos.y = renderer.text_pos.y + fullscreen_toggle_button.height / 2f;
    }
@@ -287,7 +300,7 @@ public class SettingsMenu extends GameObject {
       // Create input
       UIInput input = new UIInput(this, callBack, "", placeholder, new PVector(),
               TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, ELEMENT_PAD, BORDER_WIDTH, TOTAL_WIDTH * (1 - NAME_RATIO) - INTERNAL_PAD,
-              HEIGHT - INTERNAL_PAD, 4
+              HEIGHT - INTERNAL_PAD, 4, 0
       );
 
       input.pos.x = renderer.text_pos.x + elements_background.width * (1 - NAME_RATIO) + input.width / 2f + (INTERNAL_PAD * GameEngine.UI_SCALE) / 2f;

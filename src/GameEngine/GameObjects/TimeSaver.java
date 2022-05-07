@@ -37,7 +37,7 @@ public class TimeSaver extends GameObject {
               this::username_callback,"Enter Username: ", "",
               new PVector(GameEngine.SCREEN_WIDTH /2f, GameEngine.SCREEN_HEIGHT /2f),
               TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, PADDING, BORDER_WIDTH,
-              WIDTH * 2, HEIGHT * 2, MAX_USERNAME_LENGTH
+              WIDTH * 2, HEIGHT * 2, MAX_USERNAME_LENGTH, BUTTON_ALPHA
       );
 
       this.components.add(username_input);

@@ -46,9 +46,13 @@ public class UIControlEditor extends Component {
    private UIButton.CallBack on_click;
    private UIButton.CallBack on_finish;
 
+   public float rect_alpha;
+   public float hover_rect_alpha;
+   public float no_hover_rect_alpha;
+
 
    // Constructor
-   public UIControlEditor(GameObject parent, UIButton.CallBack on_click, UIButton.CallBack on_finish, PVector pos, PVector text_col, PVector rect_col, PVector border_col, PVector text_hover_col, PVector rect_hover_col, PVector border_hover_col, float width, float height) {
+   public UIControlEditor(GameObject parent, UIButton.CallBack on_click, UIButton.CallBack on_finish, PVector pos, PVector text_col, PVector rect_col, PVector border_col, PVector text_hover_col, PVector rect_hover_col, PVector border_hover_col, float width, float height, float rect_alpha, float hover_rect_alpha) {
       super(parent);
 
       // Init attributes
@@ -64,6 +68,9 @@ public class UIControlEditor extends Component {
       this.height = height * GameEngine.UI_SCALE;
       this.text_width = this.width / 2f - INTERNAL_PADDING * 2;
       this.text_height = this.height - INTERNAL_PADDING * 2;
+      this.no_hover_rect_alpha = rect_alpha;
+      this.rect_alpha = rect_alpha;
+      this.hover_rect_alpha = hover_rect_alpha;
 
       this.text_col_no_hover = text_col;
       this.rect_col_no_hover = rect_col;
@@ -84,6 +91,7 @@ public class UIControlEditor extends Component {
          if(sys.input_manager.latest_event != current_event){
             // Recivied input event
             sys.input_manager.setMapping(control_name, sys.input_manager.latest_event);
+            sys.input_manager.reload();
             reading_key = false;
             can_click = false;
             on_finish.onClick();
@@ -120,7 +128,7 @@ public class UIControlEditor extends Component {
       sys.pushUI();
       sys.stroke(border_col.x, border_col.y, border_col.z);
 
-      sys.fill(rect_col.x, rect_col.y, rect_col.z);
+      sys.fill(rect_col.x, rect_col.y, rect_col.z, rect_alpha);
       sys.rect(pos.x, pos.y, width, height);
 
       sys.textAlign(PConstants.CORNER);
@@ -149,10 +157,12 @@ public class UIControlEditor extends Component {
          rect_col = rect_col_hover;
          text_col = text_col_hover;
          border_col = border_col_hover;
+         rect_alpha = hover_rect_alpha;
       } else {
          rect_col = rect_col_no_hover;
          text_col = text_col_no_hover;
          border_col = border_col_no_hover;
+         rect_alpha = no_hover_rect_alpha;
       }
    }
 

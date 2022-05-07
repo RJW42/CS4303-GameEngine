@@ -17,6 +17,7 @@ public class UIRectRenderer extends Component {
    public float height;
    public float border_width;
    public boolean rect_fill;
+   public float alpha;
 
 
    // Constructor
@@ -31,6 +32,7 @@ public class UIRectRenderer extends Component {
       this.rect_colour = rect_colour;
       this.border_colour = border_colour;
       this.rect_fill = rect_fill;
+      this.alpha = 255;
    }
 
 
@@ -47,7 +49,7 @@ public class UIRectRenderer extends Component {
       sys.pushUI();
 
       // Draw background
-      if(rect_fill) sys.fill(rect_colour.x, rect_colour.y, rect_colour.z);
+      if(rect_fill) sys.fill(rect_colour.x, rect_colour.y, rect_colour.z, alpha);
       else sys.noFill();
 
       sys.rectMode(PConstants.CENTER);

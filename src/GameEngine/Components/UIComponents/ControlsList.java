@@ -29,13 +29,19 @@ public class ControlsList extends Component {
    private UIButton up_button;
    private UIButton down_button;
 
+   public float rect_alpha;
+   public float hover_rect_alpha;
+
+
    // Constructor
-   public ControlsList(GameObject parent, PVector pos) {
+   public ControlsList(GameObject parent, PVector pos, float rect_alpha, float hover_rect_alpha) {
       super(parent);
 
       // Init attributes
       this.pos = pos;
       this.control_clicked = false;
+      this.rect_alpha = rect_alpha;
+      this.hover_rect_alpha = hover_rect_alpha;
 
       load_controls();
    }
@@ -120,7 +126,7 @@ public class ControlsList extends Component {
                  parent, () -> control_pressed(id), () -> control_finished(id), new PVector(pos.x - WIDTH * UI_SCALE, button_y),
                  TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR,
                  TEXT_HOVER_COLOUR, BUTTON_HOVER_COLOUR, BORDER_HOVER_COLOUR,
-                 (int)WIDTH * 2, (int) HEIGHT
+                 (int)WIDTH * 2, (int) HEIGHT, rect_alpha, hover_rect_alpha
          );
 
          button_y -= control_editor.height + 10f;
@@ -153,12 +159,18 @@ public class ControlsList extends Component {
               BORDER_HOVER_COLOUR, PADDING, BORDER_WIDTH, WIDTH - 0.5f, HEIGHT, true
       );
 
+      up_button.rect_alpha_colour = rect_alpha;
+      up_button.hover_rect_alpha_colour = hover_rect_alpha;
+
       down_button = new UIButton(
               parent, this::down_pressed, "↓",
               new PVector(pos.x, button_y),
               TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, TEXT_HOVER_COLOUR, BUTTON_HOVER_COLOUR,
               BORDER_HOVER_COLOUR, PADDING, BORDER_WIDTH, WIDTH - 0.5f, HEIGHT, true
       );
+
+      down_button.rect_alpha_colour = rect_alpha;
+      down_button.hover_rect_alpha_colour = hover_rect_alpha;
 
       up_button.pos.x -= up_button.width / 2 + 0.5f * UI_SCALE;
       down_button.pos.x += down_button.width / 2 + 0.5f * UI_SCALE;

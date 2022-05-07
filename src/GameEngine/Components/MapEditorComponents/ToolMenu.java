@@ -16,10 +16,11 @@ public class ToolMenu extends Component {
    // Attributes
    public static final PVector BACKGROUND_C     = new PVector();
    public static final PVector BORDER_C         = new PVector(255, 255, 255);
-   public static final PVector BACKGROUND_H_C   = new PVector(127, 127, 127);
+   public static final PVector BACKGROUND_H_C   = new PVector(165, 231, 242);
    public static final PVector BORDER_H_C       = new PVector();
-   public static final PVector TEXT_C           = new PVector(255, 0, 0);
-   public static final PVector ACTIVE_C         = new PVector(0, 255, 0);
+   public static final PVector TEXT_C           = new PVector(224, 244, 255);
+   public static final PVector TEXT_H_C         = new PVector(0, 0, 0);
+   public static final PVector ACTIVE_C         = new PVector(66, 245, 245);
    public static final float ITEM_WIDTH         = 25;
    public static final float ITEM_HEIGHT        = 25;
    public static final float ITEM_BORDER_WIDTH  = 2;
@@ -122,13 +123,13 @@ public class ToolMenu extends Component {
       if(tool.icon != null)
          return new UIButton(
                  parent, () -> toggle_tool(id), tool.icon, new PVector(),
-                 TEXT_C, BACKGROUND_C, BORDER_C, TEXT_C, BACKGROUND_H_C, BORDER_H_C,
+                 TEXT_C, BACKGROUND_C, BORDER_C, TEXT_H_C, BACKGROUND_H_C, BORDER_H_C,
                  ITEM_PADDING, ITEM_BORDER_WIDTH, ITEM_WIDTH, ITEM_HEIGHT, true
          );
       else
          return new UIButton(
                  parent, () -> toggle_tool(id), tool.icon_text, new PVector(),
-                 TEXT_C, BACKGROUND_C, BORDER_C, TEXT_C, BACKGROUND_H_C, BORDER_H_C,
+                 TEXT_C, BACKGROUND_C, BORDER_C, TEXT_H_C, BACKGROUND_H_C, BORDER_H_C,
                  ITEM_PADDING, ITEM_BORDER_WIDTH, ITEM_WIDTH, ITEM_HEIGHT, true
          );
    }

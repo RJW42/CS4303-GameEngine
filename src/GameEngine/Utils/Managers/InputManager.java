@@ -302,8 +302,11 @@ public class InputManager {
 
    public void reset_and_reload(){
       reset_to_defaults();
+      reload();
+   }
+
+   public void reload(){
       init(GameEngine.CONFIG_FOLDER + GameEngine.CONTROLS_FILE);
-      tracker_mouse_keys[PConstants.LEFT] = this.mouse_click;
    }
 
    public void reset_to_defaults(){
@@ -386,7 +389,7 @@ public class InputManager {
             return true;
 
          // Create key and continue
-         Key key_ref = new Key(value, mouse_index);
+         Key key_ref = tracker_mouse_keys[mouse_index] == null ? new Key(value, mouse_index) : tracker_mouse_keys[mouse_index];
          key_ref.pressed = false;
 
          tracker_mouse_keys[mouse_index] = key_ref;
