@@ -6,6 +6,7 @@ import processing.core.PVector;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Optional;
 
 public class TerrainLoader {
    private TerrainLoader(){} // Util class for writing and loading maps from file
@@ -25,6 +26,7 @@ public class TerrainLoader {
    private static final String GOAL_X        = "goal_x";
    private static final String GOAL_Y        = "goal_y";
    private static final String LEADERBOARD   = "leaderboard";
+   private static final String TIPS          = "tips";
 
    // Monster spawn properties
    private static final String MONSTER_X     = "x";
@@ -71,7 +73,8 @@ public class TerrainLoader {
     *       username: str,
     *       time: float
     *    }
-    * ]
+    * ],
+    * tips: [str]
     */
 
    public static void loadTerrain(LoadedTerrainGenerator generator, TerrainRenderer renderer, String file_name){
@@ -96,6 +99,11 @@ public class TerrainLoader {
       world_from_json(generator, terrain_data.getJSONArray(WORLD_ARR));
       monsters_from_JSON(generator, terrain_data.getJSONArray(MONSTERS_SPAWN));
       leaderboard_from_JSON(generator, terrain_data.getJSONArray(LEADERBOARD));
+
+      if(terrain_data.has(TIPS))
+         tips_from_JSON(generator, terrain_data.getJSONArray(TIPS));
+      else
+         generator.tips = Optional.empty();
    }
 
 
@@ -118,6 +126,7 @@ public class TerrainLoader {
       core.put(AIR_CLR, rgb_to_JSON(renderer.air_colour));
       core.put(BORDER_CLR, rgb_to_JSON(renderer.border_colour));
       core.put(LEADERBOARD, leaderboard_to_json(generator));
+      core.put(TIPS, tips_to_json(generator));
 
       // Write to disk
       write_file(core, file_name);
@@ -221,6 +230,33 @@ public class TerrainLoader {
       }
 
       generator.times = times;
+   }
+
+   // ******** Tips ******** //
+   private static JSONArray tips_to_json(TerrainGenerator generator){
+      // Check if generator is has tips
+      if(generator.tips.isPresent())
+         return new JSONArray();
+
+      // Contains tips
+      JSONArray out = new JSONArray();
+      for(var tip : generator.tips.get())
+         out.put(tip);
+      return out;
+   }
+
+   private static void tips_from_JSON(TerrainGenerator generator, JSONArray tips){
+      // Init output array
+      ArrayList<String> out = new ArrayList<>();
+
+      // Create tips array
+      for(int i = 0; i < tips.length(); i++){
+         out.add(tips.getString(i));
+      }
+
+      // Output tips
+      if(out.size() == 0) generator.tips = Optional.empty();
+      else generator.tips = Optional.of(out);
    }
 
    // ******** RGB ********* //

@@ -4,6 +4,7 @@ package GameEngine.Components.AIComponents;
 import GameEngine.Components.Component;
 import GameEngine.Components.ForceManager;
 import GameEngine.Components.PlayerComponents.GunController;
+import GameEngine.Components.TerrianComponents.TerrainGenerator;
 import GameEngine.GameEngine;
 import GameEngine.GameObjects.Core.GameLost;
 import GameEngine.GameObjects.Core.Monster;
@@ -12,6 +13,9 @@ import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.GameObjects.GameObject;
 import processing.core.PConstants;
 import processing.core.PVector;
+
+import java.util.Optional;
+import java.util.Random;
 
 import static GameEngine.Levels.PlayLevel.DESIRED_WALLS;
 
@@ -31,6 +35,8 @@ public class Timer extends Component {
 
    private boolean game_started;
    private float time_remaining;
+   private Optional<String> tip;
+   private float text_size;
 
    public long game_start_time;
    public float game_time;
@@ -52,6 +58,12 @@ public class Timer extends Component {
       this.direction = PVector.sub(player.pos, start_loc).normalize();
       this.player = player;
       this.game_started = false;
+
+      TerrainGenerator generator = sys.terrain.getComponent(TerrainGenerator.class);
+      this.tip = generator.tips.map(strings ->
+              "Tip: " + strings.get(new Random().nextInt(strings.size()))
+      );
+      reset_text_size();
 
       sys.chase_position = start_loc;
    }
@@ -97,6 +109,14 @@ public class Timer extends Component {
          sys.fill(255, 0, 0);
          sys.textSize(40);
          sys.uiText("T- " + Math.round(time_remaining * 10f) / 10f, GameEngine.SCREEN_WIDTH / 2f, GameEngine.SCREEN_HEIGHT / 2f);
+
+         // Draw tip at the top of the screen
+         if(tip.isPresent()) {
+            sys.fill(255, 0, 0);
+            sys.textSize(text_size);
+            sys.uiText(tip.get(), GameEngine.SCREEN_WIDTH / 2f, GameEngine.SCREEN_HEIGHT - 80);
+         }
+
          sys.popUI();
          return;
       }
@@ -144,5 +164,22 @@ public class Timer extends Component {
       float percentage = ((ZOOM_TIME - time_remaining) / ZOOM_TIME);
       sys.chase_zoom = 1f + (final_zoom - 1f) * percentage;
       sys.chase_position = PVector.add(start_loc, PVector.mult(direction, total_distance * percentage));
+   }
+
+
+   public void reset_text_size(){
+      if(tip.isEmpty())
+         return;
+      // Get max height of text
+      text_size = 2;
+
+      sys.textSize(text_size);
+      float text_height = sys.textAscent() - sys.textDescent();
+
+      while(text_height < 40 && sys.textWidth(tip.get()) < GameEngine.SCREEN_WIDTH - 20){
+         text_size += 1;
+         sys.textSize(text_size);
+         text_height = sys.textAscent() - sys.textDescent();
+      }
    }
 }

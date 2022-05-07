@@ -12,6 +12,7 @@ import processing.core.PVector;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Optional;
 
 public abstract class TerrainGenerator extends Component {
    // Attributes
@@ -22,6 +23,7 @@ public abstract class TerrainGenerator extends Component {
    public ArrayList<PVector> monster_spawn_locs;
    public ArrayList<Room> rooms;
    public ArrayList<Time> times;
+   public Optional<ArrayList<String>> tips;
 
    // Constructor
    public TerrainGenerator(GameObject parent, int seed){
