@@ -7,6 +7,7 @@ import GameEngine.Components.MapEditorComponents.ToolMenu;
 import GameEngine.Components.MapEditorComponents.Tools.*;
 import GameEngine.GameEngine;
 import GameEngine.Levels.MainMenu;
+import GameEngine.Levels.MapBuilder;
 import processing.core.PVector;
 
 
@@ -44,6 +45,6 @@ public class MapEditor extends GameObject {
    }
 
    private void on_exit(){
-      sys.level_manager.startLevel(new MainMenu(sys));
+      ((MapBuilder)sys.level_manager.getCurrentLevel()).advance = new MainMenu(sys);
    }
 }

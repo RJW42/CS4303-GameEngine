@@ -13,12 +13,14 @@ public class Config {
    public static final String WINDOW_HEIGHT  = "WINDOW_HEIGHT";
    public static final String UI_SCALE       = "UI_SCALE";
    public static final String DISPLAY        = "DISPLAY";
+   public static final String MUSIC_LEVEL    = "MUSIC_LEVEL";
 
    public boolean full_screen;
    public int screen_width;
    public int screen_height;
    public int ui_scale;
    public int display;
+   public int music_level;
 
    // Constructor
    public Config(){
@@ -47,6 +49,7 @@ public class Config {
          writer.println(WINDOW_WIDTH + " = " + screen_width);
          writer.println(WINDOW_HEIGHT + " = " + screen_height);
          writer.println(UI_SCALE + " = " + ui_scale);
+         writer.println(MUSIC_LEVEL + " = " + music_level);
       }catch (IOException e){
          System.err.println(" - Failed to save to config file");
          System.exit(0);
@@ -92,6 +95,8 @@ public class Config {
          return parse_display(values);
       }else if(key.equalsIgnoreCase(UI_SCALE)){
          return parse_ui_scale(values);
+      }else if(key.equalsIgnoreCase(MUSIC_LEVEL)){
+         return parse_music_level(values);
       }
 
       // Unkown key
@@ -106,6 +111,21 @@ public class Config {
          return true;
       }).orElseGet(() -> {
          System.err.println(" - Failed to parse full screen");
+         return false;
+      });
+   }
+
+
+   private boolean parse_music_level(String value){
+      return parse_int(value).map(val -> {
+         if(val < 0 || val > 10){
+            System.err.println(" - Invalid music level value");
+            return false;
+         }
+         this.music_level = val;
+         return true;
+      }).orElseGet(() -> {
+         System.err.println(" - Failed to parse the music level");
          return false;
       });
    }

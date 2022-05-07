@@ -32,6 +32,7 @@ public class SettingsMenu extends GameObject {
    private int screen_height;
    private int ui_scale;
    private int display;
+   private int music_level;
 
    private UIButton back_button;
    private UIButton apply_button;
@@ -42,7 +43,7 @@ public class SettingsMenu extends GameObject {
    private UIInput ui_scale_input;
    private UIInput screen_width_input;
    private UIInput screen_height_input;
-
+   private UIInput music_level_input;
 
    private float accent;
    private float decent;
@@ -57,6 +58,7 @@ public class SettingsMenu extends GameObject {
       screen_height = sys.config.screen_height;
       ui_scale = sys.config.ui_scale;
       display = sys.config.display;
+      music_level = sys.config.music_level;
 
 
       // Create menu buttons
@@ -72,6 +74,7 @@ public class SettingsMenu extends GameObject {
       this.components.add(ui_scale_input);
       this.components.add(screen_width_input);
       this.components.add(screen_height_input);
+      this.components.add(music_level_input);
    }
 
 
@@ -93,6 +96,7 @@ public class SettingsMenu extends GameObject {
       sys.config.screen_width = screen_width;
       sys.config.display = display;
       sys.config.ui_scale = ui_scale;
+      sys.config.music_level = music_level;
       sys.config.save(GameEngine.CONFIG_FOLDER + GameEngine.CONFIG_FILE);
       sys.restart();
    }
@@ -119,6 +123,21 @@ public class SettingsMenu extends GameObject {
       display_input.border_colour = BORDER_COLOUR;
       display = d;
    }
+
+
+   private void music_level_callback(String value){
+      int d = parse_int(value);
+
+      if(d < 0 || d > 10){
+         music_level_input.border_colour = ERR_COLOUR;
+         sys.warning_display.display_warning("Music level must be a number >= 0 and <= 10");
+         return;
+      }
+
+      music_level_input.border_colour = BORDER_COLOUR;
+      music_level = d;
+   }
+
 
    private void display_width_callback(String value){
       int w = parse_int(value);
@@ -203,7 +222,7 @@ public class SettingsMenu extends GameObject {
 
       elements_background.alpha = BUTTON_ALPHA;
       elements_background.width += SPACING * 2;
-      elements_background.height = back_button.height * 5 + SPACING * 6;
+      elements_background.height = back_button.height * 6 + SPACING * 6;
       elements_background.pos.y += back_button.height / 2f + SPACING / 2f;
 
       float button_y = elements_background.pos.y - (elements_background.height + back_button.height) / 2f - SPACING;
@@ -222,6 +241,7 @@ public class SettingsMenu extends GameObject {
       ui_scale_input = get_input(renderers.get(2), this::ui_scale_callback, "" + ui_scale, elements_background);
       screen_width_input = get_input(renderers.get(3), this::display_width_callback, "" + screen_width, elements_background);
       screen_height_input = get_input(renderers.get(4), this::display_height_callback, "" + screen_height, elements_background);
+      music_level_input = get_input(renderers.get(5), this::music_level_callback, "" + music_level, elements_background);
 
       this.components.add(elements_background);
       this.components.addAll(renderers);
@@ -250,6 +270,10 @@ public class SettingsMenu extends GameObject {
 
       renderers.add(new UITextRenderer(this, new PVector(),
               TEXT_COLOUR, "Display height: ", PConstants.LEFT, (int)(TOTAL_WIDTH * NAME_RATIO), (int)HEIGHT
+      ));
+
+      renderers.add(new UITextRenderer(this, new PVector(),
+              TEXT_COLOUR, "Music level: ", PConstants.LEFT, (int)(TOTAL_WIDTH * NAME_RATIO), (int)HEIGHT
       ));
 
 

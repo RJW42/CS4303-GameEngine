@@ -4,6 +4,7 @@ package GameEngine.Components;
 import GameEngine.Components.Component;
 import GameEngine.GameObjects.Bullets.Explosion;
 import GameEngine.GameObjects.GameObject;
+import ddf.minim.AudioSample;
 import processing.core.PVector;
 
 
@@ -17,6 +18,7 @@ public class Damagable extends Component {
    public float time_in_flash;
    public float width;
    public float height;
+   public AudioSample punch;
 
    // Constructor
    public Damagable(GameObject parent, float width, float height, int starting_health) {
@@ -27,6 +29,8 @@ public class Damagable extends Component {
       this.health = starting_health;
       this.width = width;
       this.height = height;
+      this.punch = sys.audio_manager.get_sample("punch");
+      this.punch.setGain(-10);
    }
 
 
@@ -47,6 +51,7 @@ public class Damagable extends Component {
       time_in_flash = FLASH_LENGTH;
    }
    public void punch(float damage){
+      punch.trigger();
       health -= damage;
       time_in_flash = FLASH_LENGTH;
    }
