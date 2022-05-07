@@ -47,7 +47,8 @@ public class MachineGun {
               FIRE_RATE,
               MUZZLE_SPEED,
               BARREL_LENGTH,
-              BARREL_LENGTH
+              BARREL_LENGTH,
+              "gunshot"
       );
    }
 

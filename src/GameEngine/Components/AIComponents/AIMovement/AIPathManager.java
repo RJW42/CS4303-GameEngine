@@ -197,7 +197,7 @@ public class AIPathManager extends Component {
 
    private boolean is_valid_and_walkable(int[] world, int x, int y){
       return x >= 0 && x < generator.getWidth() && y > 0 && y < generator.getHeight() &&
-             world[generator.getIndex(x, y)] == Terrain.AIR && world[generator.getIndex(x, y - 1)] == Terrain.WALL;
+             world[generator.getIndex(x, y)] == Terrain.AIR && world[generator.getIndex(x, y - 1)] == Terrain.WALL && generator.getSpecialTiles()[generator.getIndex(x, y)] != Terrain.LAVA;
    }
 
    // ******** Graph Search ********* //

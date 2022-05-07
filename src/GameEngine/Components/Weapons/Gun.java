@@ -5,6 +5,7 @@ import GameEngine.Components.Component;
 import GameEngine.Components.ForceManager;
 import GameEngine.Components.Renderers.GifRenderer;
 import GameEngine.GameObjects.GameObject;
+import ddf.minim.AudioSample;
 import processing.core.PConstants;
 import processing.core.PVector;
 
@@ -27,10 +28,11 @@ public class Gun extends Component {
    public GifRenderer muzzle_flash;
 
    private PVector gun_pos;
+   private AudioSample on_fire;
    private ForceManager force_manager;
 
    // Constructor
-   public Gun(GameObject parent, GunRenderer renderer, GifRenderer muzzle_flash, BulletFactory bullet_factory, PVector offset, float spread_angle, int num_barrels, int fire_rate, int muzzle_speed, float barrel_length, float barrel_height) {
+   public Gun(GameObject parent, GunRenderer renderer, GifRenderer muzzle_flash, BulletFactory bullet_factory, PVector offset, float spread_angle, int num_barrels, int fire_rate, int muzzle_speed, float barrel_length, float barrel_height, String fire_noise) {
       super(parent);
 
       // Init attributes
@@ -48,6 +50,11 @@ public class Gun extends Component {
       this.muzzle_speed = muzzle_speed;
       this.spread_angle = spread_angle / 2;
       this.num_barrels = num_barrels;
+
+      if(fire_noise != null){
+         this.on_fire = sys.audio_manager.get_sample(fire_noise);
+         this.on_fire.setGain(-22);
+      }
 
       // Init factory
       this.bullet_factory = bullet_factory;
@@ -104,6 +111,7 @@ public class Gun extends Component {
          for(int i = 0; i < num_barrels; i++) {
             spawn_bullet();
             renderer.fire();
+            on_fire.trigger();
          }
       }
    }

@@ -41,7 +41,8 @@ public class RPG {
               FIRE_RATE,
               MUZZLE_SPEED,
               BARREL_LENGTH,
-              BARREL_LENGTH
+              BARREL_LENGTH,
+              "rpg_fire"
       );
    }
 

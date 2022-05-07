@@ -5,6 +5,7 @@ import GameEngine.Components.ForceManager;
 import GameEngine.GameObjects.Core.Player;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.Utils.Managers.InputManager;
+import ddf.minim.AudioPlayer;
 import processing.core.PVector;
 
 public class CharacterController extends Component {
@@ -25,12 +26,15 @@ public class CharacterController extends Component {
    private int double_jump_count = 0;
    private boolean can_double_jump = false;
    private boolean can_jump = false;
+   private AudioPlayer running;
 
    // Constructor
    public CharacterController(GameObject parent, float speed, float max_speed) {
       super(parent);
 
       // Init attributes
+      this.running = sys.audio_manager.get_player("running");
+      this.running.setGain(-8);
       this.speed  = speed;
       this.max_speed = max_speed;
       this.reel_in   = sys.input_manager.getKey("grapple_in");
@@ -78,11 +82,29 @@ public class CharacterController extends Component {
             force_manager.velocity.x = 0;
          if(force_manager.velocity.x > -max_speed)
             force_manager.applyForce(new PVector(-speed, 0));
+
+         // Play sound if needed
+         if(force_manager.grounded && !running.isPlaying()){
+            running.loop();
+         }
       } else if(right.pressed){
          if(force_manager.velocity.x < 0)
             force_manager.velocity.x = 0;
          if(force_manager.velocity.x < max_speed)
             force_manager.applyForce(new PVector(speed, 0));
+
+         if(force_manager.grounded && !running.isPlaying()){
+            running.loop();
+         }
+      } else {
+         if(running.isPlaying()){
+            running.pause();
+         }
+      }
+
+      // Check if in air
+      if(!force_manager.grounded && running.isPlaying()){
+         running.pause();
       }
    }
 
