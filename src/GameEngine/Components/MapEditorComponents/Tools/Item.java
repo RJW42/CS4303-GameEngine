@@ -61,6 +61,9 @@ public enum Item {
 
 
    public static void place_air(int world_index, float prev_x, float prev_y) {
+      if(position_edge(prev_x, prev_y, AIR.item_name))
+         return;
+
       // Remove door if there is one
       check_door(world_index, (int) prev_x, (int) prev_y);
 
@@ -69,6 +72,9 @@ public enum Item {
    }
 
    public static void place_lava(int world_index, float prev_x, float prev_y) {
+      if(position_edge(prev_x, prev_y, LAVA.item_name))
+         return;
+
       // Remove door if there is one
       check_door(world_index, (int) prev_x, (int) prev_y);
       check_entities(world_index);
@@ -92,7 +98,7 @@ public enum Item {
 
    public static void place_monster(int world_index, float prev_x, float prev_y) {
       // Check if the position is valid
-      if(position_not_air(prev_x, prev_y, world_index, MONSTER.item_name))
+      if(position_not_air(prev_x, prev_y, world_index, MONSTER.item_name) || position_edge(prev_x, prev_y, MONSTER.item_name))
          return;
 
       PVector loc = new PVector(
@@ -106,7 +112,7 @@ public enum Item {
 
    public static void place_player(int world_index, float prev_x, float prev_y) {
       // Check if the position is valid
-      if(position_not_air(prev_x, prev_y, world_index, PLAYER.item_name))
+      if(position_not_air(prev_x, prev_y, world_index, PLAYER.item_name) || position_edge(prev_x, prev_y, PLAYER.item_name))
          return;
 
       if(generator.player_spawn_loc == null)
@@ -146,7 +152,7 @@ public enum Item {
 
    public static void place_goal(int world_index, float prev_x, float prev_y) {
       // Check if the position is valid
-      if(position_not_air(prev_x, prev_y, world_index, GOAL.item_name))
+      if(position_not_air(prev_x, prev_y, world_index, GOAL.item_name) || position_edge(prev_x, prev_y, GOAL.item_name))
          return;
 
       if(generator.goal_spawn_loc == null)
@@ -159,7 +165,7 @@ public enum Item {
 
    public static void place_health_pack(int world_index, float prev_x, float prev_y){
       // Check if the position is valid
-      if(position_not_air(prev_x, prev_y, world_index, GOAL.item_name))
+      if(position_not_air(prev_x, prev_y, world_index, HEALTH_PACK.item_name) || position_edge(prev_x, prev_y, HEALTH_PACK.item_name))
          return;
 
       generator.powerup_spawn_locs.add(new Pair<>(
@@ -170,7 +176,7 @@ public enum Item {
 
    public static void place_gun_powerup(int world_index, float prev_x, float prev_y){
       // Check if the position is valid
-      if(position_not_air(prev_x, prev_y, world_index, GOAL.item_name))
+      if(position_not_air(prev_x, prev_y, world_index, GUN_POWERUP.item_name) || position_edge(prev_x, prev_y, GUN_POWERUP.item_name))
          return;
 
       generator.powerup_spawn_locs.add(new Pair<>(
@@ -246,5 +252,13 @@ public enum Item {
          return false;
       }
       return true;
+   }
+
+   public static boolean position_edge(float prev_x, float prev_y, String item_name){
+      if(prev_x <= 0  || prev_x >= Terrain.WIDTH - 1 || prev_y <= 0 || prev_y >= Terrain.HEIGHT - 1){
+         sys.warning_display.display_warning("Cannot place " + item_name + " on edge of the world");
+         return true;
+      }
+      return false;
    }
 }

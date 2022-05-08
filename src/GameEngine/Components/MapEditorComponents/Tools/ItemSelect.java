@@ -77,7 +77,7 @@ public class ItemSelect extends Tool {
    private void create_buttons(){
       // Create a button for each item
       buttons = new UIButton[Math.min(Item.values().length, MAX_ITEMS_ON_LIST)];
-      float x = pos.x + BUTTON_WIDTH * GameEngine.UI_SCALE / 2f - ITEM_WIDTH * GameEngine.UI_SCALE / 2f;
+      float x = pos.x + BUTTON_WIDTH * GameEngine.UI_SCALE / 2f - ITEM_WIDTH * GameEngine.UI_SCALE * 1.5f - 0.5f * UI_SCALE;
       float y = pos.y + ITEM_HEIGHT * GameEngine.UI_SCALE;
 
       if(Item.values().length > MAX_ITEMS_ON_LIST) {

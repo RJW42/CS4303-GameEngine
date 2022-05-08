@@ -30,8 +30,8 @@ public class MapEditor extends GameObject {
       this.components.add(new ToolMenu(this));
 
       // Add tools
-      this.components.add(new ItemSelect(this));
       this.components.add(new ItemPlace(this));
+      this.components.add(new ItemSelect(this));
       this.components.add(new Save(this));
       this.components.add(new Exit(this, this::on_exit));
       this.components.add(new RandomColour(this));
