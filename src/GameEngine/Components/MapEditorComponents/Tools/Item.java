@@ -67,6 +67,7 @@ public enum Item {
    public static void place_lava(int world_index, float prev_x, float prev_y) {
       // Remove door if there is one
       check_door(world_index, (int) prev_x, (int) prev_y);
+      check_entities(world_index);
 
       world[world_index] = Terrain.AIR;
       tile_attributes[world_index] = Terrain.LAVA;
@@ -154,7 +155,7 @@ public enum Item {
 
    // Value helper methods
    public static void check_entities(int world_index){
-      // Check player and door
+      // Check player and goal
       PVector player_loc = generator.player_spawn_loc;
       PVector goal_loc = generator.goal_spawn_loc;
 
@@ -163,6 +164,15 @@ public enum Item {
       }
       if(goal_loc != null && generator.getIndexFromWorldPos(goal_loc.x + 0.1f, goal_loc.y - 0.1f) == world_index){
          generator.goal_spawn_loc = null;
+      }
+
+      // Check monsters
+      for(int i = generator.monster_spawn_locs.size() - 1; i >= 0; i--){
+         var monster_loc = generator.monster_spawn_locs.get(i);
+
+         if(generator.getIndexFromWorldPos(monster_loc.x, monster_loc.y) == world_index){
+            generator.monster_spawn_locs.remove(i);
+         }
       }
    }
 
