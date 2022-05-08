@@ -77,6 +77,7 @@ public class Player extends GameObject implements Collideable {
       this.components.add(controller);
       this.components.add(new GrappleHook(this));
       this.components.add(force_manager);
+      this.components.add(new PowerupManager(this));
 
       if(has_healthbar)
          this.components.add(new HealthBar(this, new PVector(20f, 20f), 75f, 10f));

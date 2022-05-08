@@ -9,11 +9,13 @@ import processing.core.PVector;
 
 public class RectGunRenderer extends GunRenderer {
    // Attributes
+   public static PVector BORDER_COL = new PVector(0, 0, 0);
+
    public float width;
    public float height;
    public float half_height;
    public PVector rect_col = new PVector(0, 0, 0);
-   public PVector border_col = new PVector(0, 0, 0);
+   public PVector border_col = BORDER_COL;
 
 
    // Constructor

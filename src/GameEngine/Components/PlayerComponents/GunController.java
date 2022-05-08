@@ -15,7 +15,7 @@ public class GunController extends Component {
    // Attributes
    private InputManager.Key fire;
    private InputManager.Key switch_weapon;
-   private Gun active_gun;
+   public Gun active_gun;
    private int active_index;
    private List<Gun> guns;
    private boolean can_switch;

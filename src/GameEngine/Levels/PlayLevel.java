@@ -1,14 +1,17 @@
 package GameEngine.Levels;
 
 import GameEngine.Components.AIComponents.Timer;
+import GameEngine.Components.PlayerComponents.Powerups;
 import GameEngine.Components.TerrianComponents.LoadedTerrainGenerator;
 import GameEngine.Components.TerrianComponents.TerrainLoader;
 import GameEngine.Components.TerrianComponents.TerrainRenderer;
 import GameEngine.GameObjects.Core.Director;
 import GameEngine.GameObjects.Core.Player;
+import GameEngine.GameObjects.Core.Powerup;
 import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.GameEngine;
 import GameEngine.Utils.Managers.InputManager;
+import processing.core.PVector;
 
 import java.util.Random;
 
@@ -52,6 +55,8 @@ public class PlayLevel extends Level{
       sys.audio_manager.add_combat_music(COMBAT_MUSIC);
       generator.spawn_monsters();
       generator.spawn_goal();
+
+      sys.spawn(new Powerup(sys, new PVector(4, 2), Powerups.GUN_BONUS), 2);
    }
 
 
