@@ -71,7 +71,11 @@ public class PGif {
       return new PGif(frames, fps, loop);
    }
 
-   public void play(GameEngine sys, PVector pos, float rotation_angle) {
+   public void play(GameEngine sys, PVector pos, float rotation_angle){
+      play(sys, pos, rotation_angle, 0);
+   }
+
+   public void play(GameEngine sys, PVector pos, float rotation_angle, int tint) {
       // Check if can play
       if(finished)
          return;
@@ -91,6 +95,12 @@ public class PGif {
 
       // Display frame
       sys.image(frames[frame_number], pos.x, pos.y, rotation_angle);
+      sys.push();
+      if(tint > 0){
+         sys.tint(255, 0, 0, tint);
+         sys.image(frames[frame_number], pos.x, pos.y, rotation_angle);
+      }
+      sys.pop();
 
       // Update time
       time_since_start += sys.DELTA_TIME;

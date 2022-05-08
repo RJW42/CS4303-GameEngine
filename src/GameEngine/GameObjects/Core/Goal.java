@@ -57,6 +57,7 @@ public class Goal extends GameObject implements Collideable {
          return false;
 
       // Player reached goal
+      ((Player)other.parent).stop_audio();
       ((PlayLevel)sys.level_manager.getCurrentLevel()).player_reached_goal();
       return true;
    }

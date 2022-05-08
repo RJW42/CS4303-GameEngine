@@ -40,6 +40,7 @@ public class Player extends GameObject implements Collideable {
    public final ForceManager force_manager;
    private final ArrayList<BaseCollisionComponent> collision_components;
    private final Damagable damagable;
+   private final CharacterController controller;
 
    public boolean is_dead = false;
 
@@ -69,15 +70,22 @@ public class Player extends GameObject implements Collideable {
               this, new PVector(0, 0), new PVector(0, 0), FRICTION
       );
 
+      this.controller = new CharacterController(this, ACCELERATION, MAX_SPEED);
+
       this.damagable = new Damagable(this, COLLISION_WIDTH, COLLISION_HEIGHT, HEALTH);
 
-      this.components.add(new CharacterController(this, ACCELERATION, MAX_SPEED));
+      this.components.add(controller);
       this.components.add(new GrappleHook(this));
       this.components.add(force_manager);
 
       if(has_healthbar)
          this.components.add(new HealthBar(this, new PVector(20f, 20f), 75f, 10f));
-      this.components.add(new MovingSpriteManager(this, new PVector(COLLISION_WIDTH / 2f, COLLISION_HEIGHT / -2f), "player_left", "player_right", RENDER_WIDTH, RENDER_HEIGHT));
+      this.components.add(
+         new MovingSpriteManager(this, new PVector(COLLISION_WIDTH / 2f, COLLISION_HEIGHT / -2f),
+              "player_left", "player_right", "player_walking_left", "player_walking_right",
+              RENDER_WIDTH, RENDER_HEIGHT, 0.8f, 0.90f,
+              new PVector(0.27f, -0.30f)
+      ));
 
       this.components.add(damagable);
 
@@ -96,8 +104,17 @@ public class Player extends GameObject implements Collideable {
    public boolean isDestroyed() {
       if(damagable.health <= 0)
          is_dead = true;
+      if(is_dead)
+         stop_audio();
       return is_dead;
    }
+
+
+   public void stop_audio(){
+      if(controller.running.isPlaying())
+         controller.running.pause();
+   }
+
 
    private boolean ground_collision(BaseCollisionComponent comp){
       // Check if collided with ground

@@ -26,7 +26,8 @@ public class CharacterController extends Component {
    private int double_jump_count = 0;
    private boolean can_double_jump = false;
    private boolean can_jump = false;
-   private AudioPlayer running;
+   public AudioPlayer running;
+
 
    // Constructor
    public CharacterController(GameObject parent, float speed, float max_speed) {

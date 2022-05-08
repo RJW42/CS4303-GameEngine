@@ -19,6 +19,8 @@ public class Damagable extends Component {
    public float width;
    public float height;
    public AudioSample punch;
+   public MovingSpriteManager sprite_manager;
+
 
    // Constructor
    public Damagable(GameObject parent, float width, float height, int starting_health) {
@@ -35,14 +37,18 @@ public class Damagable extends Component {
 
 
    // Methods 
-   public void start() {}
+   public void start() { this.sprite_manager = parent.getComponent(MovingSpriteManager.class); }
    public void update() {}
 
    public void draw() {
       if(time_in_flash > 0){
-         sys.fill(255, 0, 0, 127f * (time_in_flash / FLASH_LENGTH));
-         sys.rect(parent.pos.x, parent.pos.y, width, -height);
          time_in_flash -= sys.DELTA_TIME;
+         if(sprite_manager != null) {
+            sprite_manager.damage_tint = time_in_flash <= 0 ? 0 : (int) (255f * (time_in_flash / FLASH_LENGTH));
+         } else {
+            sys.fill(255, 0, 0, 127f * (time_in_flash / FLASH_LENGTH));
+            sys.rect(parent.pos.x, parent.pos.y, width, -height);
+         }
       }
    }
 

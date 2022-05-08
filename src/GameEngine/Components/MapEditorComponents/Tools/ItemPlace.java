@@ -14,6 +14,8 @@ import processing.core.PConstants;
 import processing.core.PImage;
 import processing.core.PVector;
 
+import java.rmi.MarshalException;
+
 
 public class ItemPlace extends Tool {
    // Attributes
@@ -29,6 +31,7 @@ public class ItemPlace extends Tool {
    private PImage kill_door_closed;
    private PImage basic_door_closed;
    private PImage player;
+   private PImage monster_img;
 
    private int prev_x;
    private int prev_y;
@@ -41,7 +44,12 @@ public class ItemPlace extends Tool {
       this.icon_text = "Place";
       this.player = sys.sprite_manager.get_sprite("player_right",
               Math.round(GameEngine.PIXEL_TO_METER * Player.RENDER_WIDTH),
-               Math.round(GameEngine.PIXEL_TO_METER * Player.RENDER_HEIGHT)
+              Math.round(GameEngine.PIXEL_TO_METER * Player.RENDER_HEIGHT)
+      );
+
+      this.monster_img = sys.sprite_manager.get_sprite("monster_left",
+              Math.round(GameEngine.PIXEL_TO_METER * Monster.RENDER_WIDTH),
+              Math.round(GameEngine.PIXEL_TO_METER * Monster.RENDER_HEIGHT)
       );
    }
 
@@ -123,11 +131,10 @@ public class ItemPlace extends Tool {
       // Draw each monster
       generator.monster_spawn_locs.forEach(monster -> {
          // Render monster
-         // Todo: chane this when proper monster model drawn
-         sys.noStroke();
-         sys.fill(Monster.COLOUR.x, Monster.COLOUR.y, Monster.COLOUR.z);
-         sys.rectMode(PConstants.CORNER);
-         sys.rect(monster.x, monster.y, Monster.COLLISION_WIDTH, -Monster.COLLISION_HEIGHT);
+         float x = monster.x + Monster.COLLISION_WIDTH / 2f;
+         float y = monster.y + Monster.COLLISION_HEIGHT / -2f;
+
+         sys.image(monster_img, x, y);
       });
    }
 

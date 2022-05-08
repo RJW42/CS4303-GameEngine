@@ -179,7 +179,7 @@ public class InputManager {
       latest_event = event;
 
       // Update the key object if one is set
-      if(tracked_keyboard_keys[i] != null)
+      if(tracked_keyboard_keys[i] != null && current_callback == null)
          tracked_keyboard_keys[i].pressed = true;
 
       // Handle any callbacks if needed

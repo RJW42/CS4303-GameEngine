@@ -12,6 +12,8 @@ public class RectGunRenderer extends GunRenderer {
    public float width;
    public float height;
    public float half_height;
+   public PVector rect_col = new PVector(0, 0, 0);
+   public PVector border_col = new PVector(0, 0, 0);
 
 
    // Constructor
@@ -34,10 +36,10 @@ public class RectGunRenderer extends GunRenderer {
 
    public void draw() {
         sys.pushMatrix();
-        sys.noStroke();
+        sys.stroke(border_col.x, border_col.y, border_col.z);
         sys.translate(parent.pos.x + offset.x, parent.pos.y + offset.y);
         sys.rotate(gun.rotation_angle);
-        sys.fill(0);
+        sys.fill(rect_col.x, rect_col.y, rect_col.z);
         sys.rect(0, -half_height, width, height);
         sys.popMatrix();
    }

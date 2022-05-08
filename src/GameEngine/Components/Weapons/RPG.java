@@ -22,7 +22,8 @@ public class RPG {
    
    public static Gun create(GameObject parent, PVector location) {
       // Create renderer component
-      GunRenderer renderer = new RectGunRenderer(parent, location, BARREL_LENGTH, BARREL_HEIGHT);
+      RectGunRenderer renderer = new RectGunRenderer(parent, location, BARREL_LENGTH, BARREL_HEIGHT);
+      renderer.rect_col = new PVector(41, 77, 51);
 
       // Create gun
       return new Gun(

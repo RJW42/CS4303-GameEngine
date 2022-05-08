@@ -55,7 +55,13 @@ public class Monster extends GameObject implements Collideable {
       this.force_manager = new ForceManager(
               this, new PVector(0, 0), new PVector(0, 0), FRICTION
       );
-      this.components.add(new MovingSpriteManager(this, new PVector(COLLISION_WIDTH / 2f, COLLISION_HEIGHT / -2f), "monster_left", "monster_right", RENDER_WIDTH, RENDER_HEIGHT));
+      this.components.add(
+              new MovingSpriteManager(this, new PVector(COLLISION_WIDTH / 2f, COLLISION_HEIGHT / -2f),
+                      "monster_left", "monster_right", "monster_walking_left", "monster_walking_right",
+                      RENDER_WIDTH, RENDER_HEIGHT, 0.8f, 0.90f,
+                      new PVector(0.27f, -0.30f)
+              ));
+
       this.damagable = new Damagable(this, RENDER_WIDTH, RENDER_HEIGHT, HEALTH);
       this.attacker = new Attacker(this, new PVector(COLLISION_WIDTH / 2f, COLLISION_HEIGHT / -2f), PUNCH_RATE, PUNCH_FORCE, PUNCH_DAMAGE);
       this.controller = new AIMovementController(this, new PVector(COLLISION_WIDTH / 2f, -(1 - COLLISION_HEIGHT)), 8f + 3f * (new Random().nextFloat()));

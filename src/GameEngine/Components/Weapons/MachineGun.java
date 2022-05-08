@@ -22,7 +22,8 @@ public class MachineGun {
    
    public static Gun create(GameObject parent, PVector location) {
       // Create renderer component
-      GunRenderer renderer = new RectGunRenderer(parent, location, BARREL_LENGTH, BARREL_HEIGHT);
+      RectGunRenderer renderer = new RectGunRenderer(parent, location, BARREL_LENGTH, BARREL_HEIGHT);
+      renderer.rect_col = new PVector(77, 53, 41);
       GifRenderer muzzle_renderer = new GifRenderer(
          parent, "muzzle_flash", 24, 0.5f, 0.375f, new PVector(location.x, BARREL_LENGTH + location.y + 0.375f)
       );
