@@ -2,6 +2,7 @@ package GameEngine.Components.Weapons;
 
 
 import GameEngine.Components.Component;
+import GameEngine.GameEngine;
 import GameEngine.GameObjects.GameObject;
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -37,13 +38,14 @@ public class RectGunRenderer extends GunRenderer {
    }
 
    public void draw() {
-        sys.pushMatrix();
+        sys.push();
         sys.stroke(border_col.x, border_col.y, border_col.z);
+        sys.strokeWeight(2f / GameEngine.PIXEL_TO_METER);
         sys.translate(parent.pos.x + offset.x, parent.pos.y + offset.y);
         sys.rotate(gun.rotation_angle);
         sys.fill(rect_col.x, rect_col.y, rect_col.z);
         sys.rect(0, -half_height, width, height);
-        sys.popMatrix();
+        sys.pop();
    }
 
    public void fire(){

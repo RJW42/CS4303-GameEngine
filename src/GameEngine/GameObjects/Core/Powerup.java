@@ -6,6 +6,7 @@ import GameEngine.Components.CollisionComponents.Collideable;
 import GameEngine.Components.CollisionComponents.RectCollisionComponent;
 import GameEngine.Components.PlayerComponents.PowerupManager;
 import GameEngine.Components.PlayerComponents.Powerups;
+import GameEngine.Components.Renderers.ImageRenderer;
 import GameEngine.Components.Renderers.RectRenderer;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.GameEngine;
@@ -35,8 +36,8 @@ public class Powerup extends GameObject implements Collideable {
       this.collision_components = new ArrayList<>();
       this.collision_components.add(new RectCollisionComponent(this, this::on_collision, WIDTH, WIDTH));
 
-      // Add regular components 
-      this.components.add(new RectRenderer(this, new PVector(255, 0, 0), WIDTH, WIDTH));
+      // Add regular components
+      this.components.add(new ImageRenderer(this, type.sprite_name, WIDTH, WIDTH, new PVector()));
 
       // Init attributes
       this.type = type;

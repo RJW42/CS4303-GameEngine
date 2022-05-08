@@ -56,7 +56,7 @@ public class PlayLevel extends Level{
       generator.spawn_monsters();
       generator.spawn_goal();
 
-      sys.spawn(new Powerup(sys, new PVector(4, 2), Powerups.GUN_BONUS), 2);
+      sys.spawn(new Powerup(sys, new PVector(4.5f, 1.5f), Powerups.GUN_BONUS), 2);
    }
 
 
