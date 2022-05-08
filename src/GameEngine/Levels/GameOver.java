@@ -68,6 +68,7 @@ public class GameOver extends Level{
    public void start() {
       // Get restart keys
       menu = sys.input_manager.getKey("EXIT_TO_MENU");
+      sys.audio_manager.start_background_music(PlayLevel.BACKGROUND_MUSIC);
       sys.initWorld(1, 1);
 
       // Spawn objects
@@ -83,6 +84,7 @@ public class GameOver extends Level{
    }
 
    public boolean updateAndCanAdvance() {
+      sys.audio_manager.update_background_music();
       if(menu.pressed) {
          advance = new MainMenu(sys);
       }
@@ -91,6 +93,7 @@ public class GameOver extends Level{
    }
 
    public Level advance() {
+      sys.audio_manager.cancel_background_music();
       return advance;
    }
 }

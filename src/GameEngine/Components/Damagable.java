@@ -64,11 +64,10 @@ public class Damagable extends Component {
 
 
    public void blast(Explosion explosion){
-      System.out.println(explosion.explosion_size);
+
    }
 
    public void lava(){
-      // todo: could draw a fire animation or some thing
       health = 0;
    }
 }
