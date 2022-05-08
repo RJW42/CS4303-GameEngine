@@ -2,8 +2,10 @@ package GameEngine.GameObjects.MainMenu;
 
 
 import GameEngine.Components.UIComponents.UIButton;
+import GameEngine.Components.UIComponents.UITextRenderer;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.GameEngine;
+import processing.core.PConstants;
 import processing.core.PVector;
 
 
@@ -30,6 +32,7 @@ public class MenuSelector extends GameObject {
    private UIButton editor_select;
    private UIButton controls;
    private UIButton settings;
+   private UITextRenderer title;
 
 
    // Constructor
@@ -43,6 +46,7 @@ public class MenuSelector extends GameObject {
       this.components.add(editor_select);
       this.components.add(controls);
       this.components.add(settings);
+      this.components.add(title);
    }
 
 
@@ -78,6 +82,11 @@ public class MenuSelector extends GameObject {
 
    private void init_buttons(){
       // Create buttons
+      title = new UITextRenderer(this,
+              new PVector(GameEngine.SCREEN_WIDTH / 2f, GameEngine.SCREEN_HEIGHT /2f),
+              TEXT_COLOUR, "ConCave", PConstants.CENTER, (int)WIDTH * 2, (int)HEIGHT * 2
+      );
+
       level_select = new UIButton(this, this::levels_clicked, "Levels",
               new PVector(GameEngine.SCREEN_WIDTH / 2, GameEngine.SCREEN_HEIGHT /2),
               TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, TEXT_HOVER_COLOUR, BUTTON_HOVER_COLOUR, BORDER_HOVER_COLOUR,
@@ -115,9 +124,12 @@ public class MenuSelector extends GameObject {
       settings.rect_alpha_colour = BUTTON_ALPHA;
 
       // Update buttons positions based off of button height
-      float total_height = level_select.height * 4 + SPACING * 3 * GameEngine.UI_SCALE;
+      sys.textSize(title.text_size);
+      float height = title.max_height - sys.textDescent();
+      float total_height = level_select.height * 4 + SPACING * 4 * GameEngine.UI_SCALE + height;
 
-      level_select.pos.y += total_height / 2;
+      title.text_pos.y += total_height / 2 - sys.textDescent();
+      level_select.pos.y = title.text_pos.y - (height + SPACING * GameEngine.UI_SCALE);
       editor_select.pos.y = level_select.pos.y - (level_select.height + SPACING * GameEngine.UI_SCALE);
       controls.pos.y = editor_select.pos.y  - (editor_select.height + SPACING * GameEngine.UI_SCALE);
       settings.pos.y = controls.pos.y - (controls.height + SPACING * GameEngine.UI_SCALE);
