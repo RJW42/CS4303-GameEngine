@@ -211,6 +211,7 @@ public class LevelList extends Component {
 
       up_button.rect_alpha_colour = rect_alpha_colour;
       up_button.hover_rect_alpha_colour = hover_rect_alpha_colour;
+      up_button.text_colour = new PVector(127, 127, 127);
 
       down_button = new UIButton(
               parent, this::down_pressed, "↓",

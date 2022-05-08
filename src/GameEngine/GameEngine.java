@@ -79,8 +79,6 @@ public class GameEngine extends PApplet{
    private long prev;
    private boolean restart;
 
-   private PImage test;
-
    private ArrayList<GameObject>[] objects;
    private ArrayList<GameObject>[] objects_to_add;
    private ArrayList<BaseCollisionComponent>[] collision_grid;
@@ -144,8 +142,8 @@ public class GameEngine extends PApplet{
       warning_display = new WarningDisplay(this);
 
       // Init level manager
-      level_manager = new LevelManager(this, new MainMenu(this));
-      //level_manager = new LevelManager(this, new MapBuilder(this, 20, 20, "test.json"));
+      //level_manager = new LevelManager(this, new MainMenu(this));
+      level_manager = new LevelManager(this, new MapBuilder(this, 20, 20, "test.json"));
       //level_manager = new LevelManager(this, new PlayLevel(this, "test.json"));
       //level_manager = new LevelManager(this, new Test(this));
    }
