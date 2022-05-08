@@ -1,10 +1,12 @@
 package GameEngine.Components.MapEditorComponents.Tools;
 
+import GameEngine.Components.PlayerComponents.Powerups;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
 import GameEngine.GameEngine;
 import GameEngine.GameObjects.Core.Monster;
 import GameEngine.GameObjects.Core.Player;
 import GameEngine.GameObjects.Core.Terrain;
+import GameEngine.Utils.Pair;
 import processing.core.PVector;
 
 public enum Item {
@@ -17,7 +19,9 @@ public enum Item {
    PLAYER(Item::place_player, "Player"),
    BASIC_DOOR(Item::place_basic_door, "Basic Door"),
    KILL_DOOR(Item::place_kill_door, "Kill Door"),
-   GOAL(Item::place_goal, "Goal");
+   GOAL(Item::place_goal, "Goal"),
+   HEALTH_PACK(Item::place_health_pack, "Health pack"),
+   GUN_POWERUP(Item::place_gun_powerup, "Gun powerup");
 
    // Static attributes
    public static TerrainGenerator generator;
@@ -153,6 +157,29 @@ public enum Item {
    }
 
 
+   public static void place_health_pack(int world_index, float prev_x, float prev_y){
+      // Check if the position is valid
+      if(position_not_air(prev_x, prev_y, world_index, GOAL.item_name))
+         return;
+
+      generator.powerup_spawn_locs.add(new Pair<>(
+              new PVector(prev_x + 0.5f, prev_y + 0.5f),
+              Powerups.HEALTH_PACK
+      ));
+   }
+
+   public static void place_gun_powerup(int world_index, float prev_x, float prev_y){
+      // Check if the position is valid
+      if(position_not_air(prev_x, prev_y, world_index, GOAL.item_name))
+         return;
+
+      generator.powerup_spawn_locs.add(new Pair<>(
+              new PVector(prev_x + 0.5f, prev_y + 0.5f),
+              Powerups.GUN_BONUS
+      ));
+   }
+
+
    // Value helper methods
    public static void check_entities(int world_index){
       // Check player and goal
@@ -172,6 +199,15 @@ public enum Item {
 
          if(generator.getIndexFromWorldPos(monster_loc.x, monster_loc.y) == world_index){
             generator.monster_spawn_locs.remove(i);
+         }
+      }
+
+      // Check powerups
+      for(int i = generator.powerup_spawn_locs.size() - 1; i >= 0; i--){
+         var powerup_loc = generator.powerup_spawn_locs.get(i).first;
+
+         if(generator.getIndexFromWorldPos(powerup_loc.x, powerup_loc.y) == world_index){
+            generator.powerup_spawn_locs.remove(i);
          }
       }
    }

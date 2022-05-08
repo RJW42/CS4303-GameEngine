@@ -1,5 +1,7 @@
 package GameEngine.Components.TerrianComponents;
 
+import GameEngine.Components.PlayerComponents.Powerups;
+import GameEngine.Utils.Pair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import processing.core.PVector;
@@ -27,6 +29,7 @@ public class TerrainLoader {
    private static final String GOAL_Y        = "goal_y";
    private static final String LEADERBOARD   = "leaderboard";
    private static final String TIPS          = "tips";
+   private static final String POWERUPS      = "powerups";
 
    // Monster spawn properties
    private static final String MONSTER_X     = "x";
@@ -45,6 +48,11 @@ public class TerrainLoader {
    private static final String USERNAME      = "username";
    private static final String TIME          = "time";
 
+   // Powerup properties
+   private static final String POWERUP_T     = "type";
+   private static final String POWERUP_X     = "x";
+   private static final String POWERUP_Y     = "y";
+
 
    /* ***** JSON Layout *****
     * world-width: int
@@ -61,8 +69,15 @@ public class TerrainLoader {
     * ]
     * monsters: [
     *    {
-    *       x: int,
-    *       y: int
+    *       x: float,
+    *       y: float
+    *    }
+    * ]
+    * powerups [
+    *    {
+    *       x: float,
+    *       y: float,
+    *       type: int
     *    }
     * ]
     * wall_colour: {r: int, g: int, b: int}
@@ -99,6 +114,7 @@ public class TerrainLoader {
       world_from_json(generator, terrain_data.getJSONArray(WORLD_ARR));
       monsters_from_JSON(generator, terrain_data.getJSONArray(MONSTERS_SPAWN));
       leaderboard_from_JSON(generator, terrain_data.getJSONArray(LEADERBOARD));
+      powerups_from_JSON(generator, terrain_data);
 
       if(terrain_data.has(TIPS))
          tips_from_JSON(generator, terrain_data.getJSONArray(TIPS));
@@ -127,6 +143,7 @@ public class TerrainLoader {
       core.put(BORDER_CLR, rgb_to_JSON(renderer.border_colour));
       core.put(LEADERBOARD, leaderboard_to_json(generator));
       core.put(TIPS, tips_to_json(generator));
+      core.put(POWERUPS, powerups_to_json(generator));
 
       // Write to disk
       write_file(core, file_name);
@@ -200,6 +217,41 @@ public class TerrainLoader {
          generator.monster_spawn_locs.add(pos);
       }
    }
+
+   // ******** Powerups ********** //
+   private static JSONArray powerups_to_json(TerrainGenerator generator){
+      JSONArray out = new JSONArray();
+
+      for(var powerup : generator.powerup_spawn_locs){
+         JSONObject powerup_json = new JSONObject();
+         powerup_json.put(POWERUP_X, powerup.first.x);
+         powerup_json.put(POWERUP_Y, powerup.first.y);
+         powerup_json.put(POWERUP_T, powerup.second.save_number);
+         out.put(powerup_json);
+      }
+
+      return out;
+   }
+
+
+   private static void powerups_from_JSON(TerrainGenerator generator, JSONObject terrain_data){
+      if(!terrain_data.has(POWERUPS))
+         return;
+
+      JSONArray powerups_json = terrain_data.getJSONArray(POWERUPS);
+
+      for(int i = 0; i < powerups_json.length(); i++){
+         JSONObject powerup_json = powerups_json.getJSONObject(i);
+         float x = powerup_json.getFloat(POWERUP_X);
+         float y = powerup_json.getFloat(POWERUP_Y);
+         Powerups powerup = Powerups.get_from_save_number(powerup_json.getInt(POWERUP_T));
+
+         generator.powerup_spawn_locs.add(new Pair<>(
+                 new PVector(x, y), powerup
+         ));
+      }
+   }
+
 
    // ******** Leaderboard ********* //
    private static JSONArray leaderboard_to_json(TerrainGenerator generator){

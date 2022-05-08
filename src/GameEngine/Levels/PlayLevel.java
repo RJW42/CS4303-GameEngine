@@ -55,8 +55,7 @@ public class PlayLevel extends Level{
       sys.audio_manager.add_combat_music(COMBAT_MUSIC);
       generator.spawn_monsters();
       generator.spawn_goal();
-
-      sys.spawn(new Powerup(sys, new PVector(4.5f, 1.5f), Powerups.GUN_BONUS), 2);
+      generator.spawn_powerups();
    }
 
 
@@ -95,8 +94,6 @@ public class PlayLevel extends Level{
 
    private void init_terrain(){
       int seed = new Random().nextInt();
-      System.out.println(seed);
-
       sys.terrain = new Terrain(sys, seed, LoadedTerrainGenerator::new);
       generator = sys.terrain.getComponent(LoadedTerrainGenerator.class);
       generator.loadTerrain(file_name);

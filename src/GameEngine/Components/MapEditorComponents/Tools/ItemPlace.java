@@ -2,6 +2,7 @@ package GameEngine.Components.MapEditorComponents.Tools;
 
 
 import GameEngine.Components.MapEditorComponents.TileSelector;
+import GameEngine.Components.PlayerComponents.Powerups;
 import GameEngine.Components.Renderers.GifRenderer;
 import GameEngine.Components.TerrianComponents.DoorRenderer;
 import GameEngine.Components.TerrianComponents.TerrainGenerator;
@@ -14,6 +15,7 @@ import processing.core.PConstants;
 import processing.core.PImage;
 import processing.core.PVector;
 
+import java.nio.channels.Pipe;
 import java.rmi.MarshalException;
 
 
@@ -32,6 +34,8 @@ public class ItemPlace extends Tool {
    private PImage basic_door_closed;
    private PImage player;
    private PImage monster_img;
+   private PImage gun_powerup_img;
+   private PImage health_pack_img;
 
    private int prev_x;
    private int prev_y;
@@ -50,6 +54,16 @@ public class ItemPlace extends Tool {
       this.monster_img = sys.sprite_manager.get_sprite("monster_left",
               Math.round(GameEngine.PIXEL_TO_METER * Monster.RENDER_WIDTH),
               Math.round(GameEngine.PIXEL_TO_METER * Monster.RENDER_HEIGHT)
+      );
+
+      this.health_pack_img = sys.sprite_manager.get_sprite(Powerups.HEALTH_PACK.sprite_name,
+              Math.round(GameEngine.PIXEL_TO_METER * Powerup.WIDTH),
+              Math.round(GameEngine.PIXEL_TO_METER * Powerup.WIDTH)
+      );
+
+      this.gun_powerup_img = sys.sprite_manager.get_sprite(Powerups.GUN_BONUS.sprite_name,
+              Math.round(GameEngine.PIXEL_TO_METER * Powerup.WIDTH),
+              Math.round(GameEngine.PIXEL_TO_METER * Powerup.WIDTH)
       );
    }
 
@@ -98,6 +112,7 @@ public class ItemPlace extends Tool {
       display_monsters();
       display_doors();
       display_goal();
+      display_powerups();
    }
 
 
@@ -152,6 +167,21 @@ public class ItemPlace extends Tool {
             else if(world[generator.getIndex(x, y)] == Terrain.KILL_DOOR_START)
                sys.image(kill_door_closed, x + 0.5f, y + 1.5f);
          }
+      }
+   }
+
+
+   private void display_powerups(){
+      for(var powerup : generator.powerup_spawn_locs){
+         PImage img;
+         switch (powerup.second){
+            case HEALTH_PACK:
+               img = this.health_pack_img;
+               break;
+            default:
+               img = this.gun_powerup_img;
+         }
+         sys.image(img, powerup.first.x, powerup.first.y);
       }
    }
 

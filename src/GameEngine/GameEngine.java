@@ -143,8 +143,8 @@ public class GameEngine extends PApplet{
 
       // Init level manager
       //level_manager = new LevelManager(this, new MainMenu(this));
-      //level_manager = new LevelManager(this, new MapBuilder(this, 20, 20, "test.json"));
-      level_manager = new LevelManager(this, new PlayLevel(this, "easy_1.json"));
+      level_manager = new LevelManager(this, new MapBuilder(this, 20, 20, "test.json"));
+      //level_manager = new LevelManager(this, new PlayLevel(this, "easy_1.json"));
       //level_manager = new LevelManager(this, new Test(this));
    }
 

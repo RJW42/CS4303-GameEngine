@@ -1,12 +1,11 @@
 package GameEngine.Components.TerrianComponents;
 
 import GameEngine.Components.Component;
+import GameEngine.Components.PlayerComponents.Powerups;
 import GameEngine.Components.Renderers.RectRenderer;
-import GameEngine.GameObjects.Core.Door;
-import GameEngine.GameObjects.Core.Goal;
-import GameEngine.GameObjects.Core.Monster;
+import GameEngine.GameObjects.Core.*;
 import GameEngine.GameObjects.GameObject;
-import GameEngine.GameObjects.Core.Terrain;
+import GameEngine.Utils.Pair;
 import processing.core.PVector;
 
 import java.util.ArrayList;
@@ -21,6 +20,7 @@ public abstract class TerrainGenerator extends Component {
    public PVector player_spawn_loc;
    public PVector goal_spawn_loc;
    public ArrayList<PVector> monster_spawn_locs;
+   public ArrayList<Pair<PVector, Powerups>> powerup_spawn_locs;
    public ArrayList<Room> rooms;
    public ArrayList<Time> times;
    public Optional<ArrayList<String>> tips;
@@ -34,6 +34,7 @@ public abstract class TerrainGenerator extends Component {
       this.player_spawn_loc = new PVector(0,0);
       this.goal_spawn_loc = new PVector(0, 0);
       this.monster_spawn_locs = new ArrayList<>();
+      this.powerup_spawn_locs = new ArrayList<>();
    }
 
    public int getWidth(){
@@ -104,6 +105,13 @@ public abstract class TerrainGenerator extends Component {
 
          room.monsters.add(monster);
          sys.spawn(monster, 2);
+      }
+   }
+
+
+   public void spawn_powerups(){
+      for(var powerup : powerup_spawn_locs){
+         sys.spawn(new Powerup(sys, powerup.first, powerup.second), 2);
       }
    }
 
