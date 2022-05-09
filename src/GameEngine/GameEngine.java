@@ -5,6 +5,7 @@ import GameEngine.Components.CollisionComponents.Collideable;
 import GameEngine.Components.CollisionComponents.CollisionHandlers.CollisionHandler;
 import GameEngine.GameObjects.*;
 import GameEngine.GameObjects.Core.Terrain;
+import GameEngine.GameObjects.Guide.GuideManager;
 import GameEngine.Levels.*;
 import GameEngine.Utils.Config;
 import GameEngine.Utils.Managers.AudioManager;

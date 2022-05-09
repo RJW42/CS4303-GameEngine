@@ -8,6 +8,7 @@ import GameEngine.GameObjects.Core.Director;
 import GameEngine.GameObjects.Core.Monster;
 import GameEngine.GameObjects.Core.Player;
 import GameEngine.GameObjects.Core.Terrain;
+import GameEngine.GameObjects.Guide.GuideManager;
 import GameEngine.GameObjects.MainMenu.MenuSelector;
 import GameEngine.GameObjects.RandomMove;
 import GameEngine.Levels.Level;
@@ -38,6 +39,10 @@ public class MainMenu extends Level {
       sys.audio_manager.start_background_music(BACKGROUND_MUSIC);
 
       init_terrain();
+
+      // Cache images for the guide
+//      GuideManager guideManager = new GuideManager(sys);
+//      guideManager.cache_images();
 
       sys.spawn(new MenuSelector(sys), 3);
 
