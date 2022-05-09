@@ -21,12 +21,13 @@ public class GameOver extends Level{
    private Level advance;
 
    private final String file_name;
+   public String user_name;
    public final String next_level;
    private final LoadedTerrainGenerator generator;
    private final float time;
 
    // Constructor
-   public GameOver(GameEngine sys, String file_name, float time) {
+   public GameOver(GameEngine sys, String file_name, String user_name, float time) {
       super(sys);
 
       File folder = new File(SAVE_LOC);
@@ -53,6 +54,7 @@ public class GameOver extends Level{
       this.next_level = next_level;
       this.file_name = file_name;
       this.time = time;
+      this.user_name = user_name;
 
       var terrain = new Terrain(sys, 0, LoadedTerrainGenerator::new);
       generator = terrain.getComponent(LoadedTerrainGenerator.class);
@@ -72,7 +74,7 @@ public class GameOver extends Level{
       sys.initWorld(1, 1);
 
       // Spawn objects
-      sys.spawn(new TimeSaver(sys, generator, file_name, time), 2);
+      sys.spawn(new TimeSaver(sys, generator, file_name, user_name, time), 2);
    }
 
    public void menu_pressed(){
@@ -80,7 +82,7 @@ public class GameOver extends Level{
    }
 
    public void next_level(){
-      advance = new PlayLevel(sys, next_level);
+      advance = new PlayLevel(sys, next_level, user_name);
    }
 
    public boolean updateAndCanAdvance() {

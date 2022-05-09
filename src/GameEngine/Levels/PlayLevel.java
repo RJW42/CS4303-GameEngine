@@ -1,17 +1,14 @@
 package GameEngine.Levels;
 
 import GameEngine.Components.AIComponents.Timer;
-import GameEngine.Components.PlayerComponents.Powerups;
 import GameEngine.Components.TerrianComponents.LoadedTerrainGenerator;
 import GameEngine.Components.TerrianComponents.TerrainLoader;
 import GameEngine.Components.TerrianComponents.TerrainRenderer;
 import GameEngine.GameObjects.Core.Director;
 import GameEngine.GameObjects.Core.Player;
-import GameEngine.GameObjects.Core.Powerup;
 import GameEngine.GameObjects.Core.Terrain;
 import GameEngine.GameEngine;
 import GameEngine.Utils.Managers.InputManager;
-import processing.core.PVector;
 
 import java.util.Random;
 
@@ -23,23 +20,30 @@ public class PlayLevel extends Level{
    public static final int DESIRED_WALLS = 20;
 
    private final String file_name;
+   private final String user_name;
    private InputManager.Key restart;
    private InputManager.Key menu;
    private Level advance;
    private LoadedTerrainGenerator generator;
+   private TerrainRenderer renderer;
    private Timer timer;
 
    // Constructor
    public PlayLevel(GameEngine sys, String file_name) {
+      this(sys, file_name, null);
+   }
+
+   public PlayLevel(GameEngine sys, String file_name, String user_name) {
       super(sys);
 
       // Init attributes
       this.file_name = file_name;
+      this.user_name = user_name;
    }
 
    // Methods
    public void drawBackground(){
-      sys.background(0);
+      sys.background(renderer.wall_colour.x, renderer.wall_colour.y, renderer.wall_colour.z);
    }
 
 
@@ -55,7 +59,6 @@ public class PlayLevel extends Level{
       sys.audio_manager.add_combat_music(COMBAT_MUSIC);
       generator.spawn_monsters();
       generator.spawn_goal();
-      generator.spawn_powerups();
    }
 
 
@@ -71,7 +74,7 @@ public class PlayLevel extends Level{
    public void player_reached_goal(){
       TerrainLoader.saveTerrain(generator, sys.terrain.getComponent(TerrainRenderer.class), file_name);
 
-      advance = new GameOver(sys, file_name, timer.game_time);
+      advance = new GameOver(sys, file_name, user_name, timer.game_time);
    }
 
 
@@ -94,9 +97,12 @@ public class PlayLevel extends Level{
 
    private void init_terrain(){
       int seed = new Random().nextInt();
+      System.out.println(seed);
+
       sys.terrain = new Terrain(sys, seed, LoadedTerrainGenerator::new);
       generator = sys.terrain.getComponent(LoadedTerrainGenerator.class);
       generator.loadTerrain(file_name);
+      renderer = sys.terrain.getComponent(TerrainRenderer.class);
 
       // Init world
       sys.initWorld(generator.getWidth(), generator.getHeight());

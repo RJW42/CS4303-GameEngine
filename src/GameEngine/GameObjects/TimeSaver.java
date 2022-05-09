@@ -7,6 +7,7 @@ import GameEngine.Components.TerrianComponents.TerrainLoader;
 import GameEngine.Components.TerrianComponents.TerrainRenderer;
 import GameEngine.Components.UIComponents.UIInput;
 import GameEngine.GameEngine;
+import GameEngine.Levels.GameOver;
 import processing.core.PVector;
 
 import java.io.File;
@@ -29,7 +30,7 @@ public class TimeSaver extends GameObject {
 
 
    // Constructor
-   public TimeSaver(GameEngine sys, LoadedTerrainGenerator generator, String file_name, float time) {
+   public TimeSaver(GameEngine sys, LoadedTerrainGenerator generator, String file_name, String user_name, float time) {
       super(sys);
 
       // Init attributes
@@ -38,14 +39,18 @@ public class TimeSaver extends GameObject {
       this.file_name = file_name;
 
       // Create input
-      UIInput username_input = new UIInput(this,
-              this::username_callback,"Enter Username: ", "",
-              new PVector(GameEngine.SCREEN_WIDTH /2f, GameEngine.SCREEN_HEIGHT /2f),
-              TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, PADDING, BORDER_WIDTH,
-              WIDTH * 2, HEIGHT * 2, MAX_USERNAME_LENGTH, BUTTON_ALPHA
-      );
+      if(user_name == null) {
+         UIInput username_input = new UIInput(this,
+                 this::username_callback,"Enter Username: ", "",
+                 new PVector(GameEngine.SCREEN_WIDTH /2f, GameEngine.SCREEN_HEIGHT /2f),
+                 TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, PADDING, BORDER_WIDTH,
+                 WIDTH * 2, HEIGHT * 2, MAX_USERNAME_LENGTH, BUTTON_ALPHA
+         );
 
-      this.components.add(username_input);
+         this.components.add(username_input);
+      } else {
+         username_callback(user_name);
+      }
    }
 
 
@@ -67,7 +72,7 @@ public class TimeSaver extends GameObject {
 
       // Continue to leaderboard
       is_dead = true;
-
+      ((GameOver)sys.level_manager.getCurrentLevel()).user_name = value;
       sys.spawn(new LeaderBoard(sys, file_name, generator), 2);
    }
 

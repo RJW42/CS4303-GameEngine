@@ -5,6 +5,7 @@ import GameEngine.Components.UIComponents.UIButton;
 import GameEngine.Components.UIComponents.UITextRenderer;
 import GameEngine.GameObjects.GameObject;
 import GameEngine.GameEngine;
+import GameEngine.GameObjects.Guide.GuideManager;
 import processing.core.PConstants;
 import processing.core.PVector;
 
@@ -32,6 +33,7 @@ public class MenuSelector extends GameObject {
    private UIButton editor_select;
    private UIButton controls;
    private UIButton settings;
+   private UIButton guide;
    private UITextRenderer title;
 
 
@@ -46,6 +48,7 @@ public class MenuSelector extends GameObject {
       this.components.add(editor_select);
       this.components.add(controls);
       this.components.add(settings);
+      this.components.add(guide);
       this.components.add(title);
    }
 
@@ -74,6 +77,13 @@ public class MenuSelector extends GameObject {
       is_dead = true;
       sys.spawn(new SettingsMenu(sys), 3);
    }
+
+   public void guide_clicked(){
+      // Switch to guide
+      is_dead = true;
+      sys.spawn(new GuideManager(sys), 3);
+   }
+
 
    @Override
    public boolean isDestroyed() {
@@ -123,15 +133,26 @@ public class MenuSelector extends GameObject {
       settings.hover_rect_alpha_colour = BUTTON_HOVER_ALPHA;
       settings.rect_alpha_colour = BUTTON_ALPHA;
 
+      guide = new UIButton(this, this::guide_clicked, "Guide",
+              new PVector(GameEngine.SCREEN_WIDTH / 2, GameEngine.SCREEN_HEIGHT /2),
+              TEXT_COLOUR, BUTTON_COLOUR, BORDER_COLOUR, TEXT_HOVER_COLOUR, BUTTON_HOVER_COLOUR, BORDER_HOVER_COLOUR,
+              PADDING, BORDER_WIDTH, WIDTH, HEIGHT, true
+      );
+
+      guide.hover_rect_alpha_colour = BUTTON_HOVER_ALPHA;
+      guide.rect_alpha_colour = BUTTON_ALPHA;
+
+
       // Update buttons positions based off of button height
       sys.textSize(title.text_size);
       float height = title.max_height - sys.textDescent();
-      float total_height = level_select.height * 4 + SPACING * 4 * GameEngine.UI_SCALE + height;
+      float total_height = level_select.height * 5 + SPACING * 5 * GameEngine.UI_SCALE + height;
 
       title.text_pos.y += total_height / 2 - sys.textDescent();
       level_select.pos.y = title.text_pos.y - (height + SPACING * GameEngine.UI_SCALE);
       editor_select.pos.y = level_select.pos.y - (level_select.height + SPACING * GameEngine.UI_SCALE);
       controls.pos.y = editor_select.pos.y  - (editor_select.height + SPACING * GameEngine.UI_SCALE);
       settings.pos.y = controls.pos.y - (controls.height + SPACING * GameEngine.UI_SCALE);
+      guide.pos.y = settings.pos.y - (settings.height + SPACING * GameEngine.UI_SCALE);
    }
 }
