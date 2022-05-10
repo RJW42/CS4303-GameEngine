@@ -124,9 +124,9 @@ public class GuideManager extends GameObject {
       }
 
       if(curr_img != null){
-         sys.image(curr_img, img_pos.x, img_pos.y);
+         sys.ui_image(curr_img, img_pos.x, img_pos.y, 0);
       } else if(curr_gif != null){
-         curr_gif.play(sys, img_pos, 0);
+         curr_gif.ui_play(sys, img_pos, 0);
       }
 
       sys.popUI();
@@ -169,9 +169,10 @@ public class GuideManager extends GameObject {
       // Load in the image / gif
       if(guide.sprite_name != null) {
          curr_img = sys.sprite_manager.get_sprite(guide.sprite_name,
-                 Math.round(GameEngine.PIXEL_TO_METER * img_width),
-                 Math.round(GameEngine.PIXEL_TO_METER * img_height)
+                 (int)img_width, (int)img_height
          );
+
+         System.out.println(img_width);
 
          img_pos = new PVector(
                  centre_pos.x - (img_width / 2f + SPACING * GameEngine.UI_SCALE / 2f + img_spacing / 2f),
@@ -179,8 +180,7 @@ public class GuideManager extends GameObject {
          );
       } else if(guide.gif_name != null){
          curr_gif = sys.sprite_manager.get_gif(guide.gif_name,
-                 Math.round(GameEngine.PIXEL_TO_METER * img_width),
-                 Math.round(GameEngine.PIXEL_TO_METER * img_height)
+                 (int)img_width, (int)img_height
          );
 
          img_pos = new PVector(

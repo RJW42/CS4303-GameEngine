@@ -308,6 +308,16 @@ public class GameEngine extends PApplet{
       popMatrix();
    }
 
+   public void ui_image(PImage img, float x, float y, float angle){
+      pushMatrix();
+      translate(0, SCREEN_HEIGHT);
+      scale(1, -1);
+      translate(x, GameEngine.SCREEN_HEIGHT - y);
+      rotate(angle);
+      super.image(img, -img.width/2f, -img.height/2f);
+      popMatrix();
+   }
+
 
    public void stop(){
       // Close Audio
